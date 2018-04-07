@@ -1,0 +1,74 @@
+<html>
+<head>
+  <title>Ultra Magic The Gathering</title>
+
+  <script>
+    if (typeof module === 'object') { window.module = module; module = undefined; }
+  </script>
+
+  <script>
+    var jQuery = require('jquery'); var $ = jQuery; var riot = require('riot');
+  </script>
+
+  <script>
+    if (window.module) module = window.module;
+  </script>
+
+  <link
+    rel="stylesheet"
+    href="src/style.css"
+  ></link>
+</head>
+
+<body class="pageBase wrapper">
+  <!-- <div class="wrapper">
+      <div class="box header">Header</div>
+      <div class="content"> 
+          <div class="box content1">Sidebar</div>
+          <div class="box content2">Content
+            <br /> The four arrows are inline images inside the content area.
+          </div>
+          <div class="box content3">Content
+              <br /> The four arrows are inline images inside the content area.
+          </div>
+          <div class="box footer">Footer</div>
+      </div>
+    
+     
+    </div> -->
+  <navigation pages="{state.pages}"></navigation>
+
+  <div class="content">
+    <search-page show="{state.currentPage=='search'}" ></search-page>
+    <collection-page show="{state.currentPage=='collection'}"></collection-page>
+  </div>
+
+  <script src="src/tags/all.js"></script>
+
+  <script>
+    var state = {
+      'pages': ["search", "collection"],
+      'currentPage': "search",
+      'pageInstances': {
+        "search": null,
+        "collection": null
+      }
+
+    }
+
+    //riot.mount('card-search')
+
+    function onPageSelected(page) {
+      var oldPage = state.pageInstances[state.currentPage];
+      state.currentPage = page;
+      oldPage.update();
+      state.pageInstances[page].update();
+    }
+
+    riot.mount('card-list');
+    state.pageInstances['search'] = riot.mount('search-page')[0];
+    state.pageInstances['collection'] = riot.mount('collection-page')[0];
+    riot.mount('navigation', { onPageSelected: onPageSelected });
+  </script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+{
+  "name": "umtg",
+  "version": "0.1.0",
+  "description": "Magic The Gathering Tool",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron main.js",
+    "watch": "riot -w src/tags src/tags/all.js"
+  },
+  "author": "fackler_m",
+  "license": "ISC",
+  "dependencies": {
+    "electron": "^1.8.4",
+    "jquery": "^3.3.1",
+    "riot": "^3.9.1"
+  },
+  "devDependencies": {
+    "electron-packager": "^12.0.0"
+  }
+}

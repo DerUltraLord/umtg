@@ -1,0 +1,83 @@
+@import url("./tags/css/search-page.css");
+@import url("./tags/css/collection-page.css");
+input {
+    color: #afb1be;
+    width: 190px;
+    margin-top: -2px;
+    background: rgb(50, 54, 74);
+    left: 0;
+    padding: 10px 65px;
+    border-top: 2px solid rgb(57, 61, 82);
+    border-bottom: 2px solid rgb(57, 61, 82);
+    border-right: none;
+    border-left: none;
+    outline: none;
+    font-family: 'Gudea', sans-serif;
+    box-shadow: none;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+/* Change the link color to #111 (black) on hover */
+
+li:hover {
+    background-color: #111;
+}
+
+li.active:hover {
+    background-color: green;
+}
+
+li.active {
+    background-color: green;
+}
+
+body {
+    width: 100%;
+    overflow: hidden;
+}
+
+.header {
+    grid-area: header;
+}
+
+.wrapper {
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: 1fr;
+    grid-template-rows: 45px 1fr;
+    grid-template-areas: "header" "content";
+    background-color: #fff;
+    color: #444;
+    min-height: 100vh;
+}
+
+.box {
+    background-color: #444;
+    color: #fff;
+    border-radius: 5px;
+    padding: 40px;
+    font-size: 150%;
+}
+
+.header {
+    background-color: #999;
+}
