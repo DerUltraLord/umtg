@@ -1,19 +1,29 @@
 <card-list>
-    <div id="cardDiv" onClick={onClick(c)} each={c in this.opts.cards}>
-        <h2>{c.name}</h2>
-        <img width="200px"></img>
-        <p>{c.oracle_text}</p>
-    <div>
+    <card onClick={onClick(c)} each={c in this.opts.cards} card={c}></card>
    
    <style>
 
-        p {
+        .picture {
+            grid-row:1/3;
+        }
+
+        .text {
+            align-self:start;
+        }
+
+        #cardDiv {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            grid-template-rows: 1fr 3fr;
+            
+        }
+
+        p, h2 {
             margin-bottom: 0px;
-            padding-bottom: 1em;
+            margin-top: 0;
         }
         div {
             margin: 0px 0px 0px 0px;
-            background-color: white;
         }
 
         div.active {
@@ -51,11 +61,17 @@
             
             }
         }
+
         
 
         this.on('data_loaded', function(cards) {
             opts.cards = cards;
             this.update();
         });
+
+ 
+
+  
+    
     </script>
 </card-list>

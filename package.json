@@ -16,6 +16,10 @@
     "riot": "^3.9.1"
   },
   "devDependencies": {
-    "electron-packager": "^12.0.0"
+    "electron-packager": "^12.0.0",
+    "gulp": "^3.9.1",
+    "gulp-inject": "^4.3.2",
+    "gulp-svgmin": "^1.2.4",
+    "gulp-svgstore": "^6.1.1"
   }
 }

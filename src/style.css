@@ -1,19 +1,18 @@
 @import url("./tags/css/search-page.css");
 @import url("./tags/css/collection-page.css");
+@import url("./tags/css/card.css");
+@import url("./tags/css/card-search.css");
+
 input {
-    color: #afb1be;
-    width: 190px;
-    margin-top: -2px;
-    background: rgb(50, 54, 74);
-    left: 0;
-    padding: 10px 65px;
-    border-top: 2px solid rgb(57, 61, 82);
-    border-bottom: 2px solid rgb(57, 61, 82);
-    border-right: none;
-    border-left: none;
-    outline: none;
-    font-family: 'Gudea', sans-serif;
-    box-shadow: none;
+   background: transparent;
+   border: 0px solid black;
+   color: white;
+   border-bottom: 2px solid #3c3836;
+   outline: none;
+}
+
+input:focus {
+  
 }
 
 ul {
@@ -50,9 +49,24 @@ li.active {
     background-color: green;
 }
 
+h2 {
+    color: #ebdbb2;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    text-shadow: 1px 1px black;
+}
+
+h3 {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
 body {
     width: 100%;
     overflow: hidden;
+    color: white;
+    
+    background-color: #282828;
 }
 
 .header {
@@ -65,19 +79,54 @@ body {
     grid-template-columns: 1fr;
     grid-template-rows: 45px 1fr;
     grid-template-areas: "header" "content";
-    background-color: #fff;
-    color: #444;
     min-height: 100vh;
 }
 
 .box {
-    background-color: #444;
+    border: 2px solid #3c3836;
     color: #fff;
     border-radius: 5px;
-    padding: 40px;
+    padding: 10px;
     font-size: 150%;
 }
 
 .header {
-    background-color: #999;
+    background-color: #426281;
+}
+
+.icon24 {
+   width: 24px;
+   height: 24px;
+}
+
+label {
+    color: #ebdbb2;
+    font-size: 80%;
+}
+
+button {
+    background-color: transparent;
+    color: #cc241d;
+    border: 2px solid #cc241d;
+    text-align: center;
+    padding: 10px 16px;
+    border-radius: 5px;
+}
+
+
+::-webkit-scrollbar {
+    width: 8px;
+    background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar-thumb {
+    width: 8px;
+    background-color: white;
+}
+
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    /*border: 1px solid black;*/
+    background-color: #3c3836;
 }

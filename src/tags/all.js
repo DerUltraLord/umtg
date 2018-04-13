@@ -1,4 +1,4 @@
-riot.tag2('card-list', '<div id="cardDiv" onclick="{onClick(c)}" each="{c in this.opts.cards}"> <h2>{c.name}</h2> <img width="200px"></img> <p>{c.oracle_text}</p> <div>', 'card-list p,[data-is="card-list"] p{ margin-bottom: 0px; padding-bottom: 1em; } card-list div,[data-is="card-list"] div{ margin: 0px 0px 0px 0px; background-color: white; } card-list div.active,[data-is="card-list"] div.active{ background-color: lightgray; }', '', function(opts) {
+riot.tag2('card-list', '<card onclick="{onClick(c)}" each="{c in this.opts.cards}" card="{c}"></card>', 'card-list .picture,[data-is="card-list"] .picture{ grid-row:1/3; } card-list .text,[data-is="card-list"] .text{ align-self:start; } card-list #cardDiv,[data-is="card-list"] #cardDiv{ display: grid; grid-template-columns: 200px 1fr; grid-template-rows: 1fr 3fr; } card-list p,[data-is="card-list"] p,card-list h2,[data-is="card-list"] h2{ margin-bottom: 0px; margin-top: 0; } card-list div,[data-is="card-list"] div{ margin: 0px 0px 0px 0px; } card-list div.active,[data-is="card-list"] div.active{ background-color: lightgray; }', '', function(opts) {
 
         this.findParentNode = function(node, tagName) {
             while(node) {
@@ -33,27 +33,48 @@ riot.tag2('card-list', '<div id="cardDiv" onclick="{onClick(c)}" each="{c in thi
             opts.cards = cards;
             this.update();
         });
+
 });
-riot.tag2('card-search', '<form onsubmit="{onSearch}"> <input type="text" ref="searchString"></input> <button id="searchButton">Search</Search> </form>', '', '', function(opts) {
+riot.tag2('card-search', '<form class="cardSearchContainer" onsubmit="{onSearch}"> <label>Name:</label> <input placeholder="Name or Scryfall search" type="text" ref="searchString"></input> <label>Type:</label> <input placeholder="Creature"></input> <label>Text:</label> <input placeholder="Oracle Text"></input> <label>Edition:</label> <input placeholder="XLN"></input> <button id="searchButton">Search</Search> </form>', '', '', function(opts) {
     this.onSearch = function(e) {
         e.preventDefault();
         this.opts.callback(this.refs.searchString.value);
     }.bind(this)
 });
-riot.tag2('card', '<h1>name</h1>', '', '', function(opts) {
-});
-riot.tag2('collection-page', '<div class="box collectionContent1"><p> content1</p></div> <div class="box collectionContent2"><p> content2</p></div> <div class="box collectionContent3"><p> content3</p></div>', '', 'class="contentCollectionPage"', function(opts) {
-});
-riot.tag2('hello-form', '<form onsubmit="{sayHello}"> <input type="text" ref="greet"> <button>Say Hello</button> </form> <hello-world show="{this.greeting}" greet="{this.greeting}"></hello-world>', '', '', function(opts) {
+riot.tag2('card', '<img id="image{this.opts.card.id}" class="cardImage" width="200px"></img> <h2 id="cardName{this.opts.card.id}" class="cardName">{this.opts.card.name}</h2> <div id="cardMana{this.opts.card.id}" class="cardMana"></div> <h3 id="cardType{hits.opts.card.id}" class="cardType">{this.opts.card.type_line}</h3> <p class="cardText">{this.opts.card.oracle_text}</p> <div class="cardActions"> <button>test</button> </div>', '', 'class="cardContainer"', function(opts) {
 
-    this.sayHello = function(e){
-        e.preventDefault();
-        this.greeting = this.refs.greet.value;
-        this.refs.greet.value = '';
-    }.bind(this)
+    this.getTagsForMana = function(card) {
 
+        var re = /\{\w\}/g;
+
+        res = '';
+
+        while (m = re.exec(card.mana_cost)) {
+            console.log(m[0]);
+            var manaString = m[0].substring(1, m[0].length -1);
+            console.log(manaString);
+            manaString = `<svg class="icon24" viewBox="0 0 600 600">
+                <use xlink:href="res/svg.svg#` + manaString + `"></use>
+                </svg>`
+
+            res += manaString;
+        }
+        return res;
+    }.bind(this);
+
+    this.on('mount', function() {
+        var cardImage = document.getElementById("image" + this.opts.card.id);
+        if (this.opts.card.image_uris) {
+            cardImage.setAttribute('src', this.opts.card.image_uris.art_crop);
+        }
+
+        var cardName = document.getElementById("cardMana" + this.opts.card.id);
+        cardName.insertAdjacentHTML('beforeend', this.getTagsForMana(this.opts.card));
+
+        this.update();
+    });
 });
-riot.tag2('hello-world', '<h3>Hello {opts.greet}</h3>', '', '', function(opts) {
+riot.tag2('collection-page', '<div class="box collectionContent1"><p> content1</p></div> <div class="box collectionContent2"><p> content2</p></div> <div class="box collectionContent3"><p> content3</p> <svg viewbox="0 0 600 600" width="24" height="24"> <use xlink:href="res/svg.svg#M_0"></use> </svg> </div>', 'collection-page .mana,[data-is="collection-page"] .mana{ }', 'class="contentCollectionPage"', function(opts) {
 });
 riot.tag2('navigation', '<ul> <li> <a class="navLogo" href="#">UMTG</a> <li> <li id="navPage{pageKey}" class="navElement" each="{pageKey in this.opts.pages}" id="nav{pageKey}" onclick="{parent.onClick(pageKey)}"> <a href="#">{pageKey}</a> </li> </ul>', 'navigation .navLogo,[data-is="navigation"] .navLogo{ color: lightgreen; font-weight: bold; }', 'class="header"', function(opts) {
     this.onClick = function(page) {

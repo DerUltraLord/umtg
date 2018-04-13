@@ -2,7 +2,6 @@
     display: grid;
     height: 93vh;
     grid-gap: 10px;
-    background-color: pink;
     grid-template-columns: 1f 1fr 1fr;
     grid-template-areas: "collectionContent1 collectionContent2 collectionContent3"
 }
