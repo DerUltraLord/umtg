@@ -10,7 +10,6 @@
             grid-template-columns: 20px 1fr;
         }
 
-
         img {
             width: 16px;
             height: 16px;
@@ -22,5 +21,9 @@
             font-size: 50%;
             border-bottom: 1px solid var(--color-brown);
         }
+
     </style>
+
+    <script>
+    </script>
 </set>

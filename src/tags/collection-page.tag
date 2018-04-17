@@ -1,36 +1,56 @@
-<collection-page class="contentCollectionPage">
+<collection-page>
     <div class="box collectionContent1 scrollable">
-        <set-list sets={this.opts.sets}></set-list>
+        <set-list callback={onSetClicked} sets={this.opts.sets}></set-list>
     </div>
     <div class="box collectionContent2 scrollable">
-        <card-list><card-list></div>
+        <card-list><card-list>
+    </div>
 
     <style>
-    .mana {
-      
-        
-    }
+        collection-page {
+            display: grid;
+            grid-gap: 10px;
+            grid-template-columns: 250px 1fr;
+            grid-template-areas: "collectionContent1 collectionContent2"
+        }
+
+
+        .collectionContent1 {
+            grid-area: collectionContent1;
+        }
+
+        .collectionContent2 {
+            grid-area: collectionContent2;
+        }
+
 
     </style>
 
     <script>
 
-    this.on('update', function() {
-        scryfallGetSets(this.onSets);
-    });
 
-    onSets(res) {
-        opts.sets = res.data;
-        this.tags['set-list'].update();
+        this.on('update', function() {
+            scryfallGetSets(this.onSets);
+        });
 
-        $.getJSON(opts.sets[0].search_uri, this.onSet);
-    }
+        onSets(res) {
+            opts.sets = res.data;
+            this.tags['set-list'].update();
+            this.showSet(opts.sets[0]);
+        }
 
-    onSet(res) {
-        console.log("HIER");
-        this.tags['card-list'].opts.cards = res.data;
-        this.tags['card-list'].update();
-    }
+        showSet(set) {
+            $.getJSON(set.search_uri, this.onSet);
+        }
+
+        onSet(res) {
+            this.tags['card-list'].opts.cards = res.data;
+            this.tags['card-list'].update();
+        }
+
+        onSetClicked(set) {
+            this.showSet(set);
+        }
 
     </script>
 </collection-page>

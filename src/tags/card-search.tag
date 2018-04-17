@@ -11,10 +11,17 @@
         <button id="searchButton">Search</Search>
         
     </form>
+    <style>
+        .cardSearchContainer {
+            display: grid;
+            grid-gap: 10px;
+            grid-template-columns: 80px 1fr;
+        }
+    </style>
     <script>
-    onSearch(e) {
-        e.preventDefault();
-        this.opts.callback(this.refs.searchString.value);
-    }
+        onSearch(e) {
+            e.preventDefault();
+            this.opts.callback(this.refs.searchString.value);
+        }
     </script>
 </card-search>
