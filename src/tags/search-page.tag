@@ -1,6 +1,6 @@
 <search-page class="contentSearchPage">
     <card-search class="box content1" callback={onSearchEntered}></card-search>
-    <card-list class="content2" id="cardResult"></card-list>
+    <card-list class="content2 scrollable" id="cardResult"></card-list>
     <div class="content3"><p>Content3</p></div>
     <div class="box footer">
         <button>add</button>
@@ -15,7 +15,6 @@
             
             res = $.getJSON("https://api.scryfall.com/cards/search?order=cmc&q=" + searchText, this.onDataAvailable);
             res.fail(this.onDataNotAvailable);
-            console.log(res);
             
         }
 

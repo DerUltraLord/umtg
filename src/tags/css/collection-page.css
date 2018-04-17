@@ -2,8 +2,8 @@
     display: grid;
     height: 93vh;
     grid-gap: 10px;
-    grid-template-columns: 1f 1fr 1fr;
-    grid-template-areas: "collectionContent1 collectionContent2 collectionContent3"
+    grid-template-columns: 250px 1fr;
+    grid-template-areas: "collectionContent1 collectionContent2"
 }
 
 .content {
@@ -18,6 +18,3 @@
     grid-area: collectionContent2;
 }
 
-.collectionContent3 {
-    grid-area: collectionContent3;
-}

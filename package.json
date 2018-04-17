@@ -6,16 +6,19 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron main.js",
-    "watch": "riot -w src/tags src/tags/all.js"
+    "watch": "riot -w src/tags src/tags/all.js",
+    "postinstall": "electron-builder install-app-deps"
   },
   "author": "fackler_m",
   "license": "ISC",
   "dependencies": {
     "electron": "^1.8.4",
     "jquery": "^3.3.1",
-    "riot": "^3.9.1"
+    "riot": "^3.9.1",
+    "sqlite3": "^4.0.0"
   },
   "devDependencies": {
+    "electron-builder": "^20.8.1",
     "electron-packager": "^12.0.0",
     "gulp": "^3.9.1",
     "gulp-inject": "^4.3.2",

@@ -12,8 +12,6 @@
 }
 
 .content2 {
-    overflow: auto;
-    max-height: 83vh;
     grid-area: content2;
 }
 

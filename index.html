@@ -1,82 +1,80 @@
 <html>
-<head>
-  <title>Ultra Magic The Gathering</title>
+    <head>
+        <title>Ultra Magic The Gathering</title>
 
-  <script>
-    if (typeof module === 'object') { window.module = module; module = undefined; }
-  </script>
+        <script>
+            if (typeof module === 'object') { window.module = module; module = undefined; }
+        </script>
 
-  <script>
-    var jQuery = require('jquery'); var $ = jQuery; var riot = require('riot');
-  </script>
+        <script>
+            var jQuery = require('jquery'); var $ = jQuery; var riot = require('riot');
+        </script>
 
-  <script>
-    if (window.module) module = window.module;
-  </script>
+        <script src="src/db.js"></script>
+        <script src="src/scryfall.js"></script>
 
-  <link
-    rel="stylesheet"
-    href="src/style.css"
-  ></link>
-</head>
+        <script> if (window.module) module = window.module; </script>
 
-<body class="pageBase wrapper">
-  <!-- <div class="wrapper">
-      <div class="box header">Header</div>
-      <div class="content"> 
-          <div class="box content1">Sidebar</div>
-          <div class="box content2">Content
+        <link rel="stylesheet" href="src/style.css" ></link>
+    </head>
+
+    <body class="pageBase wrapper">
+        <!-- <div class="wrapper">
+            <div class="box header">Header</div>
+            <div class="content"> 
+            <div class="box content1">Sidebar</div>
+            <div class="box content2">Content
             <br /> The four arrows are inline images inside the content area.
-          </div>
-          <div class="box content3">Content
-              <br /> The four arrows are inline images inside the content area.
-          </div>
-          <div class="box footer">Footer</div>
-      </div>
-    
-     
-    </div> -->
-    <!--
-  <svg version="1.1" xmlns="http://www.w3.org/2000/svg"
-    xmlns:xlink="http://www.w3.org/1999/xlink">
-      <path id="icon-home" class="path1" d="M32 18.451l-16-12.42-16 12.42v-5.064l16-12.42 16 12.42zM28 18v12h-8v-8h-8v8h-8v-12l12-9z" />
-      <path id="icon-camera" class="path1" d="M9.5 19c0 3.59 2.91 6.5 6.5 6.5s6.5-2.91 6.5-6.5-2.91-6.5-6.5-6.5-6.5 2.91-6.5 6.5zM30 8h-7c-0.5-2-1-4-3-4h-8c-2 0-2.5 2-3 4h-7c-1.1 0-2 0.9-2 2v18c0 1.1 0.9 2 2 2h28c1.1 0 2-0.9 2-2v-18c0-1.1-0.9-2-2-2zM16 27.875c-4.902 0-8.875-3.973-8.875-8.875 0-4.902 3.973-8.875 8.875-8.875 4.902 0 8.875 3.973 8.875 8.875 0 4.902-3.973 8.875-8.875 8.875zM30 14h-4v-2h4v2z" />
-  </svg>
--->
-  <navigation pages="{state.pages}"></navigation>
+            </div>
+            <div class="box content3">Content
+            <br /> The four arrows are inline images inside the content area.
+            </div>
+            <div class="box footer">Footer</div>
+            </div>
 
 
-  <div class="content">
-    <search-page show="{state.currentPage=='search'}" ></search-page>
-    <collection-page show="{state.currentPage=='collection'}"></collection-page>
-  </div>
+            </div> -->
+            <!--
+                <svg version="1.1" xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
+                <path id="icon-home" class="path1" d="M32 18.451l-16-12.42-16 12.42v-5.064l16-12.42 16 12.42zM28 18v12h-8v-8h-8v8h-8v-12l12-9z" />
+                <path id="icon-camera" class="path1" d="M9.5 19c0 3.59 2.91 6.5 6.5 6.5s6.5-2.91 6.5-6.5-2.91-6.5-6.5-6.5-6.5 2.91-6.5 6.5zM30 8h-7c-0.5-2-1-4-3-4h-8c-2 0-2.5 2-3 4h-7c-1.1 0-2 0.9-2 2v18c0 1.1 0.9 2 2 2h28c1.1 0 2-0.9 2-2v-18c0-1.1-0.9-2-2-2zM16 27.875c-4.902 0-8.875-3.973-8.875-8.875 0-4.902 3.973-8.875 8.875-8.875 4.902 0 8.875 3.973 8.875 8.875 0 4.902-3.973 8.875-8.875 8.875zM30 14h-4v-2h4v2z" />
+                </svg>
+            -->
+            <navigation pages="{state.pages}"></navigation>
 
-  <script src="src/tags/all.js"></script>
 
-  <script>
-    var state = {
-      'pages': ["search", "collection"],
-      'currentPage': "search",
-      'pageInstances': {
-        "search": null,
-        "collection": null
-      }
+            <div class="content">
+                <search-page show="{state.currentPage=='search'}" ></search-page>
+                <collection-page show="{state.currentPage=='collection'}"></collection-page>
+            </div>
 
-    }
+            <script src="src/tags/all.js"></script>
 
-    //riot.mount('card-search')
+            <script>
+                var state = {
+                    'pages': ["search", "collection"],
+                    'currentPage': "search",
+                    'pageInstances': {
+                        "search": null,
+                        "collection": null
+                    }
 
-    function onPageSelected(page) {
-      var oldPage = state.pageInstances[state.currentPage];
-      state.currentPage = page;
-      oldPage.update();
-      state.pageInstances[page].update();
-    }
+                }
 
-    riot.mount('card-list');
-    state.pageInstances['search'] = riot.mount('search-page')[0];
-    state.pageInstances['collection'] = riot.mount('collection-page')[0];
-    riot.mount('navigation', { onPageSelected: onPageSelected });
-  </script>
-</body>
+                //riot.mount('card-search')
+
+                function onPageSelected(page) {
+                    var oldPage = state.pageInstances[state.currentPage];
+                    state.currentPage = page;
+                    oldPage.update();
+                    state.pageInstances[page].update();
+                }
+
+                riot.mount('card-list');
+                state.pageInstances['search'] = riot.mount('search-page')[0];
+                state.pageInstances['collection'] = riot.mount('collection-page')[0];
+                riot.mount('navigation', { onPageSelected: onPageSelected });
+            </script>
+    </body>
 </html>

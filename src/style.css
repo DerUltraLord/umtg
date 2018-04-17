@@ -3,6 +3,10 @@
 @import url("./tags/css/card.css");
 @import url("./tags/css/card-search.css");
 
+:root {
+    --color-brown: #ebdbb2;
+}
+
 input {
    background: transparent;
    border: 0px solid black;
@@ -97,6 +101,12 @@ body {
 .icon24 {
    width: 24px;
    height: 24px;
+}
+
+
+.scrollable {
+    max-height: 83vh;
+    overflow: auto;
 }
 
 label {
