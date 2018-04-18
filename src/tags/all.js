@@ -1,3 +1,6 @@
+riot.tag2('about-page', '<p>About Page</p>', '', '', function(opts) {
+});
+
 riot.tag2('card-list', '<card tabindex="0" onclick="{onClick(c)}" each="{c in this.opts.cards}" card="{c}"></card>', 'card-list card:focus,[data-is="card-list"] card:focus{ background-color: black; }', '', function(opts) {
 
         this.findParentNode = function(node, tagName) {
@@ -150,4 +153,7 @@ riot.tag2('set-list', '<set tabindex="0" onclick="{onSetClick(s)}" each="{s in t
 });
 
 riot.tag2('set', '<img riot-src="{this.opts.set.icon_svg_uri}" width="16px" height="16px"></img> <label>{this.opts.set.name}</label>', 'set { display: grid; grid-gap: 0px; grid-template-columns: 20px 1fr; } set img,[data-is="set"] img{ width: 16px; height: 16px; background-color: white; } set label,[data-is="set"] label{ font-size: 50%; border-bottom: 1px solid var(--color-brown); }', '', function(opts) {
+});
+
+riot.tag2('settings-page', '<p>Settings Page</p>', '', '', function(opts) {
 });
