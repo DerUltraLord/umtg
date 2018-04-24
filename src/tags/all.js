@@ -38,7 +38,7 @@ riot.tag2('card-search', '<form class="cardSearchContainer" onsubmit="{onSearch}
         }.bind(this)
 });
 
-riot.tag2('card', '<img id="image{this.opts.card.id}" class="cardImage" width="200px"></img> <h2 id="cardName{this.opts.card.id}" class="cardName">{this.opts.card.name}</h2> <div id="cardMana{this.opts.card.id}" class="cardMana"></div> <h3 id="cardType{this.opts.card.id}" class="cardType">{this.opts.card.type_line}</h3> <p class="cardText">{this.opts.card.oracle_text}</p> <div class="cardActions"> <button>test</button> </div>', 'card { display: grid; grid-gap: 10px; grid-template-columns: 200px 1fr 100px; grid-template-rows: 20px 20px 1fr 20px; grid-template-areas: "cardImage cardName cardMana" "cardImage cardType cardType" "cardImage cardText cardText" "cardImage cardActions cardActions"; border-bottom: 2px solid #3c3836; margin-top: 10px; margin-bottom: 10px; } card .cardImage,[data-is="card"] .cardImage{ grid-area: cardImage; background-color: white; } card .cardName,[data-is="card"] .cardName{ grid-area: cardName; } card .cardType,[data-is="card"] .cardType{ grid-area: cardType; } card .cardText,[data-is="card"] .cardText{ grid-area: cardText; } card .cardActions,[data-is="card"] .cardActions{ grid-area: cardActions; } card .cardMana,[data-is="card"] .cardMana{ grid-area: cardMana; text-align: right; margin-right: 10px; margin-top: 3px; }', '', function(opts) {
+riot.tag2('card', '<img id="image{this.opts.card.id}" class="cardImage" width="200px"></img> <h2 id="cardName{this.opts.card.id}" class="cardName">{this.opts.card.name}</h2> <div id="cardMana{this.opts.card.id}" class="cardMana"></div> <h3 id="cardType{this.opts.card.id}" class="cardType">{this.opts.card.type_line}</h3> <p class="cardText">{this.opts.card.oracle_text}</p> <div class="cardActions"> <button id="removeButton" onclick="{removeCardFromCollection}" class="cardButton">-</button> <label id="lblAmount">0</label> <button id="addButton" onclick="{addCardToCollection}" class="cardButton">+</button> </div>', 'card { display: grid; grid-gap: 10px; grid-template-columns: 200px 1fr 100px; grid-template-rows: 20px 20px 1fr 40px; grid-template-areas: "cardImage cardName cardMana" "cardImage cardType cardType" "cardImage cardText cardText" "cardImage cardActions cardActions"; border-bottom: 2px solid #3c3836; margin-top: 10px; margin-bottom: 10px; } card .cardButton,[data-is="card"] .cardButton{ color: green; padding-top: 0px; padding-bottom: 0px; padding-left: 5px; padding-right: 5px; border: 2px solid green; } card .cardImage,[data-is="card"] .cardImage{ grid-area: cardImage; background-color: white; } card .cardName,[data-is="card"] .cardName{ grid-area: cardName; } card .cardType,[data-is="card"] .cardType{ grid-area: cardType; } card .cardText,[data-is="card"] .cardText{ grid-area: cardText; } card .cardActions,[data-is="card"] .cardActions{ grid-area: cardActions; } card .cardMana,[data-is="card"] .cardMana{ grid-area: cardMana; text-align: right; margin-right: 10px; margin-top: 3px; }', '', function(opts) {
 
         this.getTagsForMana = function(card) {
 
@@ -68,6 +68,23 @@ riot.tag2('card', '<img id="image{this.opts.card.id}" class="cardImage" width="2
 
             this.update();
         });
+
+        this.on("update", function() {
+            DB.getAmountOfCard(this.opts.card.id, this.updateAmount);
+        });
+
+        this.updateAmount = function(amount) {
+            var lblAmount = this.root.querySelector("#lblAmount");
+            lblAmount.innerHTML = amount;
+        }.bind(this)
+
+        this.addCardToCollection = function() {
+            DB.cardAdjustAmount(this.opts.card, 1, this.update);
+        }.bind(this)
+
+        this.removeCardFromCollection = function() {
+            DB.cardAdjustAmount(this.opts.card, -1, this.update);
+        }.bind(this)
 });
 
 riot.tag2('collection-page', '<div class="box collectionContent1 scrollable"> <set-list callback="{onSetClicked}" sets="{this.opts.sets}"></set-list> </div> <div class="box collectionContent2 scrollable"> <card-list><card-list> </div>', 'collection-page { display: grid; grid-gap: 10px; grid-template-columns: 250px 1fr; grid-template-areas: "collectionContent1 collectionContent2" } collection-page .collectionContent1,[data-is="collection-page"] .collectionContent1{ grid-area: collectionContent1; } collection-page .collectionContent2,[data-is="collection-page"] .collectionContent2{ grid-area: collectionContent2; }', '', function(opts) {
@@ -105,7 +122,6 @@ riot.tag2('navigation', '<ul> <li> <a class="navLogo" href="#">UMTG</a> <li> <li
             var elements = document.getElementsByClassName("navElement");
             for (var i = 0; i < elements.length; ++i) {
                 elements[i].classList.remove("active");
-                console.log(elements[i].id == "nav"+page)
                 if (elements[i].id == "navPage" + page) {
                     elements[i].classList.add("active");
                 }
@@ -120,6 +136,7 @@ riot.tag2('navigation', '<ul> <li> <a class="navLogo" href="#">UMTG</a> <li> <li
         elements[0].classList.add("active")
     });
 });
+
 riot.tag2('search-page', '<card-search class="box content1" callback="{onSearchEntered}"></card-search> <card-list class="content2 scrollable" id="cardResult"></card-list> <div class="content3"><p>Content3</p></div> <div class="box footer"> <button>add</button> <button>remve</button> </div>', 'search-page { display: grid; height: 93vh; grid-gap: 10px; grid-template-columns: 300px 3fr 2fr; grid-template-rows: 1fr 80px; grid-template-areas: "content1 content2 content3" "footer footer footer"; } search-page .content1,[data-is="search-page"] .content1{ grid-area: content1; } search-page .content2,[data-is="search-page"] .content2{ grid-area: content2; } search-page .content3,[data-is="search-page"] .content3{ grid-area: content3; } search-page .footer,[data-is="search-page"] .footer{ grid-area: footer; }', '', function(opts) {
         riot.mount('card-search');
         riot.mount('card-list');

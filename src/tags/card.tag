@@ -5,7 +5,9 @@
     <h3 id="cardType{this.opts.card.id}" class="cardType">{this.opts.card.type_line}</h3>
     <p class="cardText">{this.opts.card.oracle_text}</p>
     <div class="cardActions">
-        <button>test</button>
+        <button id="removeButton" onClick="{removeCardFromCollection}" class="cardButton">-</button>
+        <label id="lblAmount">0</label>
+        <button id="addButton" onClick="{addCardToCollection}" class="cardButton">+</button>
     </div>
 
     <style>
@@ -14,7 +16,7 @@
             grid-gap: 10px;
             
             grid-template-columns: 200px 1fr 100px;
-            grid-template-rows: 20px 20px 1fr 20px;
+            grid-template-rows: 20px 20px 1fr 40px;
             grid-template-areas:    "cardImage cardName cardMana"
                                     "cardImage cardType cardType"
                                     "cardImage cardText cardText"
@@ -24,6 +26,14 @@
             margin-bottom: 10px;
         }
 
+        .cardButton {
+            color: green;
+            padding-top: 0px;
+            padding-bottom: 0px;
+            padding-left: 5px;
+            padding-right: 5px;
+            border: 2px solid green;
+        }
 
         .cardImage {
             grid-area: cardImage;
@@ -82,8 +92,26 @@
             var cardName = document.getElementById("cardMana" + this.opts.card.id);
             cardName.insertAdjacentHTML('beforeend', this.getTagsForMana(this.opts.card));
 
+
             this.update();
         });
+
+        this.on("update", function() {
+            DB.getAmountOfCard(this.opts.card.id, this.updateAmount);
+        });
+
+        updateAmount(amount) {
+            var lblAmount = this.root.querySelector("#lblAmount");
+            lblAmount.innerHTML = amount;
+        }
+
+        addCardToCollection() {
+            DB.cardAdjustAmount(this.opts.card, 1, this.update);
+        }
+
+        removeCardFromCollection() {
+            DB.cardAdjustAmount(this.opts.card, -1, this.update);
+        }
     </script>
 
 </card>
