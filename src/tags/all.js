@@ -38,7 +38,7 @@ riot.tag2('card-search', '<form class="cardSearchContainer" onsubmit="{onSearch}
         }.bind(this)
 });
 
-riot.tag2('card', '<img id="image{this.opts.card.id}" class="cardImage" width="200px"></img> <h2 id="cardName{this.opts.card.id}" class="cardName">{this.opts.card.name}</h2> <div id="cardMana{this.opts.card.id}" class="cardMana"></div> <h3 id="cardType{this.opts.card.id}" class="cardType">{this.opts.card.type_line}</h3> <p class="cardText">{this.opts.card.oracle_text}</p> <div class="cardActions"> <button id="removeButton" onclick="{removeCardFromCollection}" class="cardButton">-</button> <label id="lblAmount">0</label> <button id="addButton" onclick="{addCardToCollection}" class="cardButton">+</button> </div>', 'card { display: grid; grid-gap: 10px; grid-template-columns: 200px 1fr 100px; grid-template-rows: 20px 20px 1fr 40px; grid-template-areas: "cardImage cardName cardMana" "cardImage cardType cardType" "cardImage cardText cardText" "cardImage cardActions cardActions"; border-bottom: 2px solid #3c3836; margin-top: 10px; margin-bottom: 10px; } card .cardButton,[data-is="card"] .cardButton{ color: green; padding-top: 0px; padding-bottom: 0px; padding-left: 5px; padding-right: 5px; border: 2px solid green; } card .cardImage,[data-is="card"] .cardImage{ grid-area: cardImage; background-color: white; } card .cardName,[data-is="card"] .cardName{ grid-area: cardName; } card .cardType,[data-is="card"] .cardType{ grid-area: cardType; } card .cardText,[data-is="card"] .cardText{ grid-area: cardText; } card .cardActions,[data-is="card"] .cardActions{ grid-area: cardActions; } card .cardMana,[data-is="card"] .cardMana{ grid-area: cardMana; text-align: right; margin-right: 10px; margin-top: 3px; }', '', function(opts) {
+riot.tag2('card', '<img id="image{this.opts.card.id}" class="cardImage" width="200px"></img> <h2 id="cardName{this.opts.card.id}" class="cardName">{this.opts.card.name}</h2> <div id="cardMana{this.opts.card.id}" class="cardMana"></div> <h3 id="cardType{this.opts.card.id}" class="cardType">{this.opts.card.type_line}</h3> <p class="cardText">{this.opts.card.oracle_text}</p> <div class="cardActions"> <button id="removeButton" onclick="{removeCardFromCollection}" class="cardButton">-</button> <label id="lblAmount">0</label> <button id="addButton" onclick="{addCardToCollection}" class="cardButton">+</button> <button id="btnAddToDeck" onclick="{addCardToDeck}" class="cardButton">add to deck</button> </div>', 'card { display: grid; grid-gap: 10px; grid-template-columns: 200px 1fr 100px; grid-template-rows: 20px 20px 1fr 40px; grid-template-areas: "cardImage cardName cardMana" "cardImage cardType cardType" "cardImage cardText cardText" "cardImage cardActions cardActions"; border-bottom: 2px solid #3c3836; margin-top: 10px; margin-bottom: 10px; } card .cardButton,[data-is="card"] .cardButton{ color: green; padding-top: 0px; padding-bottom: 0px; padding-left: 5px; padding-right: 5px; border: 2px solid green; } card .cardImage,[data-is="card"] .cardImage{ grid-area: cardImage; background-color: white; } card .cardName,[data-is="card"] .cardName{ grid-area: cardName; } card .cardType,[data-is="card"] .cardType{ grid-area: cardType; } card .cardText,[data-is="card"] .cardText{ grid-area: cardText; } card .cardActions,[data-is="card"] .cardActions{ grid-area: cardActions; } card .cardMana,[data-is="card"] .cardMana{ grid-area: cardMana; text-align: right; margin-right: 10px; margin-top: 3px; }', '', function(opts) {
 
         this.getTagsForMana = function(card) {
 
@@ -113,6 +113,29 @@ riot.tag2('collection-page', '<div class="box collectionContent1 scrollable"> <s
             this.showSet(set);
         }.bind(this)
 
+});
+
+riot.tag2('decks-page', '<div class="box scrollable"> <label tabindex="0" onclick="{onClick(d)}" each="{d in this.decks}">{d.name}</label> </div> <div class="box scrollable"> <card-list></card-list> </div>', 'decks-page { display: grid; grid-gap: 10px; grid-template-columns: 250px 1fr; }', 'class="fullHeight"', function(opts) {
+        this.decks = []
+        this.on('mount', function() {
+            this.decks = DECK.getDecks(this.setDecks);
+        });
+
+        this.setDecks = function(decks) {
+            this.decks = decks;
+        }.bind(this);
+
+        this.onClick = function(deck) {
+            return function(e) {
+                var cards = []
+                var cardList = this.parent.tags['card-list'];
+                DECK.getCardsOfDeck(deck.name, function(card) {
+                    cards.push(card);
+                    cardList.opts.cards = cards;
+                    cardList.update();
+                });
+            }
+        }.bind(this)
 });
 
 riot.tag2('navigation', '<ul> <li> <a class="navLogo" href="#">UMTG</a> <li> <li id="navPage{pageKey}" class="navElement" each="{pageKey in this.opts.pages}" id="nav{pageKey}" onclick="{parent.onClick(pageKey)}"> <a href="#">{pageKey}</a> </li> </ul>', 'navigation .navLogo,[data-is="navigation"] .navLogo{ color: lightgreen; font-weight: bold; }', 'class="header"', function(opts) {

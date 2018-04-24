@@ -12,6 +12,7 @@
   "author": "fackler_m",
   "license": "ISC",
   "dependencies": {
+    "async": "^2.6.0",
     "electron": "^1.8.4",
     "jquery": "^3.3.1",
     "riot": "^3.9.1",

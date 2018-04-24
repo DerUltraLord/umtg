@@ -8,6 +8,7 @@
         <button id="removeButton" onClick="{removeCardFromCollection}" class="cardButton">-</button>
         <label id="lblAmount">0</label>
         <button id="addButton" onClick="{addCardToCollection}" class="cardButton">+</button>
+        <button id="btnAddToDeck" onClick="{addCardToDeck}" class="cardButton">add to deck</button>
     </div>
 
     <style>

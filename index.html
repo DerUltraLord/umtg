@@ -11,6 +11,7 @@
         </script>
 
         <script src="src/db.js"></script>
+        <script src="src/deck.js"></script>
         <script src="src/scryfall.js"></script>
 
         <script> if (window.module) module = window.module; </script>
@@ -47,6 +48,7 @@
             <div class="content">
                 <search-page show="{state.currentPage=='search'}" ></search-page>
                 <collection-page show="{state.currentPage=='collection'}"></collection-page>
+                <decks-page show="{state.currentPage=='decks'}"></decks-page>
                 <settings-page show="{state.currentPage=='settings'}"></settings-page>
                 <about-page show="{state.currentPage=='about'}"></settings-page>
             </div>
@@ -55,11 +57,12 @@
 
             <script>
                 var state = {
-                    'pages': ["search", "collection", "settings", "about"],
+                    'pages': ["search", "collection", "decks", "settings", "about"],
                     'currentPage': "search",
                     'pageInstances': {
                         "search": null,
                         "collection": null,
+                        "decks": null,
                         "settings": null,
                         "about": null,
                     }
@@ -78,6 +81,7 @@
                 riot.mount('card-list');
                 state.pageInstances['search'] = riot.mount('search-page')[0];
                 state.pageInstances['collection'] = riot.mount('collection-page')[0];
+                state.pageInstances['decks'] = riot.mount('decks-page')[0];
                 state.pageInstances['settings'] = riot.mount('settings-page')[0];
                 state.pageInstances['about'] = riot.mount('about-page')[0];
                 riot.mount('navigation', { onPageSelected: onPageSelected });
