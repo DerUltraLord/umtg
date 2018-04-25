@@ -7,12 +7,12 @@
         </script>
 
         <script>
-            var jQuery = require('jquery'); var $ = jQuery; var riot = require('riot');
+            var riot = require('riot');
+            var db = require('./src/db.js');
+            var deck = require('./src/deck.js');
+            var scry = require('./src/scryfall.js');
+            db.init('test.db');
         </script>
-
-        <script src="src/db.js"></script>
-        <script src="src/deck.js"></script>
-        <script src="src/scryfall.js"></script>
 
         <script> if (window.module) module = window.module; </script>
 

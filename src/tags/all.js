@@ -70,7 +70,7 @@ riot.tag2('card', '<img id="image{this.opts.card.id}" class="cardImage" width="2
         });
 
         this.on("update", function() {
-            DB.getAmountOfCard(this.opts.card.id, this.updateAmount);
+            db.getAmountOfCard(this.opts.card.id, this.updateAmount);
         });
 
         this.updateAmount = function(amount) {
@@ -79,11 +79,11 @@ riot.tag2('card', '<img id="image{this.opts.card.id}" class="cardImage" width="2
         }.bind(this)
 
         this.addCardToCollection = function() {
-            DB.cardAdjustAmount(this.opts.card, 1, this.update);
+            db.cardAdjustAmount(this.opts.card, 1, this.update);
         }.bind(this)
 
         this.removeCardFromCollection = function() {
-            DB.cardAdjustAmount(this.opts.card, -1, this.update);
+            db.cardAdjustAmount(this.opts.card, -1, this.update);
         }.bind(this)
 });
 
@@ -91,7 +91,7 @@ riot.tag2('collection-page', '<div class="box collectionContent1 scrollable"> <s
 
 
         this.on('update', function() {
-            scryfallGetSets(this.onSets);
+            scry.scryfallGetSets(this.onSets);
         });
 
         this.onSets = function(res) {
@@ -101,7 +101,7 @@ riot.tag2('collection-page', '<div class="box collectionContent1 scrollable"> <s
         }.bind(this)
 
         this.showSet = function(set) {
-            $.getJSON(set.search_uri, this.onSet);
+            getJSON(set.search_uri, this.onSet);
         }.bind(this)
 
         this.onSet = function(res) {
@@ -118,18 +118,18 @@ riot.tag2('collection-page', '<div class="box collectionContent1 scrollable"> <s
 riot.tag2('decks-page', '<div class="box scrollable"> <label tabindex="0" onclick="{onClick(d)}" each="{d in this.decks}">{d.name}</label> </div> <div class="box scrollable"> <card-list></card-list> </div>', 'decks-page { display: grid; grid-gap: 10px; grid-template-columns: 250px 1fr; }', 'class="fullHeight"', function(opts) {
         this.decks = []
         this.on('mount', function() {
-            this.decks = DECK.getDecks(this.setDecks);
+            this.decks = deck.getDecks(this.setDecks);
         });
 
         this.setDecks = function(decks) {
             this.decks = decks;
         }.bind(this);
 
-        this.onClick = function(deck) {
+        this.onClick = function(d) {
             return function(e) {
                 var cards = []
                 var cardList = this.parent.tags['card-list'];
-                DECK.getCardsOfDeck(deck.name, function(card) {
+                deck.getCardsOfDeck(d.name, function(card) {
                     cards.push(card);
                     cardList.opts.cards = cards;
                     cardList.update();
@@ -165,14 +165,13 @@ riot.tag2('search-page', '<card-search class="box content1" callback="{onSearchE
         riot.mount('card-list');
 
         this.onSearchEntered = function(searchText) {
-
-            res = $.getJSON("https://api.scryfall.com/cards/search?order=cmc&q=" + searchText, this.onDataAvailable);
-            res.fail(this.onDataNotAvailable);
+            scry.search(searchText, this.onDataAvailable, this.onDataNotAvailable)
 
         }.bind(this)
 
-        this.onDataAvailable = function() {
-            this.tags['card-list'].trigger('data_loaded', res.responseJSON.data);
+        this.onDataAvailable = function(data) {
+            console.log(data);
+            this.tags['card-list'].trigger('data_loaded', data.data);
 
         }.bind(this)
 

@@ -4,7 +4,7 @@
   "description": "Magic The Gathering Tool",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "./node_modules/mocha/bin/mocha --watch || true",
     "start": "electron main.js",
     "watch": "riot -w src/tags src/tags/all.js",
     "postinstall": "electron-builder install-app-deps"
@@ -24,6 +24,8 @@
     "gulp": "^3.9.1",
     "gulp-inject": "^4.3.2",
     "gulp-svgmin": "^1.2.4",
-    "gulp-svgstore": "^6.1.1"
+    "gulp-svgstore": "^6.1.1",
+    "mocha": "^5.1.1",
+    "sinon": "^4.5.0"
   }
 }

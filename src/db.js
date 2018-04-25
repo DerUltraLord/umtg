@@ -1,20 +1,21 @@
 var sqlite3 = require('sqlite3').verbose();
-var db = new sqlite3.Database('test.db');
 const async = require('async');
 
-db.serialize(function() {
-    db.run("CREATE TABLE Card (id TEXT PRIMARY KEY, jsonString TEXT, amount INTEGER, foilAmount INTEGER)");
-});
+var db = null;
 
-
-function DB () {
+exports.init = function(name) {
+    db = new sqlite3.Database(name);
+    db.serialize(function() {
+        db.run("CREATE TABLE IF NOT EXISTS Card (id TEXT PRIMARY KEY, jsonString TEXT, amount INTEGER, foilAmount INTEGER)");
+    });
 }
 
-DB.dbString = function(s) {
+
+dbString = function(s) {
     return s.replace("'", "''");
 }
 
-DB.cardAdd = function(card, amount) {
+exports.cardAdd = function(card, amount) {
     console.log("Add card " + card.name + " to db with id " + card.id);
     var stmt = db.prepare("INSERT INTO Card VALUES(?, ?, ?, ?)");
     // TODO: foil
@@ -23,15 +24,15 @@ DB.cardAdd = function(card, amount) {
 }
 
 
-DB.cardExistsByName = function(cardname, callback) {
+exports.cardExistsByName = function(cardname, callback) {
     function stmtFinished(err, res) {
         callback(res[0].ex > 0);
     }
 
-    db.all("SELECT EXISTS(SELECT * FROM Card where json_extract(Card.jsonString, '$.name') = '" + DB.dbString(cardname) + "') as ex", stmtFinished);
+    db.all("SELECT EXISTS(SELECT * FROM Card where json_extract(Card.jsonString, '$.name') = '" + dbString(cardname) + "') as ex", stmtFinished);
 }
 
-DB.cardAdjustAmount = function(card, amount, callback) {
+exports.cardAdjustAmount = function(card, amount, callback) {
 
     function stmtFinished(err, res) {
 
@@ -55,7 +56,7 @@ DB.cardAdjustAmount = function(card, amount, callback) {
 
 }
 
-DB.getAmountOfCard = function(id, callback) {
+exports.getAmountOfCard = function(id, callback) {
     
     // TODO: foil
     //
@@ -72,22 +73,22 @@ DB.getAmountOfCard = function(id, callback) {
 
 }
 
-DB.getCardByName = function(name, callback) {
+exports.getCardByName = function(name, callback) {
     function stmtFinished(err, res) {
         if (res.length == 1) {
             callback(JSON.parse(res[0].jsonString));
         }
     }
 
-    db.all("SELECT * FROM Card where json_extract(Card.jsonString, '$.name') = '" + DB.dbString(name) + "'", stmtFinished);
+    db.all("SELECT * FROM Card where json_extract(Card.jsonString, '$.name') = '" + dbString(name) + "'", stmtFinished);
 }
 
-DB.cardInDbByName = function(name, callback) {
+exports.cardInDbByName = function(name, callback) {
 
     function stmtFinished(err, res) {
         //callback(res.length > 0);
     }
-    db.all("SELECT * FROM Card where json_extract(Card.jsonString, '$.name') = '" + DB.dbString(name) + "'", stmtFinished);
+    db.all("SELECT * FROM Card where json_extract(Card.jsonString, '$.name') = '" + dbString(name) + "'", stmtFinished);
 }
 
 

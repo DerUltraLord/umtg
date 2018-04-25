@@ -98,7 +98,7 @@
         });
 
         this.on("update", function() {
-            DB.getAmountOfCard(this.opts.card.id, this.updateAmount);
+            db.getAmountOfCard(this.opts.card.id, this.updateAmount);
         });
 
         updateAmount(amount) {
@@ -107,11 +107,11 @@
         }
 
         addCardToCollection() {
-            DB.cardAdjustAmount(this.opts.card, 1, this.update);
+            db.cardAdjustAmount(this.opts.card, 1, this.update);
         }
 
         removeCardFromCollection() {
-            DB.cardAdjustAmount(this.opts.card, -1, this.update);
+            db.cardAdjustAmount(this.opts.card, -1, this.update);
         }
     </script>
 

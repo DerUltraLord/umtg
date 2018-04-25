@@ -39,14 +39,13 @@
         riot.mount('card-list'); 
 
         onSearchEntered(searchText) {
-            
-            res = $.getJSON("https://api.scryfall.com/cards/search?order=cmc&q=" + searchText, this.onDataAvailable);
-            res.fail(this.onDataNotAvailable);
+            scry.search(searchText, this.onDataAvailable, this.onDataNotAvailable)
             
         }
 
-        onDataAvailable() {
-            this.tags['card-list'].trigger('data_loaded', res.responseJSON.data);
+        onDataAvailable(data) {
+            console.log(data);
+            this.tags['card-list'].trigger('data_loaded', data.data);
             
         }
 

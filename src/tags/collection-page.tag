@@ -8,8 +8,7 @@
 
     <style>
         collection-page {
-            display: grid;
-            grid-gap: 10px;
+            display: grid; grid-gap: 10px;
             grid-template-columns: 250px 1fr;
             grid-template-areas: "collectionContent1 collectionContent2"
         }
@@ -30,7 +29,7 @@
 
 
         this.on('update', function() {
-            scryfallGetSets(this.onSets);
+            scry.scryfallGetSets(this.onSets);
         });
 
         onSets(res) {
@@ -40,7 +39,7 @@
         }
 
         showSet(set) {
-            $.getJSON(set.search_uri, this.onSet);
+            getJSON(set.search_uri, this.onSet);
         }
 
         onSet(res) {

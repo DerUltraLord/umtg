@@ -1,14 +1,11 @@
+var https = require('https');
 
-
-function scryfallGetSets(successCallback) {
-    res = $.getJSON("https://api.scryfall.com/sets", successCallback);
+exports.scryfallGetSets = function(successCallback) {
+    getJSON("https://api.scryfall.com/sets", successCallback);
 }
 
 
-function SCRYFALL () {
-}
-
-SCRYFALL.getCardByName = function(name, successCallback) {
+exports.getCardByName = function(name, successCallback) {
     function onResponse(res) {
         if (res.total_cards != 1) {
             throw "Error getting card " + name + " from scryfall";
@@ -17,5 +14,31 @@ SCRYFALL.getCardByName = function(name, successCallback) {
         }
 
     }
-    res = $.getJSON("https://api.scryfall.com/cards/search?q=%21\"" + name.replace(" ", "+") + "\"", onResponse);
+    getJSON("https://api.scryfall.com/cards/search?q=%21\"" + name.replace(" ", "+") + "\"", onResponse);
+}
+
+exports.search = function(searchText, success, fail) {
+    getJSON("https://api.scryfall.com/cards/search?order=cmc&q=" + searchText, success);
+}
+
+
+getJSON = function(url, callback, fail) {
+    
+    res = https.get(url, res => {
+        res.setEncoding("utf8");
+        let body = "";
+        res.on("data", data => {
+            body += data;
+        });
+        res.on("end", () => {
+            body = JSON.parse(body);
+            callback(body);
+        });
+        if (fail) {
+            res.on("error", (e) => {
+                fail();
+            });
+        }
+    });
+
 }

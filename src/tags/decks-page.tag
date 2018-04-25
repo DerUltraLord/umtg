@@ -17,18 +17,18 @@
     <script>
         this.decks = []
         this.on('mount', function() {
-            this.decks = DECK.getDecks(this.setDecks);
+            this.decks = deck.getDecks(this.setDecks);
         });
 
         setDecks(decks) {
             this.decks = decks;
         };
 
-        onClick(deck) {
+        onClick(d) {
             return function(e) {
                 var cards = []
                 var cardList = this.parent.tags['card-list'];
-                DECK.getCardsOfDeck(deck.name, function(card) {
+                deck.getCardsOfDeck(d.name, function(card) {
                     cards.push(card);
                     cardList.opts.cards = cards;
                     cardList.update();
