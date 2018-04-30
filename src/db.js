@@ -38,7 +38,7 @@ exports.cardAdjustAmount = function(card, amount, callback) {
 
         if (res.length == 0) {
             if (amount > 0) {
-                DB.cardAdd(card, 1);
+                exports.cardAdd(card, 1);
             }
         } else {
             var newAmount = res[0].amount + amount

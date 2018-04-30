@@ -66,6 +66,7 @@
         }
     </style>
     <script>
+        var db = require("./src/db.js");
 
         getTagsForMana(card) {
 
