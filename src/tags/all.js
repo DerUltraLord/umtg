@@ -97,7 +97,9 @@ riot.tag2('collection-page', '<div class="box collectionContent1 scrollable"> <s
         this.onSets = function(res) {
             opts.sets = res.data;
             this.tags['set-list'].update();
+
             this.showSet(opts.sets[0]);
+            console.log(opts.sets[0]);
         }.bind(this)
 
         this.showSet = function(set) {
@@ -182,7 +184,15 @@ riot.tag2('search-page', '<card-search class="box content1" callback="{onSearchE
 
 });
 
-riot.tag2('set-list', '<set tabindex="0" onclick="{onSetClick(s)}" each="{s in this.opts.sets}" set="{s}"></set>', 'set-list set:focus,[data-is="set-list"] set:focus{ background-color: black; }', '', function(opts) {
+riot.tag2('set-list', '<set tabindex="0" if="{this.setTypes[s.set_type]}" onclick="{onSetClick(s)}" each="{s in this.opts.sets}" set="{s}"></set>', 'set-list set:focus,[data-is="set-list"] set:focus{ background-color: black; }', '', function(opts) {
+
+        this.setTypes = null;
+
+        this.on('update', function() {
+            console.log("set list update");
+            this.setTypes = document.getElementsByTagName('settings-page')[0]._tag.settings.setTypes;
+        });
+
         this.onSetClick = function(set) {
             var callback = this.opts.callback;
             return function(e) {
@@ -194,5 +204,67 @@ riot.tag2('set-list', '<set tabindex="0" onclick="{onSetClick(s)}" each="{s in t
 riot.tag2('set', '<img riot-src="{this.opts.set.icon_svg_uri}" width="16px" height="16px"></img> <label>{this.opts.set.name}</label>', 'set { display: grid; grid-gap: 0px; grid-template-columns: 20px 1fr; } set img,[data-is="set"] img{ width: 16px; height: 16px; background-color: white; } set label,[data-is="set"] label{ font-size: 50%; border-bottom: 1px solid var(--color-brown); }', '', function(opts) {
 });
 
-riot.tag2('settings-page', '<p>Settings Page</p>', '', '', function(opts) {
+riot.tag2('settings-page', '<p>Settings Page</p> <ul> <li each="{value, name in settings.setTypes}"> <input onclick="{onSetTypeClicked()}" type="checkbox" riot-value="{name}" checked="{value}">{name}</input> </li> <ul>', '', '', function(opts) {
+        var fs = require('fs');
+        var settingsPath = "/home/maximilian/.umtg";
+        var settingsFile = settingsPath + "/settings.json";
+
+        this.settings = {
+            "setTypes": {
+                core: true,
+                expansion: true,
+                masters: true,
+                masterpiece: false,
+                from_the_vault: false,
+                spellbook: false,
+                premium_deck: false,
+                duel_deck: false,
+                commander: false,
+                planechase: false,
+                conspiracy: false,
+                archenemy: false,
+                vanguard: false,
+                funny: false,
+                starter: false,
+                box: false,
+                promo: false,
+                token: false,
+                memorabilia: false
+            }
+        };
+
+        this.on('update', function() {
+            console.log("update");
+            console.log(this.settings);
+        });
+
+        this.on('mount', function() {
+            this.loadSettingsFromFile();
+            this.update();
+        });
+
+        this.onSetTypeClicked = function() {
+            return function(e) {
+                this.settings.setTypes[e.srcElement.value] = e.srcElement.checked;
+                this.settingsToFile();
+            }
+        }.bind(this)
+
+        this.settingsToFile = function() {
+            fs.mkdir(settingsPath, function(err) {
+            });
+            fs.writeFile(settingsFile, JSON.stringify(this.settings, null, 4), function(err) {
+                console.log(err);
+            });
+        }.bind(this)
+
+        this.loadSettingsFromFile = function() {
+            var settings = this.settings;
+            fs.readFile(settingsFile, 'ascii', this.setSettings);
+        }.bind(this)
+
+        this.setSettings = function(err, data) {
+            this.settings = JSON.parse(data);
+        }.bind(this)
+
 });

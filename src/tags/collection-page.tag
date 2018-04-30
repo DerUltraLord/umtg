@@ -35,7 +35,9 @@
         onSets(res) {
             opts.sets = res.data;
             this.tags['set-list'].update();
+            // TODO: consider visible set types
             this.showSet(opts.sets[0]);
+            console.log(opts.sets[0]);
         }
 
         showSet(set) {
