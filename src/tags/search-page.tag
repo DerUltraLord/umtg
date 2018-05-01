@@ -1,7 +1,6 @@
 <search-page>
     <card-search class="box content1" callback={onSearchEntered}></card-search>
     <card-list class="content2 scrollable" id="cardResult"></card-list>
-    <div class="content3"><p>Content3</p></div>
     <div class="box footer">
         <button>add</button>
         <button>remve</button>
@@ -12,7 +11,7 @@
             display: grid;
             height: 93vh;
             grid-gap: 10px;
-            grid-template-columns: 300px 3fr 2fr;
+            grid-template-columns: 300px 3fr;
             grid-template-rows: 1fr 80px;
             grid-template-areas: "content1 content2 content3" "footer footer footer";
         }
