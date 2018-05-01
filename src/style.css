@@ -1,6 +1,22 @@
 
 :root {
     --color-brown: #ebdbb2;
+    --color-background: #eeeeec;
+    --color-font-fg: black;
+    --color-header: #283f51;
+}
+
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    color: var(--color-font-fg);
+    margin-top: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-bottom: 0px;
+    
+    background-color: var(--color-background);
 }
 
 input {
@@ -15,60 +31,22 @@ input:focus {
   
 }
 
-ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: #333;
-}
-
-li {
-    float: left;
-}
-
-li a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-}
-
-/* Change the link color to #111 (black) on hover */
-
-li:hover {
-    background-color: #111;
-}
-
-li.active:hover {
-    background-color: green;
-}
-
-li.active {
-    background-color: green;
+p {
+    color: var(--color-font-fg);
 }
 
 h2 {
-    color: #ebdbb2;
+    color: var(--color-font-fg);
     margin-top: 0px;
     margin-bottom: 0px;
-    text-shadow: 1px 1px black;
 }
 
 h3 {
+    color: var(--color-font-fg);
     margin-top: 0px;
     margin-bottom: 0px;
 }
 
-body {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    color: white;
-    
-    background-color: #282828;
-}
 
 .fullHeight {
     height: 100%;
@@ -80,7 +58,6 @@ body {
 
 .wrapper {
     display: grid;
-    grid-gap: 10px;
     grid-template-columns: 1fr;
     grid-template-rows: 45px 1fr;
     grid-template-areas: "header" "content";
@@ -89,14 +66,9 @@ body {
 
 .box {
     border: 2px solid #3c3836;
-    color: #fff;
     border-radius: 5px;
-    padding: 10px;
 }
 
-.header {
-    background-color: #426281;
-}
 
 .icon24 {
    width: 24px;
@@ -110,18 +82,25 @@ body {
 }
 
 label {
-    color: #ebdbb2;
+    color: var(--color-font-fg);
     font-size: 80%;
 }
 
 button {
-    background-color: transparent;
-    color: #cc241d;
-    border: 2px solid #cc241d;
-    text-align: center;
-    padding: 10px 16px;
+    background-image: linear-gradient(to bottom, #647a9c, var(--color-header));
     border-radius: 5px;
+    text-shadow: 1px 1px 0px #000000;
+    color: var(--color-background);
+    padding: 5px 10px 5px 10px;
+    text-decoration: none;
+    border: 1px solid black;
 }
+
+button:hover {
+    background-image: linear-gradient(to bottom, #436291, #41637a);
+    text-decoration: none;
+}
+
 
 button:focus {
     outline: none;

@@ -31,7 +31,7 @@ riot.tag2('card-list', '<card tabindex="0" onclick="{onClick(c)}" each="{c in th
 
 });
 
-riot.tag2('card-search', '<form class="cardSearchContainer" onsubmit="{onSearch}"> <label>Name:</label> <input placeholder="Name or Scryfall search" type="text" ref="searchName"></input> <label>Type:</label> <input placeholder="Creature" ref="searchType"></input> <label>Text:</label> <input placeholder="Oracle Text" ref="searchText"></input> <label>Edition:</label> <input placeholder="XLN" ref="searchEdition"></input> <button id="searchButton">Search</Search> </form>', 'card-search .cardSearchContainer,[data-is="card-search"] .cardSearchContainer{ display: grid; grid-gap: 10px; grid-template-columns: 80px 1fr; }', '', function(opts) {
+riot.tag2('card-search', '<form class="cardSearchContainer" onsubmit="{onSearch}"> <label>Name:</label> <input placeholder="Name or Scryfall search" type="text" ref="searchName"></input> <label>Type:</label> <input placeholder="Creature" ref="searchType"></input> <label>Text:</label> <input placeholder="Oracle Text" ref="searchText"></input> <label>Edition:</label> <input placeholder="XLN" ref="searchEdition"></input> <div> <div> <button>Search</Search> </form>', 'card-search .cardSearchContainer,[data-is="card-search"] .cardSearchContainer{ display: grid; margin-top: 10px; margin-left: 10px; grid-gap: 10px; grid-template-columns: 60px 1fr; }', '', function(opts) {
         this.onSearch = function(e) {
             e.preventDefault();
 
@@ -43,7 +43,7 @@ riot.tag2('card-search', '<form class="cardSearchContainer" onsubmit="{onSearch}
         }.bind(this)
 });
 
-riot.tag2('card', '<img id="image{this.opts.card.id}" class="cardImage" width="200px"></img> <h2 id="cardName{this.opts.card.id}" class="cardName">{this.opts.card.name}</h2> <div id="cardMana{this.opts.card.id}" class="cardMana"></div> <h3 id="cardType{this.opts.card.id}" class="cardType">{this.opts.card.type_line}</h3> <p class="cardText">{this.opts.card.oracle_text}</p> <div class="cardActions"> <button id="removeButton" onclick="{removeCardFromCollection}" class="cardButton">-</button> <label id="lblAmount">0</label> <button id="addButton" onclick="{addCardToCollection}" class="cardButton">+</button> <button id="btnAddToDeck" onclick="{addCardToDeck}" class="cardButton">add to deck</button> </div>', 'card { display: grid; grid-gap: 10px; grid-template-columns: 200px 1fr 100px; grid-template-rows: 20px 20px 1fr 40px; grid-template-areas: "cardImage cardName cardMana" "cardImage cardType cardType" "cardImage cardText cardText" "cardImage cardActions cardActions"; border-bottom: 2px solid #3c3836; margin-top: 10px; margin-bottom: 10px; } card .cardButton,[data-is="card"] .cardButton{ color: green; padding-top: 0px; padding-bottom: 0px; padding-left: 5px; padding-right: 5px; border: 2px solid green; } card .cardImage,[data-is="card"] .cardImage{ grid-area: cardImage; background-color: white; } card .cardName,[data-is="card"] .cardName{ grid-area: cardName; } card .cardType,[data-is="card"] .cardType{ grid-area: cardType; } card .cardText,[data-is="card"] .cardText{ grid-area: cardText; } card .cardActions,[data-is="card"] .cardActions{ grid-area: cardActions; } card .cardMana,[data-is="card"] .cardMana{ grid-area: cardMana; text-align: right; margin-right: 10px; margin-top: 3px; }', '', function(opts) {
+riot.tag2('card', '<img id="image{this.opts.card.id}" class="cardImage" width="200px"></img> <h2 id="cardName{this.opts.card.id}" class="cardName">{this.opts.card.name}</h2> <div id="cardMana{this.opts.card.id}" class="cardMana"></div> <h3 id="cardType{this.opts.card.id}" class="cardType">{this.opts.card.type_line}</h3> <p class="cardText">{this.opts.card.oracle_text}</p> <div class="cardActions"> <button id="removeButton" onclick="{removeCardFromCollection}" class="cardButton">-</button> <label id="lblAmount">0</label> <button id="addButton" onclick="{addCardToCollection}" class="cardButton">+</button> <button id="btnAddToDeck" onclick="{addCardToDeck}" class="cardButton">add to deck</button> </div>', 'card { display: grid; grid-gap: 10px; grid-template-columns: 200px 1fr 100px; grid-template-rows: 20px 20px 1fr 40px; grid-template-areas: "cardImage cardName cardMana" "cardImage cardType cardType" "cardImage cardText cardText" "cardImage cardActions cardActions"; border-bottom: 2px solid #3c3836; margin-top: 10px; margin-bottom: 10px; } card .cardButton,[data-is="card"] .cardButton{ color: green; padding-top: 0px; padding-bottom: 0px; padding-left: 5px; padding-right: 5px; border: 2px solid green; } card .cardImage,[data-is="card"] .cardImage{ grid-area: cardImage; } card .cardName,[data-is="card"] .cardName{ grid-area: cardName; } card .cardType,[data-is="card"] .cardType{ grid-area: cardType; } card .cardText,[data-is="card"] .cardText{ grid-area: cardText; } card .cardActions,[data-is="card"] .cardActions{ grid-area: cardActions; } card .cardMana,[data-is="card"] .cardMana{ grid-area: cardMana; text-align: right; margin-right: 10px; margin-top: 3px; }', '', function(opts) {
         var db = require("./src/db.js");
 
         this.getTagsForMana = function(card) {
@@ -146,29 +146,29 @@ riot.tag2('decks-page', '<div class="box scrollable"> <label tabindex="0" onclic
         }.bind(this)
 });
 
-riot.tag2('navigation', '<ul> <li> <a class="navLogo" href="#">UMTG</a> <li> <li id="navPage{pageKey}" class="navElement" each="{pageKey in this.opts.pages}" id="nav{pageKey}" onclick="{parent.onClick(pageKey)}"> <a href="#">{pageKey}</a> </li> </ul>', 'navigation .navLogo,[data-is="navigation"] .navLogo{ color: lightgreen; font-weight: bold; }', 'class="header"', function(opts) {
-    this.onClick = function(page) {
-        return function(e) {
-            this.opts.onPageSelected(page)
-            var elements = document.getElementsByClassName("navElement");
-            for (var i = 0; i < elements.length; ++i) {
-                elements[i].classList.remove("active");
-                if (elements[i].id == "navPage" + page) {
-                    elements[i].classList.add("active");
+riot.tag2('navigation', '<ul> <li> <a class="navLogo" href="#">UMTG</a> <li> <li id="navPage{pageKey}" class="navElement" each="{pageKey in this.opts.pages}" id="nav{pageKey}" onclick="{parent.onClick(pageKey)}"> <a href="#">{pageKey}</a> </li> </ul>', 'navigation { background: linear-gradient(var(--color-header), black); color: white; } navigation ul,[data-is="navigation"] ul{ list-style-type: none; margin: 0; padding: 0; overflow: hidden; } navigation li,[data-is="navigation"] li{ float: left; } navigation a,[data-is="navigation"] a{ display: block; text-align: center; padding: 14px 16px; text-decoration: none; color: var(--color--background); } navigation li:hover,[data-is="navigation"] li:hover{ background-color: var(--color-background); color: var(--color-font-fg); } navigation li.active:hover,[data-is="navigation"] li.active:hover{ } navigation li.active,[data-is="navigation"] li.active{ background-color: var(--color-background); background: linear-gradient(var(--color-background), darkgray); color: var(--color-font-fg); } navigation .navLogo,[data-is="navigation"] .navLogo{ font-weight: bold; }', 'class="header"', function(opts) {
+        this.onClick = function(page) {
+            return function(e) {
+                this.opts.onPageSelected(page)
+                var elements = document.getElementsByClassName("navElement");
+                for (var i = 0; i < elements.length; ++i) {
+                    elements[i].classList.remove("active");
+                    if (elements[i].id == "navPage" + page) {
+                        elements[i].classList.add("active");
+                    }
+
                 }
 
             }
+        }.bind(this)
 
-        }
-    }.bind(this)
-
-    this.on("mount", function () {
-        var elements = document.getElementsByClassName("navElement");
-        elements[0].classList.add("active")
-    });
+        this.on("mount", function () {
+            var elements = document.getElementsByClassName("navElement");
+            elements[0].classList.add("active")
+        });
 });
 
-riot.tag2('search-page', '<card-search class="box content1" callback="{onSearchEntered}"></card-search> <card-list class="content2 scrollable" id="cardResult"></card-list> <div class="box footer"> <button>add</button> <button>remve</button> </div>', 'search-page { display: grid; height: 93vh; grid-gap: 10px; grid-template-columns: 300px 3fr; grid-template-rows: 1fr 80px; grid-template-areas: "content1 content2 content3" "footer footer footer"; } search-page .content1,[data-is="search-page"] .content1{ grid-area: content1; } search-page .content2,[data-is="search-page"] .content2{ grid-area: content2; } search-page .content3,[data-is="search-page"] .content3{ grid-area: content3; } search-page .footer,[data-is="search-page"] .footer{ grid-area: footer; }', '', function(opts) {
+riot.tag2('search-page', '<card-search class="content1" callback="{onSearchEntered}"></card-search> <card-list class="content2 scrollable" id="cardResult"></card-list> <div class="box footer"> <button>add</button> <button>remve</button> </div>', 'search-page { display: grid; height: 93vh; grid-gap: 10px; grid-template-columns: 300px 3fr; grid-template-rows: 1fr 80px; grid-template-areas: "content1 content2 content3" "footer footer footer"; } search-page .content1,[data-is="search-page"] .content1{ background: lightgray; grid-area: content1; } search-page .content2,[data-is="search-page"] .content2{ grid-area: content2; } search-page .content3,[data-is="search-page"] .content3{ grid-area: content3; } search-page .footer,[data-is="search-page"] .footer{ grid-area: footer; }', '', function(opts) {
         riot.mount('card-search');
         riot.mount('card-list');
 

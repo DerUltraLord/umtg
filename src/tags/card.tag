@@ -38,7 +38,6 @@
 
         .cardImage {
             grid-area: cardImage;
-            background-color: white;
         }
 
         .cardName {

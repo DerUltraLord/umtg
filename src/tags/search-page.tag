@@ -1,5 +1,5 @@
 <search-page>
-    <card-search class="box content1" callback={onSearchEntered}></card-search>
+    <card-search class="content1" callback={onSearchEntered}></card-search>
     <card-list class="content2 scrollable" id="cardResult"></card-list>
     <div class="box footer">
         <button>add</button>
@@ -17,6 +17,7 @@
         }
 
         .content1 {
+            background: lightgray;
             grid-area: content1;
         }
 

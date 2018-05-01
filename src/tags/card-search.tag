@@ -8,13 +8,17 @@
         <input placeholder="Oracle Text" ref="searchText"></input>
         <label>Edition:</label>
         <input placeholder="XLN" ref="searchEdition"></input>
-        <button id="searchButton">Search</Search>
+        <div>
+        <div>
+        <button>Search</Search>
     </form>
     <style>
         .cardSearchContainer {
             display: grid;
+            margin-top: 10px;
+            margin-left: 10px;
             grid-gap: 10px;
-            grid-template-columns: 80px 1fr;
+            grid-template-columns: 60px 1fr;
         }
     </style>
     <script>
