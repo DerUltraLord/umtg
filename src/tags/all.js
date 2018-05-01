@@ -31,10 +31,15 @@ riot.tag2('card-list', '<card tabindex="0" onclick="{onClick(c)}" each="{c in th
 
 });
 
-riot.tag2('card-search', '<form class="cardSearchContainer" onsubmit="{onSearch}"> <label>Name:</label> <input placeholder="Name or Scryfall search" type="text" ref="searchString"></input> <label>Type:</label> <input placeholder="Creature"></input> <label>Text:</label> <input placeholder="Oracle Text"></input> <label>Edition:</label> <input placeholder="XLN"></input> <button id="searchButton">Search</Search> </form>', 'card-search .cardSearchContainer,[data-is="card-search"] .cardSearchContainer{ display: grid; grid-gap: 10px; grid-template-columns: 80px 1fr; }', '', function(opts) {
+riot.tag2('card-search', '<form class="cardSearchContainer" onsubmit="{onSearch}"> <label>Name:</label> <input placeholder="Name or Scryfall search" type="text" ref="searchName"></input> <label>Type:</label> <input placeholder="Creature" ref="searchType"></input> <label>Text:</label> <input placeholder="Oracle Text" ref="searchText"></input> <label>Edition:</label> <input placeholder="XLN" ref="searchEdition"></input> <button id="searchButton">Search</Search> </form>', 'card-search .cardSearchContainer,[data-is="card-search"] .cardSearchContainer{ display: grid; grid-gap: 10px; grid-template-columns: 80px 1fr; }', '', function(opts) {
         this.onSearch = function(e) {
             e.preventDefault();
-            this.opts.callback(this.refs.searchString.value);
+
+            filter = scry.getSearchFilter(this.refs.searchName.value,
+                                          this.refs.searchType.value,
+                                          this.refs.searchText.value,
+                                          this.refs.searchEdition.value)
+            this.opts.callback(filter);
         }.bind(this)
 });
 
@@ -167,8 +172,9 @@ riot.tag2('search-page', '<card-search class="box content1" callback="{onSearchE
         riot.mount('card-search');
         riot.mount('card-list');
 
-        this.onSearchEntered = function(searchText) {
-            scry.search(searchText, this.onDataAvailable, this.onDataNotAvailable)
+        this.onSearchEntered = function(filter) {
+
+            scry.searchByFilter(filter, this.onDataAvailable, this.onDataNotAvailable);
 
         }.bind(this)
 

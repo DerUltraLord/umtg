@@ -37,8 +37,9 @@
         riot.mount('card-search');
         riot.mount('card-list'); 
 
-        onSearchEntered(searchText) {
-            scry.search(searchText, this.onDataAvailable, this.onDataNotAvailable)
+        onSearchEntered(filter) {
+            //scry.search(searchText, this.onDataAvailable, this.onDataNotAvailable)
+            scry.searchByFilter(filter, this.onDataAvailable, this.onDataNotAvailable);
             
         }
 

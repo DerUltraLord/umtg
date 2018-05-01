@@ -25,7 +25,6 @@ describe('deck.js', function() {
     });
 
     it('getDecks()', function() {
-        assert.equal(1, 1);
         deck.getDecks(function(res) {
             assert.equal(res[0].name, 'test1.txt');
             assert.equal(res[1].name, 'test2.txt');
