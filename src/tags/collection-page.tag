@@ -1,21 +1,22 @@
 <collection-page>
-    <div class="box collectionContent1 scrollable">
+    <div class="collectionContent1 scrollable">
         <set-list callback={onSetClicked} sets={this.opts.sets}></set-list>
     </div>
-    <div class="box collectionContent2 scrollable">
+    <div class="collectionContent2 scrollable">
         <card-list><card-list>
     </div>
 
     <style>
         collection-page {
             display: grid; grid-gap: 10px;
-            grid-template-columns: 250px 1fr;
+            grid-template-columns: 300px 1fr;
             grid-template-areas: "collectionContent1 collectionContent2"
         }
 
 
         .collectionContent1 {
             grid-area: collectionContent1;
+            background-color: var(--color-background-two);
         }
 
         .collectionContent2 {

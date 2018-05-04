@@ -93,7 +93,7 @@ riot.tag2('card', '<img id="image{this.opts.card.id}" class="cardImage" width="2
         }.bind(this)
 });
 
-riot.tag2('collection-page', '<div class="box collectionContent1 scrollable"> <set-list callback="{onSetClicked}" sets="{this.opts.sets}"></set-list> </div> <div class="box collectionContent2 scrollable"> <card-list><card-list> </div>', 'collection-page { display: grid; grid-gap: 10px; grid-template-columns: 250px 1fr; grid-template-areas: "collectionContent1 collectionContent2" } collection-page .collectionContent1,[data-is="collection-page"] .collectionContent1{ grid-area: collectionContent1; } collection-page .collectionContent2,[data-is="collection-page"] .collectionContent2{ grid-area: collectionContent2; }', '', function(opts) {
+riot.tag2('collection-page', '<div class="collectionContent1 scrollable"> <set-list callback="{onSetClicked}" sets="{this.opts.sets}"></set-list> </div> <div class="collectionContent2 scrollable"> <card-list><card-list> </div>', 'collection-page { display: grid; grid-gap: 10px; grid-template-columns: 300px 1fr; grid-template-areas: "collectionContent1 collectionContent2" } collection-page .collectionContent1,[data-is="collection-page"] .collectionContent1{ grid-area: collectionContent1; background-color: var(--color-background-two); } collection-page .collectionContent2,[data-is="collection-page"] .collectionContent2{ grid-area: collectionContent2; }', '', function(opts) {
 
 
         this.on('update', function() {
@@ -191,7 +191,7 @@ riot.tag2('search-page', '<card-search class="content1" callback="{onSearchEnter
 
 });
 
-riot.tag2('set-list', '<set tabindex="0" if="{this.setTypes[s.set_type]}" onclick="{onSetClick(s)}" each="{s in this.opts.sets}" set="{s}"></set>', 'set-list set:focus,[data-is="set-list"] set:focus{ background-color: black; }', '', function(opts) {
+riot.tag2('set-list', '<set tabindex="0" if="{this.setTypes[s.set_type]}" onclick="{onSetClick(s)}" each="{s in this.opts.sets}" set="{s}"></set>', 'set-list set:focus,[data-is="set-list"] set:focus{ border: 1px solid black; outline: 0; }', '', function(opts) {
 
         this.setTypes = null;
 
@@ -208,7 +208,7 @@ riot.tag2('set-list', '<set tabindex="0" if="{this.setTypes[s.set_type]}" onclic
         }.bind(this)
 });
 
-riot.tag2('set', '<img riot-src="{this.opts.set.icon_svg_uri}" width="16px" height="16px"></img> <label>{this.opts.set.name}</label>', 'set { display: grid; grid-gap: 0px; grid-template-columns: 20px 1fr; } set img,[data-is="set"] img{ width: 16px; height: 16px; background-color: white; } set label,[data-is="set"] label{ font-size: 50%; border-bottom: 1px solid var(--color-brown); }', '', function(opts) {
+riot.tag2('set', '<img riot-src="{this.opts.set.icon_svg_uri}"></img> <div class="progress" data-label="{this.opts.set.name}"> <span class="value" style="width:20%;"></span> </div>', 'set { display: grid; grid-gap: 0px; grid-template-columns: 40px 1fr; height: 30px; } set img,[data-is="set"] img{ width: 20px; height: 20px; margin-left: 5px; } set .progress,[data-is="set"] .progress{ margin-top: 1px; height: 29px; width: 100%; background-color: #c9c9c9; position: relative; } set .progress:before,[data-is="set"] .progress:before{ content: attr(data-label); position: absolute; text-align: left; top: 5px; left: 0; right: 0; margin-left: 10px; } set .progress .value,[data-is="set"] .progress .value{ background-color: #7cc4ff; display: inline-block; height: 100%; }', '', function(opts) {
 });
 
 riot.tag2('settings-page', '<p>Settings Page</p> <ul> <li each="{value, name in settings.setTypes}"> <input onclick="{onSetTypeClicked()}" type="checkbox" riot-value="{name}" checked="{value}">{name}</input> </li> <ul>', '', '', function(opts) {

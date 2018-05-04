@@ -120,6 +120,31 @@ button:focus {
 
 ::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-    /*border: 1px solid black;*/
     background-color: #3c3836;
 }
+
+.progress {
+    margin-top: 1px;
+    height: 28px;
+    width: 100%;
+    background-color: #c9c9c9;
+    position: relative;
+}
+
+.progress:before {
+    content: attr(data-label);
+    position: absolute;
+    text-align: left;
+    top: 5px;
+    left: 0;
+    right: 0;
+    margin-left: 10px;
+}
+
+.progress .value {
+    background-color: #7cc4ff;
+    display: inline-block;
+    height: 100%;
+}
+
+
