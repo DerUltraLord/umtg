@@ -1,5 +1,5 @@
 <search-page>
-    <card-search callback={onSearchEntered}></card-search>
+    <card-search class="leftContent" callback={onSearchEntered}></card-search>
     <card-list class="scrollable" id="cardResult"></card-list>
 
     <style>

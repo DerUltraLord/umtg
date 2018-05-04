@@ -31,7 +31,7 @@ riot.tag2('card-list', '<card tabindex="0" onclick="{onClick(c)}" each="{c in th
 
 });
 
-riot.tag2('card-search', '<form class="cardSearchContainer" onsubmit="{onSearch}"> <label>Name:</label> <input placeholder="Name or Scryfall search" type="text" ref="searchName"></input> <label>Type:</label> <input placeholder="Creature" ref="searchType"></input> <label>Text:</label> <input placeholder="Oracle Text" ref="searchText"></input> <label>Edition:</label> <input placeholder="XLN" ref="searchEdition"></input> <div> <div> <button>Search</Search> </form>', 'card-search { background-color: var(--color-background-two); } card-search .cardSearchContainer,[data-is="card-search"] .cardSearchContainer{ display: grid; margin-top: 10px; margin-left: 10px; grid-gap: 10px; grid-template-columns: 60px 1fr; }', '', function(opts) {
+riot.tag2('card-search', '<form class="cardSearchContainer" onsubmit="{onSearch}"> <label>Name:</label> <input placeholder="Name or Scryfall search" type="text" ref="searchName"></input> <label>Type:</label> <input placeholder="Creature" ref="searchType"></input> <label>Text:</label> <input placeholder="Oracle Text" ref="searchText"></input> <label>Edition:</label> <input placeholder="XLN" ref="searchEdition"></input> <div> <div> <button>Search</Search> </form>', 'card-search .cardSearchContainer,[data-is="card-search"] .cardSearchContainer{ display: grid; margin-top: 10px; margin-left: 10px; grid-gap: 10px; grid-template-columns: 60px 1fr; }', '', function(opts) {
         this.onSearch = function(e) {
             e.preventDefault();
 
@@ -93,7 +93,7 @@ riot.tag2('card', '<img id="image{this.opts.card.id}" class="cardImage" width="2
         }.bind(this)
 });
 
-riot.tag2('collection-page', '<div class="scrollable"> <set-list callback="{onSetClicked}" sets="{this.opts.sets}"></set-list> </div> <div class="scrollable"> <card-list><card-list> </div>', 'collection-page { display: grid; grid-gap: 10px; grid-template-columns: 300px 1fr; }', '', function(opts) {
+riot.tag2('collection-page', '<div class="scrollable leftContent"> <set-list callback="{onSetClicked}" sets="{this.opts.sets}"></set-list> </div> <div class="scrollable"> <card-list><card-list> </div>', 'collection-page { display: grid; grid-gap: 10px; grid-template-columns: 300px 1fr; }', '', function(opts) {
 
 
         this.on('update', function() {
@@ -168,7 +168,7 @@ riot.tag2('navigation', '<ul> <li> <a class="navLogo" href="#">UMTG</a> <li> <li
         });
 });
 
-riot.tag2('search-page', '<card-search callback="{onSearchEntered}"></card-search> <card-list class="scrollable" id="cardResult"></card-list>', 'search-page { display: grid; height: 100%; grid-gap: 10px; grid-template-columns: 300px 3fr; }', '', function(opts) {
+riot.tag2('search-page', '<card-search class="leftContent" callback="{onSearchEntered}"></card-search> <card-list class="scrollable" id="cardResult"></card-list>', 'search-page { display: grid; height: 100%; grid-gap: 10px; grid-template-columns: 300px 3fr; }', '', function(opts) {
         riot.mount('card-search');
         riot.mount('card-list');
 
@@ -191,7 +191,7 @@ riot.tag2('search-page', '<card-search callback="{onSearchEntered}"></card-searc
 
 });
 
-riot.tag2('set-list', '<set tabindex="0" if="{this.setTypes[s.set_type]}" onclick="{onSetClick(s)}" each="{s in this.opts.sets}" set="{s}"></set>', 'set-list { background-color: var(--color-background-two); } set-list set:focus,[data-is="set-list"] set:focus{ border: 1px solid black; outline: 0; }', '', function(opts) {
+riot.tag2('set-list', '<set tabindex="0" if="{this.setTypes[s.set_type]}" onclick="{onSetClick(s)}" each="{s in this.opts.sets}" set="{s}"></set>', 'set-list set:focus,[data-is="set-list"] set:focus{ border: 1px solid black; outline: 0; }', '', function(opts) {
 
         this.setTypes = null;
 

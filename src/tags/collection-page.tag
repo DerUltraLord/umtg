@@ -1,5 +1,5 @@
 <collection-page>
-    <div class="scrollable">
+    <div class="scrollable leftContent">
         <set-list callback={onSetClicked} sets={this.opts.sets}></set-list>
     </div>
     <div class="scrollable">

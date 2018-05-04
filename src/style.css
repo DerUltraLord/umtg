@@ -68,6 +68,11 @@ h3 {
     min-height: 100vh;
 }
 
+.leftContent {
+    background-color: var(--color-background-two);
+    border-right: 2px solid black;
+}
+
 .box {
     border: 2px solid #3c3836;
     border-radius: 5px;
@@ -82,7 +87,7 @@ h3 {
 
 .scrollable {
     overflow: auto;
-    max-height: 95vh;
+    max-height: calc(100vh - 45px);
 }
 
 label {
@@ -113,17 +118,17 @@ button:focus {
 
 ::-webkit-scrollbar {
     width: 8px;
-    background-color: #F5F5F5;
+    background-color: var(--color-background-two);
 }
 
 ::-webkit-scrollbar-thumb {
     width: 8px;
-    background-color: white;
+    background-color: var(--color-header);
 }
 
 
 ::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-    background-color: #3c3836;
+    background-color: var(--color-background-two);
 }
 
