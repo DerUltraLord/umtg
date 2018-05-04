@@ -17,7 +17,7 @@
         }
 
         .content1 {
-            background: lightgray;
+            background: var(--color-background-two);
             grid-area: content1;
         }
 

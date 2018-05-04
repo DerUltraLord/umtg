@@ -4,6 +4,7 @@
     --color-background: #eeeeec;
     --color-font-fg: black;
     --color-header: #283f51;
+    --color-background-two: lightgrey;
 }
 
 body {
@@ -22,7 +23,6 @@ body {
 input {
    background: transparent;
    border: 0px solid black;
-   color: white;
    border-bottom: 2px solid #3c3836;
    outline: none;
 }

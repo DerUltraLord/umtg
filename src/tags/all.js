@@ -1,7 +1,7 @@
 riot.tag2('about-page', '<p>About Page</p>', '', '', function(opts) {
 });
 
-riot.tag2('card-list', '<card tabindex="0" onclick="{onClick(c)}" each="{c in this.opts.cards}" card="{c}"></card>', 'card-list card:focus,[data-is="card-list"] card:focus{ background-color: black; }', '', function(opts) {
+riot.tag2('card-list', '<card tabindex="0" onclick="{onClick(c)}" each="{c in this.opts.cards}" card="{c}"></card>', 'card-list card:focus,[data-is="card-list"] card:focus{ background-color: var(--color-background-two); }', '', function(opts) {
 
         this.findParentNode = function(node, tagName) {
             while(node) {
@@ -168,7 +168,7 @@ riot.tag2('navigation', '<ul> <li> <a class="navLogo" href="#">UMTG</a> <li> <li
         });
 });
 
-riot.tag2('search-page', '<card-search class="content1" callback="{onSearchEntered}"></card-search> <card-list class="content2 scrollable" id="cardResult"></card-list> <div class="box footer"> <button>add</button> <button>remve</button> </div>', 'search-page { display: grid; height: 93vh; grid-gap: 10px; grid-template-columns: 300px 3fr; grid-template-rows: 1fr 80px; grid-template-areas: "content1 content2 content3" "footer footer footer"; } search-page .content1,[data-is="search-page"] .content1{ background: lightgray; grid-area: content1; } search-page .content2,[data-is="search-page"] .content2{ grid-area: content2; } search-page .content3,[data-is="search-page"] .content3{ grid-area: content3; } search-page .footer,[data-is="search-page"] .footer{ grid-area: footer; }', '', function(opts) {
+riot.tag2('search-page', '<card-search class="content1" callback="{onSearchEntered}"></card-search> <card-list class="content2 scrollable" id="cardResult"></card-list> <div class="box footer"> <button>add</button> <button>remve</button> </div>', 'search-page { display: grid; height: 93vh; grid-gap: 10px; grid-template-columns: 300px 3fr; grid-template-rows: 1fr 80px; grid-template-areas: "content1 content2 content3" "footer footer footer"; } search-page .content1,[data-is="search-page"] .content1{ background: var(--color-background-two); grid-area: content1; } search-page .content2,[data-is="search-page"] .content2{ grid-area: content2; } search-page .content3,[data-is="search-page"] .content3{ grid-area: content3; } search-page .footer,[data-is="search-page"] .footer{ grid-area: footer; }', '', function(opts) {
         riot.mount('card-search');
         riot.mount('card-list');
 

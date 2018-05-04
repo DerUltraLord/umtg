@@ -4,8 +4,7 @@
    <style>
 
         card:focus {
-            background-color: black;
-
+            background-color: var(--color-background-two);
         }
 
    </style>
