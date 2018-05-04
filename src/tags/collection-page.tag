@@ -19,16 +19,35 @@
 
 
         this.on('update', function() {
-            scry.scryfallGetSets(this.onSets);
+            db.getSets(this.checkIfSetsAreInDb);
         });
 
-        onSets(res) {
-            opts.sets = res.data;
-            this.tags['set-list'].update();
-            // TODO: consider visible set types
-            this.showSet(opts.sets[0]);
-            console.log(opts.sets[0]);
+        checkIfSetsAreInDb(res) {
+            console.log(res);
+            if (res.length == 0) {
+                scry.scryfallGetSets(this.onSetsFromScryfall);
+            }
+            db.getSets(this.onGetSetsFromDb);
         }
+
+        onGetSetsFromDb(res) {
+            var sets = [];
+            for (var i = 0; i < res.length; ++i) {
+                var code = res[i].code;
+                var set = JSON.parse(res[i].jsonString);
+                sets.push(set);
+            }
+            opts.sets = sets;
+            this.tags['set-list'].update();
+        }
+
+        onSetsFromScryfall(res) {
+            res.data.forEach(function(set) {
+                db.setAdd(set);
+            });
+            db.getSets(this.onGetSetsFromDb);
+        }
+
 
         showSet(set) {
             getJSON(set.search_uri, this.onSet);

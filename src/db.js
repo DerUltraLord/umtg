@@ -3,11 +3,14 @@ const async = require('async');
 
 var db = null;
 
+
 exports.init = function(name) {
     db = new sqlite3.Database(name);
     db.serialize(function() {
         db.run("CREATE TABLE IF NOT EXISTS Card (id TEXT PRIMARY KEY, jsonString TEXT, amount INTEGER, foilAmount INTEGER)");
+        db.run("CREATE TABLE IF NOT EXISTS [Set] (id TEXT PRIMARY KEY, jsonString TEXT)");
     });
+    exports.db = db;
 }
 
 
@@ -23,6 +26,11 @@ exports.cardAdd = function(card, amount) {
     stmt.finalize();
 }
 
+exports.setAdd = function(set, callback) {
+    var stmt = db.prepare("INSERT INTO [Set] VALUES(?, ?)");
+    stmt.run(set.code, JSON.stringify(set), callback);
+    stmt.finalize();
+}
 
 exports.cardExistsByName = function(cardname, callback) {
     function stmtFinished(err, res) {
@@ -35,6 +43,7 @@ exports.cardExistsByName = function(cardname, callback) {
 exports.cardAdjustAmount = function(card, amount, callback) {
 
     function stmtFinished(err, res) {
+        console.log(err);
 
         if (res.length == 0) {
             if (amount > 0) {
@@ -53,7 +62,6 @@ exports.cardAdjustAmount = function(card, amount, callback) {
     }
 
     db.all("SELECT * FROM Card where id = '" + card.id + "'", stmtFinished);
-
 }
 
 exports.getAmountOfCard = function(id, callback) {
@@ -91,5 +99,16 @@ exports.cardInDbByName = function(name, callback) {
     db.all("SELECT * FROM Card where json_extract(Card.jsonString, '$.name') = '" + dbString(name) + "'", stmtFinished);
 }
 
+exports.getSets = function(callback, types) {
+    function stmtFinished(err, res) {
+        callback(res);
+    }
+    stmt = "SELECT * FROM [Set]";
+    if (types != undefined) {
+        stmt += " WHERE json_extract([Set].jsonString, '$.set_type') in (" + types.map(type => `'${type}'`).join(',') + ")";
+        
+    }
+    db.all(stmt, stmtFinished);
+}
 
 

@@ -97,15 +97,33 @@ riot.tag2('collection-page', '<div class="scrollable leftContent"> <set-list cal
 
 
         this.on('update', function() {
-            scry.scryfallGetSets(this.onSets);
+            db.getSets(this.checkIfSetsAreInDb);
         });
 
-        this.onSets = function(res) {
-            opts.sets = res.data;
-            this.tags['set-list'].update();
+        this.checkIfSetsAreInDb = function(res) {
+            console.log(res);
+            if (res.length == 0) {
+                scry.scryfallGetSets(this.onSetsFromScryfall);
+            }
+            db.getSets(this.onGetSetsFromDb);
+        }.bind(this)
 
-            this.showSet(opts.sets[0]);
-            console.log(opts.sets[0]);
+        this.onGetSetsFromDb = function(res) {
+            var sets = [];
+            for (var i = 0; i < res.length; ++i) {
+                var code = res[i].code;
+                var set = JSON.parse(res[i].jsonString);
+                sets.push(set);
+            }
+            opts.sets = sets;
+            this.tags['set-list'].update();
+        }.bind(this)
+
+        this.onSetsFromScryfall = function(res) {
+            res.data.forEach(function(set) {
+                db.setAdd(set);
+            });
+            db.getSets(this.onGetSetsFromDb);
         }.bind(this)
 
         this.showSet = function(set) {

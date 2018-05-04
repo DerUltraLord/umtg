@@ -33,7 +33,7 @@ describe('deck.js', function() {
 
     it('getCardsOfDeck()', function() {
 
-        deck.getCardsOfDeck('test1.txt', function(card) {
+            deck.getCardsOfDeck('test1.txt', function(card) {
         });
 
     });
