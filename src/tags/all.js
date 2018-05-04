@@ -31,7 +31,7 @@ riot.tag2('card-list', '<card tabindex="0" onclick="{onClick(c)}" each="{c in th
 
 });
 
-riot.tag2('card-search', '<form class="cardSearchContainer" onsubmit="{onSearch}"> <label>Name:</label> <input placeholder="Name or Scryfall search" type="text" ref="searchName"></input> <label>Type:</label> <input placeholder="Creature" ref="searchType"></input> <label>Text:</label> <input placeholder="Oracle Text" ref="searchText"></input> <label>Edition:</label> <input placeholder="XLN" ref="searchEdition"></input> <div> <div> <button>Search</Search> </form>', 'card-search .cardSearchContainer,[data-is="card-search"] .cardSearchContainer{ display: grid; margin-top: 10px; margin-left: 10px; grid-gap: 10px; grid-template-columns: 60px 1fr; }', '', function(opts) {
+riot.tag2('card-search', '<form class="cardSearchContainer" onsubmit="{onSearch}"> <label>Name:</label> <input placeholder="Name or Scryfall search" type="text" ref="searchName"></input> <label>Type:</label> <input placeholder="Creature" ref="searchType"></input> <label>Text:</label> <input placeholder="Oracle Text" ref="searchText"></input> <label>Edition:</label> <input placeholder="XLN" ref="searchEdition"></input> <div> <div> <button>Search</Search> </form>', 'card-search { background-color: var(--color-background-two); } card-search .cardSearchContainer,[data-is="card-search"] .cardSearchContainer{ display: grid; margin-top: 10px; margin-left: 10px; grid-gap: 10px; grid-template-columns: 60px 1fr; }', '', function(opts) {
         this.onSearch = function(e) {
             e.preventDefault();
 
@@ -93,7 +93,7 @@ riot.tag2('card', '<img id="image{this.opts.card.id}" class="cardImage" width="2
         }.bind(this)
 });
 
-riot.tag2('collection-page', '<div class="collectionContent1 scrollable"> <set-list callback="{onSetClicked}" sets="{this.opts.sets}"></set-list> </div> <div class="collectionContent2 scrollable"> <card-list><card-list> </div>', 'collection-page { display: grid; grid-gap: 10px; grid-template-columns: 300px 1fr; grid-template-areas: "collectionContent1 collectionContent2" } collection-page .collectionContent1,[data-is="collection-page"] .collectionContent1{ grid-area: collectionContent1; background-color: var(--color-background-two); } collection-page .collectionContent2,[data-is="collection-page"] .collectionContent2{ grid-area: collectionContent2; }', '', function(opts) {
+riot.tag2('collection-page', '<div class="scrollable"> <set-list callback="{onSetClicked}" sets="{this.opts.sets}"></set-list> </div> <div class="scrollable"> <card-list><card-list> </div>', 'collection-page { display: grid; grid-gap: 10px; grid-template-columns: 300px 1fr; }', '', function(opts) {
 
 
         this.on('update', function() {
@@ -168,7 +168,7 @@ riot.tag2('navigation', '<ul> <li> <a class="navLogo" href="#">UMTG</a> <li> <li
         });
 });
 
-riot.tag2('search-page', '<card-search class="content1" callback="{onSearchEntered}"></card-search> <card-list class="content2 scrollable" id="cardResult"></card-list> <div class="box footer"> <button>add</button> <button>remve</button> </div>', 'search-page { display: grid; height: 93vh; grid-gap: 10px; grid-template-columns: 300px 3fr; grid-template-rows: 1fr 80px; grid-template-areas: "content1 content2 content3" "footer footer footer"; } search-page .content1,[data-is="search-page"] .content1{ background: var(--color-background-two); grid-area: content1; } search-page .content2,[data-is="search-page"] .content2{ grid-area: content2; } search-page .content3,[data-is="search-page"] .content3{ grid-area: content3; } search-page .footer,[data-is="search-page"] .footer{ grid-area: footer; }', '', function(opts) {
+riot.tag2('search-page', '<card-search callback="{onSearchEntered}"></card-search> <card-list class="scrollable" id="cardResult"></card-list>', 'search-page { display: grid; height: 100%; grid-gap: 10px; grid-template-columns: 300px 3fr; }', '', function(opts) {
         riot.mount('card-search');
         riot.mount('card-list');
 
@@ -191,7 +191,7 @@ riot.tag2('search-page', '<card-search class="content1" callback="{onSearchEnter
 
 });
 
-riot.tag2('set-list', '<set tabindex="0" if="{this.setTypes[s.set_type]}" onclick="{onSetClick(s)}" each="{s in this.opts.sets}" set="{s}"></set>', 'set-list set:focus,[data-is="set-list"] set:focus{ border: 1px solid black; outline: 0; }', '', function(opts) {
+riot.tag2('set-list', '<set tabindex="0" if="{this.setTypes[s.set_type]}" onclick="{onSetClick(s)}" each="{s in this.opts.sets}" set="{s}"></set>', 'set-list { background-color: var(--color-background-two); } set-list set:focus,[data-is="set-list"] set:focus{ border: 1px solid black; outline: 0; }', '', function(opts) {
 
         this.setTypes = null;
 
@@ -208,7 +208,7 @@ riot.tag2('set-list', '<set tabindex="0" if="{this.setTypes[s.set_type]}" onclic
         }.bind(this)
 });
 
-riot.tag2('set', '<img riot-src="{this.opts.set.icon_svg_uri}"></img> <div class="progress" data-label="{this.opts.set.name}"> <span class="value" style="width:20%;"></span> </div>', 'set { display: grid; grid-gap: 0px; grid-template-columns: 40px 1fr; height: 30px; } set img,[data-is="set"] img{ width: 20px; height: 20px; margin-left: 5px; } set .progress,[data-is="set"] .progress{ margin-top: 1px; height: 29px; width: 100%; background-color: #c9c9c9; position: relative; } set .progress:before,[data-is="set"] .progress:before{ content: attr(data-label); position: absolute; text-align: left; top: 5px; left: 0; right: 0; margin-left: 10px; } set .progress .value,[data-is="set"] .progress .value{ background-color: #7cc4ff; display: inline-block; height: 100%; }', '', function(opts) {
+riot.tag2('set', '<img riot-src="{this.opts.set.icon_svg_uri}"></img> <div class="progress" data-label="{this.opts.set.name}"> <span class="value" style="width:20%;"></span> </div>', 'set { display: grid; grid-gap: 0px; grid-template-columns: 40px 1fr; height: 30px; background-color: var(--color-background-two); } set img,[data-is="set"] img{ width: 20px; height: 20px; margin-left: 5px; } set .progress,[data-is="set"] .progress{ margin-top: 1px; height: 29px; width: 100%; background-color: #c9c9c9; position: relative; } set .progress:before,[data-is="set"] .progress:before{ content: attr(data-label); position: absolute; text-align: left; top: 5px; left: 0; right: 0; margin-left: 10px; } set .progress .value,[data-is="set"] .progress .value{ background-color: #7cc4ff; display: inline-block; height: 100%; }', '', function(opts) {
 });
 
 riot.tag2('settings-page', '<p>Settings Page</p> <ul> <li each="{value, name in settings.setTypes}"> <input onclick="{onSetTypeClicked()}" type="checkbox" riot-value="{name}" checked="{value}">{name}</input> </li> <ul>', '', '', function(opts) {

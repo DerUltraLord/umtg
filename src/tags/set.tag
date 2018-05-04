@@ -11,6 +11,7 @@
             grid-gap: 0px;
             grid-template-columns: 40px 1fr;
             height: 30px;
+            background-color: var(--color-background-two);
         }
 
         img {

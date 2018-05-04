@@ -13,6 +13,10 @@
         <button>Search</Search>
     </form>
     <style>
+        card-search {
+            background-color: var(--color-background-two);
+        }
+
         .cardSearchContainer {
             display: grid;
             margin-top: 10px;

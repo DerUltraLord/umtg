@@ -1,37 +1,15 @@
 <search-page>
-    <card-search class="content1" callback={onSearchEntered}></card-search>
-    <card-list class="content2 scrollable" id="cardResult"></card-list>
-    <div class="box footer">
-        <button>add</button>
-        <button>remve</button>
-    </div>
+    <card-search callback={onSearchEntered}></card-search>
+    <card-list class="scrollable" id="cardResult"></card-list>
 
     <style>
         search-page {
             display: grid;
-            height: 93vh;
+            height: 100%;
             grid-gap: 10px;
             grid-template-columns: 300px 3fr;
-            grid-template-rows: 1fr 80px;
-            grid-template-areas: "content1 content2 content3" "footer footer footer";
         }
 
-        .content1 {
-            background: var(--color-background-two);
-            grid-area: content1;
-        }
-
-        .content2 {
-            grid-area: content2;
-        }
-
-        .content3 {
-            grid-area: content3;
-        }
-
-        .footer {
-            grid-area: footer;
-        }
     </style>
    
     <script>

@@ -2,11 +2,14 @@
     <set tabindex="0" if={ this.setTypes[s.set_type] } } onClick={onSetClick(s)} each={s in this.opts.sets} set={s}></set>
 
     <style>
+        set-list {
+            background-color: var(--color-background-two);
+        }
 
-    set:focus {
-        border: 1px solid black;
-        outline: 0;
-    }
+        set:focus {
+            border: 1px solid black;
+            outline: 0;
+        }
     </style>
     <script>
 
