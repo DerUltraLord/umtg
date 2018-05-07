@@ -103,11 +103,13 @@ exports.getSets = function(callback, types) {
     function stmtFinished(err, res) {
         callback(res);
     }
-    stmt = "SELECT * FROM [Set]";
+    stmt = "SELECT *, json_extract([Set].jsonString, '$.released_at') as released_at FROM [Set]";
     if (types != undefined) {
         stmt += " WHERE json_extract([Set].jsonString, '$.set_type') in (" + types.map(type => `'${type}'`).join(',') + ")";
         
     }
+    stmt += " ORDER BY released_at desc";
+    console.log(stmt);
     db.all(stmt, stmtFinished);
 }
 

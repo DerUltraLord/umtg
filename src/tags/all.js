@@ -101,11 +101,10 @@ riot.tag2('collection-page', '<div class="scrollable leftContent"> <set-list cal
         });
 
         this.checkIfSetsAreInDb = function(res) {
-            console.log(res);
             if (res.length == 0) {
                 scry.scryfallGetSets(this.onSetsFromScryfall);
             }
-            db.getSets(this.onGetSetsFromDb);
+            this.onGetSetsFromDb(res);
         }.bind(this)
 
         this.onGetSetsFromDb = function(res) {
@@ -116,7 +115,9 @@ riot.tag2('collection-page', '<div class="scrollable leftContent"> <set-list cal
                 sets.push(set);
             }
             opts.sets = sets;
+
             this.tags['set-list'].update();
+            this.showSet(this.tags['set-list'].tags['set'][0].opts.set);
         }.bind(this)
 
         this.onSetsFromScryfall = function(res) {

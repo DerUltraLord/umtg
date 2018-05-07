@@ -23,11 +23,10 @@
         });
 
         checkIfSetsAreInDb(res) {
-            console.log(res);
             if (res.length == 0) {
                 scry.scryfallGetSets(this.onSetsFromScryfall);
             }
-            db.getSets(this.onGetSetsFromDb);
+            this.onGetSetsFromDb(res);
         }
 
         onGetSetsFromDb(res) {
@@ -38,7 +37,9 @@
                 sets.push(set);
             }
             opts.sets = sets;
+            
             this.tags['set-list'].update();
+            this.showSet(this.tags['set-list'].tags['set'][0].opts.set);
         }
 
         onSetsFromScryfall(res) {
