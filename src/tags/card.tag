@@ -85,10 +85,10 @@
         };
 
         this.on('mount', function() {
-            var cardImage = document.getElementById("image" + this.opts.card.id);
-            if (this.opts.card.image_uris) {
-                cardImage.setAttribute('src', this.opts.card.image_uris.art_crop);
-            }
+            //var cardImage = document.getElementById("image" + this.opts.card.id);
+            //if (this.opts.card.image_uris) {
+            //    cardImage.setAttribute('src', this.opts.card.image_uris.art_crop);
+            //}
 
             var cardName = document.getElementById("cardMana" + this.opts.card.id);
             cardName.insertAdjacentHTML('beforeend', this.getTagsForMana(this.opts.card));
@@ -98,6 +98,9 @@
         });
 
         this.on("update", function() {
+            if (this.opts.card.image_uris) {
+                this.root.querySelector('img').setAttribute('src', this.opts.card.image_uris.art_crop);
+            }
             db.getAmountOfCard(this.opts.card.id, this.updateAmount);
         });
 

@@ -64,10 +64,6 @@ riot.tag2('card', '<img id="image{this.opts.card.id}" class="cardImage" width="2
         }.bind(this);
 
         this.on('mount', function() {
-            var cardImage = document.getElementById("image" + this.opts.card.id);
-            if (this.opts.card.image_uris) {
-                cardImage.setAttribute('src', this.opts.card.image_uris.art_crop);
-            }
 
             var cardName = document.getElementById("cardMana" + this.opts.card.id);
             cardName.insertAdjacentHTML('beforeend', this.getTagsForMana(this.opts.card));
@@ -76,6 +72,9 @@ riot.tag2('card', '<img id="image{this.opts.card.id}" class="cardImage" width="2
         });
 
         this.on("update", function() {
+            if (this.opts.card.image_uris) {
+                this.root.querySelector('img').setAttribute('src', this.opts.card.image_uris.art_crop);
+            }
             db.getAmountOfCard(this.opts.card.id, this.updateAmount);
         });
 
@@ -95,6 +94,7 @@ riot.tag2('card', '<img id="image{this.opts.card.id}" class="cardImage" width="2
 
 riot.tag2('collection-page', '<div class="scrollable leftContent"> <set-list callback="{onSetClicked}" sets="{this.opts.sets}"></set-list> </div> <div class="scrollable"> <card-list><card-list> </div>', 'collection-page { display: grid; grid-gap: 10px; grid-template-columns: 300px 1fr; }', '', function(opts) {
 
+        this.currentSet = null;
 
         this.on('mount', function() {
             db.getSets(this.checkIfSetsAreInDb);
@@ -134,15 +134,40 @@ riot.tag2('collection-page', '<div class="scrollable leftContent"> <set-list cal
 
         this.showCardsOfSet = function(set) {
             var setList = this.tags['set-list'].root;
+            this.currentSet = set;
             setList.querySelector('.selected').classList.remove('selected');
-            getJSON(set.search_uri, this.onSet);
             setList.querySelector('set[code="' + set.code + '"]').classList.add('selected')
+            db.getCardsOfSet(set, this.onCardsFromDb);
+
         }.bind(this)
 
-        this.onSet = function(res) {
-            this.tags['card-list'].opts.cards = res.data;
+        this.onCardsFromDb = function(res) {
+            if (res.length < this.currentSet.card_count) {
+                getJSON(this.currentSet.search_uri, this.onCardsFromScryfall);
+            } else {
+                console.log("set already stored " + this.currentSet.name);
+                this.showCards(res);
+                console.log(res);
+            }
+        }.bind(this)
+
+        this.onCardsFromScryfall = function(res) {
+            for (var i = 0; i < res.data.length; ++i) {
+                var card = res.data[i];
+                db.cardAdd(card, 0);
+            }
+
+            if (res.has_more == true) {
+                getJSON(res.next_page, this.onCardsFromScryfall);
+            } else {
+                db.getCardsOfSet(this.currentSet, this.onCardsFromDb);
+            }
+
+        }.bind(this)
+
+        this.showCards = function(cards) {
+            this.tags['card-list'].opts.cards = cards;
             this.tags['card-list'].update();
-            console.log("hier");
         }.bind(this)
 
         this.onSetClicked = function(set) {

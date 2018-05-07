@@ -17,6 +17,9 @@
 
     <script>
 
+        this.currentSet = null;
+
+
 
         this.on('mount', function() {
             db.getSets(this.checkIfSetsAreInDb);
@@ -57,15 +60,40 @@
 
         showCardsOfSet(set) {
             var setList = this.tags['set-list'].root;
+            this.currentSet = set;
             setList.querySelector('.selected').classList.remove('selected');
-            getJSON(set.search_uri, this.onSet);
             setList.querySelector('set[code="' + set.code + '"]').classList.add('selected')
+            db.getCardsOfSet(set, this.onCardsFromDb);
+
         }
 
-        onSet(res) {
-            this.tags['card-list'].opts.cards = res.data;
+        onCardsFromDb(res) {
+            if (res.length < this.currentSet.card_count) {
+                getJSON(this.currentSet.search_uri, this.onCardsFromScryfall);
+            } else {
+                console.log("set already stored " + this.currentSet.name);
+                this.showCards(res);
+                console.log(res);
+            }
+        }
+
+        onCardsFromScryfall(res) {
+            for (var i = 0; i < res.data.length; ++i) {
+                var card = res.data[i];
+                db.cardAdd(card, 0);
+            }
+
+            if (res.has_more == true) {
+                getJSON(res.next_page, this.onCardsFromScryfall);
+            } else {
+                db.getCardsOfSet(this.currentSet, this.onCardsFromDb);
+            }
+
+        }
+
+        showCards(cards) {
+            this.tags['card-list'].opts.cards = cards;
             this.tags['card-list'].update();
-            console.log("hier");
         }
 
         onSetClicked(set) {

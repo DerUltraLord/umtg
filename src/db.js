@@ -22,7 +22,7 @@ exports.cardAdd = function(card, amount) {
     console.log("Add card " + card.name + " to db with id " + card.id);
     var stmt = db.prepare("INSERT INTO Card VALUES(?, ?, ?, ?)");
     // TODO: foil
-    stmt.run(card.id, JSON.stringify(card), 1, 0);
+    stmt.run(card.id, JSON.stringify(card), amount, 0);
     stmt.finalize();
 }
 
@@ -109,6 +109,19 @@ exports.getSets = function(callback, types) {
         
     }
     stmt += " ORDER BY released_at desc";
+    db.all(stmt, stmtFinished);
+}
+
+exports.getCardsOfSet = function(set, callback) {
+
+    function stmtFinished(err, res) {
+        var cards = []
+        for (var i = 0; i < res.length; ++i) {
+            cards.push(JSON.parse(res[i].jsonString));
+        }
+        callback(cards);
+    }
+    stmt = "SELECT * from [Card] WHERE json_extract([Card].jsonString, '$.set') = '" + set.code + "'";
     console.log(stmt);
     db.all(stmt, stmtFinished);
 }
