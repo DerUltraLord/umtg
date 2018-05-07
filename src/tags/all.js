@@ -96,7 +96,7 @@ riot.tag2('card', '<img id="image{this.opts.card.id}" class="cardImage" width="2
 riot.tag2('collection-page', '<div class="scrollable leftContent"> <set-list callback="{onSetClicked}" sets="{this.opts.sets}"></set-list> </div> <div class="scrollable"> <card-list><card-list> </div>', 'collection-page { display: grid; grid-gap: 10px; grid-template-columns: 300px 1fr; }', '', function(opts) {
 
 
-        this.on('update', function() {
+        this.on('mount', function() {
             db.getSets(this.checkIfSetsAreInDb);
         });
 
@@ -117,7 +117,12 @@ riot.tag2('collection-page', '<div class="scrollable leftContent"> <set-list cal
             opts.sets = sets;
 
             this.tags['set-list'].update();
-            this.showSet(this.tags['set-list'].tags['set'][0].opts.set);
+            if (this.tags['card-list'].opts.cards == undefined) {
+                var setToShow = this.tags['set-list'].tags['set'][0];
+                setToShow.root.classList.add('selected');
+                this.showCardsOfSet(setToShow.opts.set);
+
+            }
         }.bind(this)
 
         this.onSetsFromScryfall = function(res) {
@@ -127,17 +132,21 @@ riot.tag2('collection-page', '<div class="scrollable leftContent"> <set-list cal
             db.getSets(this.onGetSetsFromDb);
         }.bind(this)
 
-        this.showSet = function(set) {
+        this.showCardsOfSet = function(set) {
+            var setList = this.tags['set-list'].root;
+            setList.querySelector('.selected').classList.remove('selected');
             getJSON(set.search_uri, this.onSet);
+            setList.querySelector('set[code="' + set.code + '"]').classList.add('selected')
         }.bind(this)
 
         this.onSet = function(res) {
             this.tags['card-list'].opts.cards = res.data;
             this.tags['card-list'].update();
+            console.log("hier");
         }.bind(this)
 
         this.onSetClicked = function(set) {
-            this.showSet(set);
+            this.showCardsOfSet(set);
         }.bind(this)
 
 });
@@ -210,12 +219,11 @@ riot.tag2('search-page', '<card-search class="leftContent" callback="{onSearchEn
 
 });
 
-riot.tag2('set-list', '<set tabindex="0" if="{this.setTypes[s.set_type]}" onclick="{onSetClick(s)}" each="{s in this.opts.sets}" set="{s}"></set>', 'set-list set:focus,[data-is="set-list"] set:focus{ border: 1px solid black; outline: 0; }', '', function(opts) {
+riot.tag2('set-list', '<set code="{s.code}" tabindex="0" if="{this.setTypes[s.set_type]}" onclick="{onSetClick(s)}" each="{s in this.opts.sets}" set="{s}"></set>', 'set-list set:focus,[data-is="set-list"] set:focus{ } set-list set:active,[data-is="set-list"] set:active{ } set-list set.selected,[data-is="set-list"] set.selected{ border: 1px solid black; outline: 0; }', '', function(opts) {
 
         this.setTypes = null;
 
         this.on('update', function() {
-            console.log("set list update");
             this.setTypes = document.getElementsByTagName('settings-page')[0]._tag.settings.setTypes;
         });
 
