@@ -6,7 +6,7 @@
     <p class="cardText">{this.opts.card.oracle_text}</p>
     <div class="cardActions">
         <button id="removeButton" onClick="{removeCardFromCollection}" class="cardButton">-</button>
-        <label id="lblAmount">0</label>
+        <label id="lblAmount">?</label>
         <button id="addButton" onClick="{addCardToCollection}" class="cardButton">+</button>
         <button id="btnAddToDeck" onClick="{addCardToDeck}" class="cardButton">add to deck</button>
     </div>
@@ -17,7 +17,7 @@
             grid-gap: 10px;
             
             grid-template-columns: 200px 1fr 100px;
-            grid-template-rows: 20px 20px 1fr 40px;
+            grid-template-rows: 27px 20px 1fr 40px;
             grid-template-areas:    "cardImage cardName cardMana"
                                     "cardImage cardType cardType"
                                     "cardImage cardText cardText"
@@ -25,6 +25,14 @@
             border-bottom: 2px solid #3c3836;
             margin-top: 10px;
             margin-bottom: 10px;
+        }
+
+        h2 {
+            overflow: hidden;
+        }
+
+        h3 {
+
         }
 
         .cardButton {
