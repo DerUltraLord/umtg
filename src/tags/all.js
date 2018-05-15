@@ -135,7 +135,11 @@ riot.tag2('collection-page', '<div class="scrollable leftContent"> <set-list cal
         this.showCardsOfSet = function(set) {
             var setList = this.tags['set-list'].root;
             this.currentSet = set;
-            setList.querySelector('.selected').classList.remove('selected');
+            var selectedItem = setList.querySelector('.selected')
+            if (selectedItem) {
+                selectedItem.classList.remove('selected');
+            }
+
             setList.querySelector('set[code="' + set.code + '"]').classList.add('selected')
             db.getCardsOfSet(set, this.onCardsFromDb);
 
