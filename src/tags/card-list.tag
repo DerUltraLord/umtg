@@ -1,5 +1,5 @@
-<card-list>
-    <card tabindex="0" onClick={onClick(c)} each={c in this.opts.cards} card={c}></card>
+<card-list class="list-group scrollable">
+    <card onClick={onClick(c)} each={c in this.opts.cards} card={c}></card>
    
    <style>
 
@@ -28,11 +28,12 @@
         onClick(card) {
             return function(e) {
 
+
                 //this.selectedCard = card;
-                //var cardDiv = this.findParentNode(e.target, 'div');
-                //cardDiv.className = 'active';
+                //var cardDiv = this.findParentNode(e.target, 'card');
+                //cardDiv.classList.add('active');
                 //if (this.state.selectedElement != null) {
-                //    this.state.selectedElement.className = '';
+                //    this.state.selectedElement.classList.remove('active');
                 //}
                 //this.state.selectedElement = cardDiv;
 

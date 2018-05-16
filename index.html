@@ -15,6 +15,7 @@
         <script>
             window.$ = window.jQuery = require('jquery');
             window.Bootstrap = require('bootstrap');
+            var octicons = require("octicons");
             var riot = require('riot');
             var globalEvents = riot.observable();
             var db = require('./src/db.js');
@@ -27,10 +28,12 @@
 
         <link rel="stylesheet" href="src/style.css" ></link>
         <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+        <!--<link rel="stylesheet" href="node_modules/octicons/build/build.css">-->
     </head>
 
     <body>
         <navigation pages="{state.pages}"></navigation>
+
         <div>
             <search-page show="{state.currentPage=='search'}" ></search-page>
             <collection-page show="{state.currentPage=='collection'}"></collection-page>

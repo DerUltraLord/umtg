@@ -1,7 +1,7 @@
 riot.tag2('about-page', '<p>About Page</p>', '', '', function(opts) {
 });
 
-riot.tag2('card-list', '<card tabindex="0" onclick="{onClick(c)}" each="{c in this.opts.cards}" card="{c}"></card>', 'card-list card:focus,[data-is="card-list"] card:focus{ background-color: var(--color-background-two); }', '', function(opts) {
+riot.tag2('card-list', '<card onclick="{onClick(c)}" each="{c in this.opts.cards}" card="{c}"></card>', 'card-list card:focus,[data-is="card-list"] card:focus{ background-color: var(--color-background-two); }', 'class="list-group scrollable"', function(opts) {
 
         this.findParentNode = function(node, tagName) {
             while(node) {
@@ -43,7 +43,7 @@ riot.tag2('card-search', '<form class="cardSearchContainer" onsubmit="{onSearch}
         }.bind(this)
 });
 
-riot.tag2('card', '<img id="image{this.opts.card.id}" class="cardImage" width="200px"></img> <h2 id="cardName{this.opts.card.id}" class="cardName">{this.opts.card.name}</h2> <div id="cardMana{this.opts.card.id}" class="cardMana"></div> <h3 id="cardType{this.opts.card.id}" class="cardType">{this.opts.card.type_line}</h3> <p class="cardText">{this.opts.card.oracle_text}</p> <div class="cardActions"> <div class="btn-group btn-group-sm"> <button id="removeButton" onclick="{removeCardFromCollection}" class="btn btn-default delete" role="group"></button> <button id="lblAmount" class="btn btn-default" role="group">?</label> <button id="addButton" onclick="{addCardToCollection}" class="btn btn-default add" role="group"></button> </div> <div class="btn-group btn-group-sm" role="group"> <button type="button" id="btnAddToDeck" onclick="{addCardToDeck}" class="btn btn-default plus"></button> <div class="btn-group btn-group-sm" role="group"> <button id="btnDeck" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> MyDeck </button> <div class="dropdown-menu" aria-labelledby="btnDeck"> <a class="dropdown-item" href="#">foo</a> <a class="dropdown-item" href="#">foo</a> </div> </div> <div> </div>', 'card { display: grid; grid-gap: 10px; grid-template-columns: 200px 1fr 100px; grid-template-rows: 27px 20px 1fr 40px; grid-template-areas: "cardImage cardName cardMana" "cardImage cardType cardType" "cardImage cardText cardText" "cardImage cardActions cardActions"; border-bottom: 2px solid #3c3836; margin-top: 10px; margin-bottom: 10px; } card h2,[data-is="card"] h2{ overflow: hidden; } card h3,[data-is="card"] h3{ } card .cardButton,[data-is="card"] .cardButton{ display: inline-block; background: #ccc; vertical-align: middle; border: 1px solid #777; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px; min-height: 22px; min-width: 20px; } card .radius-right,[data-is="card"] .radius-right{ border-radius: 0px 5px 5px 0px; } card .radius-left,[data-is="card"] .radius-left{ border-radius: 5px 0px 0px 5px; } card .plus:before,[data-is="card"] .plus:before{ content: "\\002B"; } card .add:before,[data-is="card"] .add:before{ content: "\\25B6"; } card .delete:before,[data-is="card"] .delete:before{ content: "\\25C0"; } card .cardImage,[data-is="card"] .cardImage{ grid-area: cardImage; } card .cardName,[data-is="card"] .cardName{ grid-area: cardName; } card .cardType,[data-is="card"] .cardType{ grid-area: cardType; } card .cardText,[data-is="card"] .cardText{ grid-area: cardText; } card .cardActions,[data-is="card"] .cardActions{ grid-area: cardActions; } card .cardMana,[data-is="card"] .cardMana{ grid-area: cardMana; text-align: right; margin-right: 10px; margin-top: 3px; }', '', function(opts) {
+riot.tag2('card', '<div class="media"> <div class="m20"> <img id="image{this.opts.card.id}" width="250" height="200"></img> <div> <div> <div class="btn-group btn-group-sm"> <button id="removeButton" onclick="{removeCardFromCollection}" class="btn btn-default delete" role="group"></button> <button id="lblAmount" class="btn btn-default" role="group">?</label> <button id="addButton" onclick="{addCardToCollection}" class="btn btn-default add" role="group"><span class="glyphicon glyphicon-search"></span></button> </div> <div class="btn-group btn-group-sm float-lg-right" role="group"> <button type="button" id="btnAddToDeck" onclick="{addCardToDeck}" class="btn btn-default plus"></button> <div class="btn-group btn-group-sm" role="group"> <button id="btnDeck" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> MyDeck </button> <div class="dropdown-menu" aria-labelledby="btnDeck"> <a class="dropdown-item" href="#">foo</a> <a class="dropdown-item" href="#">foo</a> </div> </div> </div> </div> </div> </div> <div class="media-body"> <div class="row"> <h2 id="cardName{this.opts.card.id}" class="col-lg-8">{this.opts.card.name}</h2> <div id="cardMana{this.opts.card.id}" class="col-lg-4"></div> </div> <h3 id="cardType{this.opts.card.id}" class="cardType">{this.opts.card.type_line}</h3> <p class="cardText">{this.opts.card.oracle_text}</p> </div> <div>', 'card h2,[data-is="card"] h2{ overflow: hidden; font-size: 100%; font-weight: bold; } card h3,[data-is="card"] h3{ font-size: 90%; } card .m20,[data-is="card"] .m20{ margin-right: 20px; } card .plus:before,[data-is="card"] .plus:before{ content: "\\002B"; } card .add:before,[data-is="card"] .add:before{ content: "\\25B6"; } card .delete:before,[data-is="card"] .delete:before{ content: "\\25C0"; } card .cardMana,[data-is="card"] .cardMana{ grid-area: cardMana; text-align: right; margin-right: 10px; margin-top: 3px; }', 'class="list-group-item"', function(opts) {
         var db = require("./src/db.js");
 
         this.getTagsForMana = function(card) {
@@ -54,11 +54,11 @@ riot.tag2('card', '<img id="image{this.opts.card.id}" class="cardImage" width="2
 
             while (m = re.exec(card.mana_cost)) {
                 var manaString = m[0].substring(1, m[0].length -1);
-                manaString = `<svg class="icon24" viewBox="0 0 600 600">
+                manaString = `<svg class="icon24 float-lg-right" viewBox="0 0 600 600">
                     <use xlink:href="res/svg.svg#` + manaString + `"></use>
                     </svg>`
 
-                res += manaString;
+                res = manaString + res;
             }
             return res;
         }.bind(this);
@@ -67,6 +67,30 @@ riot.tag2('card', '<img id="image{this.opts.card.id}" class="cardImage" width="2
 
             var cardName = document.getElementById("cardMana" + this.opts.card.id);
             cardName.insertAdjacentHTML('beforeend', this.getTagsForMana(this.opts.card));
+
+            var colorIdentity = this.opts.card.color_identity;
+
+            if (colorIdentity.length == 1) {
+                var typeToAdd = '';
+                if (colorIdentity[0] === "W") {
+                    typeToAdd = 'warning';
+                } else if (colorIdentity[0] === "U") {
+                    typeToAdd = 'info';
+                } else if (colorIdentity[0] === "B") {
+                    typeToAdd = 'dark';
+                } else if (colorIdentity[0] === "G") {
+                    typeToAdd = 'success';
+                } else if (colorIdentity[0] === "R") {
+                    typeToAdd = 'danger';
+                }
+                this.root.classList.add("list-group-item-" + typeToAdd);
+
+                var buttons = this.root.querySelectorAll('button');
+                buttons.forEach(function(button) {
+                    button.classList.remove('btn-default');
+                    button.classList.add('btn-' + typeToAdd);
+                });
+            }
 
             this.update();
         });
@@ -225,7 +249,7 @@ riot.tag2('navigation', '<nav class="navbar navbar-expand-lg navbar-dark bg-dark
         });
 });
 
-riot.tag2('search-page', '<card-search class="leftContent" callback="{onSearchEntered}"></card-search> <card-list class="scrollable" id="cardResult"></card-list>', 'search-page { display: grid; height: 100%; grid-gap: 10px; grid-template-columns: 300px 3fr; }', '', function(opts) {
+riot.tag2('search-page', '<card-search class="leftContent" callback="{onSearchEntered}"></card-search> <card-list></card-list>', 'search-page { height: 100%; display: grid; grid-gap: 10px; grid-template-columns: 300px 3fr; }', '', function(opts) {
         riot.mount('card-search');
         riot.mount('card-list');
 
@@ -237,7 +261,9 @@ riot.tag2('search-page', '<card-search class="leftContent" callback="{onSearchEn
 
         this.onDataAvailable = function(data) {
             console.log(data);
-            this.tags['card-list'].trigger('data_loaded', data.data);
+
+            this.tags['card-list'].opts.cards = data.data;
+            this.tags['card-list'].update();
 
         }.bind(this)
 
