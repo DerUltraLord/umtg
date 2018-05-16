@@ -52,21 +52,7 @@ h3 {
     height: 100%;
 }
 
-.header {
-    grid-area: header;
-}
 
-.content {
-    grid-area: content;
-}
-
-.wrapper {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 45px 1fr;
-    grid-template-areas: "header" "content";
-    min-height: 100vh;
-}
 
 .leftContent {
     background-color: var(--color-background-two);

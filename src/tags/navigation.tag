@@ -1,14 +1,18 @@
 <navigation class="header">
   
     
-    <ul>
-        <li>
-            <a class="navLogo" href="#">UMTG</a>
-        <li>
-        <li id="navPage{pageKey}" class="navElement" each={pageKey in this.opts.pages} id="nav{pageKey}" onClick={ parent.onClick(pageKey) }>
-            <a href="#">{pageKey}</a>
-        </li>
-    </ul>
+
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="#">UMTG</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a id="navPage{pageKey}" class="nav-item nav-link" onClick={ onClick(pageKey) } each={ pageKey in this.opts.pages } href="#">{ pageKey }</a>
+                </div>
+            </div>
+            </nav>
     <style>
 
         navigation {
@@ -58,7 +62,7 @@
         onClick(page) {
             return function(e) {
                 this.opts.onPageSelected(page)
-                var elements = document.getElementsByClassName("navElement");
+                var elements = document.getElementsByClassName("nav-item");
                 for (var i = 0; i < elements.length; ++i) {
                     elements[i].classList.remove("active");
                     if (elements[i].id == "navPage" + page) {
@@ -73,7 +77,7 @@
 
 
         this.on("mount", function () {
-            var elements = document.getElementsByClassName("navElement");
+            var elements = document.getElementsByClassName("nav-item");
             elements[0].classList.add("active")
         });
     </script>
