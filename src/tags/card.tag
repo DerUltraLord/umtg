@@ -5,10 +5,24 @@
     <h3 id="cardType{this.opts.card.id}" class="cardType">{this.opts.card.type_line}</h3>
     <p class="cardText">{this.opts.card.oracle_text}</p>
     <div class="cardActions">
-        <button id="removeButton" onClick="{removeCardFromCollection}" class="cardButton">-</button>
-        <label id="lblAmount">?</label>
-        <button id="addButton" onClick="{addCardToCollection}" class="cardButton">+</button>
-        <button id="btnAddToDeck" onClick="{addCardToDeck}" class="cardButton">add to deck</button>
+        <div class="btn-group btn-group-sm">
+            <button id="removeButton" onClick="{removeCardFromCollection}" class="btn btn-default delete" role="group"></button>
+            <button id="lblAmount" class="btn btn-default" role="group">?</label>
+            <button id="addButton" onClick="{addCardToCollection}" class="btn btn-default add" role="group"></button>
+        </div>
+
+        <div class="btn-group btn-group-sm" role="group">
+            <button type="button" id="btnAddToDeck" onClick="{addCardToDeck}" class="btn btn-default plus"></button>
+            <div class="btn-group btn-group-sm" role="group">
+                <button id="btnDeck" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    MyDeck
+                </button>
+                <div class="dropdown-menu" aria-labelledby="btnDeck">
+                    <a class="dropdown-item" href="#">foo</a>
+                    <a class="dropdown-item" href="#">foo</a>
+                </div>
+            </div>
+        <div>
     </div>
 
     <style>
@@ -35,13 +49,38 @@
 
         }
 
+
         .cardButton {
-            color: green;
-            padding-top: 0px;
-            padding-bottom: 0px;
-            padding-left: 5px;
-            padding-right: 5px;
-            border: 2px solid green;
+            display: inline-block;
+            background: #ccc;
+            vertical-align: middle;
+            border: 1px solid #777;
+            padding: 0px 0px 0px 0px;
+            margin: 0px 0px 0px 0px;
+            min-height: 22px;
+            min-width: 20px;
+
+        }
+
+        .radius-right {
+            border-radius: 0px 5px 5px 0px;
+        }
+
+        .radius-left {
+            border-radius: 5px 0px 0px 5px;
+        }
+
+        .plus:before {
+            content: "\002B";
+        }
+
+        .add:before {
+            content: "\25B6";
+        }
+
+
+        .delete:before {
+            content: "\25C0";        
         }
 
         .cardImage {

@@ -10,7 +10,7 @@
         <input placeholder="XLN" ref="searchEdition"></input>
         <div>
         <div>
-        <button>Search</Search>
+        <button type="submit" class="btn btn-primary">Search</Search>
     </form>
     <style>
 

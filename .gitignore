@@ -2,3 +2,4 @@ node_modules/
 umtg-win32*
 package-lock.json
 *.db
+dist/
