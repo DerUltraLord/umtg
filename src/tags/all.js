@@ -143,7 +143,6 @@ riot.tag2('collection-page', '<div class="scrollable leftContent"> <set-list cal
             this.tags['set-list'].update();
             if (this.tags['card-list'].opts.cards == undefined) {
                 var setToShow = this.tags['set-list'].tags['set'][0];
-                setToShow.root.classList.add('selected');
                 this.showCardsOfSet(setToShow.opts.set);
 
             }
@@ -157,14 +156,7 @@ riot.tag2('collection-page', '<div class="scrollable leftContent"> <set-list cal
         }.bind(this)
 
         this.showCardsOfSet = function(set) {
-            var setList = this.tags['set-list'].root;
             this.currentSet = set;
-            var selectedItem = setList.querySelector('.selected')
-            if (selectedItem) {
-                selectedItem.classList.remove('selected');
-            }
-
-            setList.querySelector('set[code="' + set.code + '"]').classList.add('selected')
             db.getCardsOfSet(set, this.onCardsFromDb);
 
         }.bind(this)
@@ -274,23 +266,35 @@ riot.tag2('search-page', '<card-search class="leftContent" callback="{onSearchEn
 
 });
 
-riot.tag2('set-list', '<set code="{s.code}" tabindex="0" if="{this.setTypes[s.set_type]}" onclick="{onSetClick(s)}" each="{s in this.opts.sets}" set="{s}"></set>', 'set-list set:focus,[data-is="set-list"] set:focus{ } set-list set:active,[data-is="set-list"] set:active{ } set-list set.selected,[data-is="set-list"] set.selected{ border: 1px solid black; outline: 0; }', '', function(opts) {
+riot.tag2('set-list', '<set code="{s.code}" if="{this.setTypes[s.set_type]}" onclick="{onSetClick(s)}" each="{s in this.opts.sets}" set="{s}"></set>', '', 'class="list-group scrollable"', function(opts) {
 
         this.setTypes = null;
 
         this.on('update', function() {
             this.setTypes = document.getElementsByTagName('settings-page')[0]._tag.settings.setTypes;
+
+            var sets = $(this.root).children();
+            if (sets.length > 0) {
+                if (sets.filter('.list-group-item-info').length == 0) {
+                    $(sets[0]).toggleClass('list-group-item-info');
+                }
+            }
         });
 
         this.onSetClick = function(set) {
             var callback = this.opts.callback;
+            var sets = this.root.querySelectorAll('set');
             return function(e) {
+                sets.forEach(function(setElement) {
+                    setElement.classList.remove('list-group-item-info');
+                });
+                $(e.srcElement).closest('set').toggleClass('list-group-item-info');
                 callback(set);
             }
         }.bind(this)
 });
 
-riot.tag2('set', '<img riot-src="{this.opts.set.icon_svg_uri}"></img> <div class="progress" data-label="{this.opts.set.name}"> <span class="value" style="width:20%;"></span> </div>', 'set { display: grid; grid-gap: 0px; grid-template-columns: 40px 1fr; height: 30px; background-color: var(--color-background-two); } set img,[data-is="set"] img{ width: 20px; height: 20px; margin-left: 5px; } set .progress,[data-is="set"] .progress{ margin-top: 1px; height: 29px; width: 100%; background-color: #c9c9c9; position: relative; } set .progress:before,[data-is="set"] .progress:before{ content: attr(data-label); position: absolute; text-align: left; top: 5px; left: 0; right: 0; margin-left: 10px; } set .progress .value,[data-is="set"] .progress .value{ background-color: #7cc4ff; display: inline-block; height: 100%; }', '', function(opts) {
+riot.tag2('set', '<div class="row"> <div class="col-2"> <img class="" riot-src="{this.opts.set.icon_svg_uri}"></img> </div> <div class="col-10"> <span class="badge badge-default">{this.opts.set.name}</span> <div class="progress"> <div class="progress-bar" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div> </div> </div>', 'set img,[data-is="set"] img{ width: 20px; height: 20px; margin-left: 5px; }', 'class="list-group-item"', function(opts) {
 });
 
 riot.tag2('settings-page', '<p>Settings Page</p> <ul> <li each="{value, name in settings.setTypes}"> <input onclick="{onSetTypeClicked()}" type="checkbox" riot-value="{name}" checked="{value}">{name}</input> </li> <ul>', '', '', function(opts) {

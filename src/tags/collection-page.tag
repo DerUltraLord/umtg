@@ -42,7 +42,6 @@
             this.tags['set-list'].update();
             if (this.tags['card-list'].opts.cards == undefined) {
                 var setToShow = this.tags['set-list'].tags['set'][0];
-                setToShow.root.classList.add('selected');
                 this.showCardsOfSet(setToShow.opts.set);
                 
             }
@@ -57,14 +56,7 @@
 
 
         showCardsOfSet(set) {
-            var setList = this.tags['set-list'].root;
             this.currentSet = set;
-            var selectedItem = setList.querySelector('.selected')
-            if (selectedItem) {
-                selectedItem.classList.remove('selected');
-            }
-
-            setList.querySelector('set[code="' + set.code + '"]').classList.add('selected')
             db.getCardsOfSet(set, this.onCardsFromDb);
 
         }
