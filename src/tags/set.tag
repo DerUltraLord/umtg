@@ -9,8 +9,6 @@
                 <div class="progress-bar" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div> 
             </div>
         </div>
-
-
     <style>
 
         img {

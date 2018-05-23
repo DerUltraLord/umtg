@@ -196,27 +196,53 @@ riot.tag2('collection-page', '<div class="scrollable leftContent"> <set-list cal
 
 });
 
-riot.tag2('decks-page', '<div class="box scrollable"> <label tabindex="0" onclick="{onClick(d)}" each="{d in this.decks}">{d.name}</label> </div> <div class="box scrollable"> <card-list></card-list> </div>', 'decks-page { display: grid; grid-gap: 10px; grid-template-columns: 250px 1fr; }', 'class="fullHeight"', function(opts) {
-        this.decks = []
+riot.tag2('deck-list', '<deck id="{index}" class="list-group-item" each="{d, index in this.opts.decks}" deck="{d}" onclick="{() => onClick(index)}"></deck>', '', 'class="list-group"', function(opts) {
+
+        this.onClick = function(index) {
+            let selectionClassName = 'list-group-item-info';
+            $('deck.' + selectionClassName).removeClass(selectionClassName);
+            let element = this.tags['deck'][index];
+            element.root.classList.add(selectionClassName);
+            events.trigger('deck:onClick', element);
+        }.bind(this)
+});
+
+riot.tag2('decks-page', '<div class="scrollable"> <deck-list decks="{this.decks}" selecteddeck="{this.selectedDeck}" callback="{onDeckClicked}"></deck-list> </div> <div class="scrollable"> <card-list></card-list> </div> </div>', 'decks-page { display: grid; grid-gap: 10px; grid-template-columns: 300px 1fr; }', '', function(opts) {
+        var self = this;
+        this.decks = [];
+        this.selectedDeck = null;
+
         this.on('mount', function() {
             this.decks = deck.getDecks(this.setDecks);
+        });
+
+        this.on('update', function() {
+            if (this.selectedDeck == null && this.decks.length > 0) {
+                this.selectedDeck = this.decks[0];
+            }
         });
 
         this.setDecks = function(decks) {
             this.decks = decks;
         }.bind(this);
 
-        this.onClick = function(d) {
-            return function(e) {
-                var cards = []
-                var cardList = this.parent.tags['card-list'];
-                deck.getCardsOfDeck(d.name, function(card) {
-                    cards.push(card);
-                    cardList.opts.cards = cards;
-                    cardList.update();
-                });
-            }
+        this.showCardsOfDeck = function(d) {
+            var cards = []
+            var cardList = this.tags['card-list'];
+            deck.getCardsOfDeck(d.name, function(card) {
+                cards.push(card);
+                cardList.opts.cards = cards;
+                cardList.update();
+            });
+            this.visibleDeck = d;
         }.bind(this)
+
+        events.on('deck:onClick', function(element) {
+            self.showCardsOfDeck(element.opts.deck);
+        });
+});
+
+riot.tag2('deck', '<p>{this.opts.deck.name}</p>', '', '', function(opts) {
 });
 
 riot.tag2('navigation', '<nav class="navbar navbar-expand-lg navbar-dark bg-dark"> <a class="navbar-brand" href="#">UMTG</a> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse" id="navbarNavAltMarkup"> <div class="navbar-nav"> <a id="navPage{pageKey}" class="nav-item nav-link" onclick="{onClick(pageKey)}" each="{pageKey in this.opts.pages}" href="#">{pageKey}</a> </div> </div> </nav>', 'navigation { background: linear-gradient(var(--color-header), black); color: white; } navigation ul,[data-is="navigation"] ul{ list-style-type: none; margin: 0; padding: 0; overflow: hidden; } navigation li,[data-is="navigation"] li{ float: left; } navigation a,[data-is="navigation"] a{ display: block; text-align: center; padding: 14px 16px; text-decoration: none; color: var(--color--background); } navigation li:hover,[data-is="navigation"] li:hover{ background-color: var(--color-background); color: var(--color-font-fg); } navigation li.active:hover,[data-is="navigation"] li.active:hover{ } navigation li.active,[data-is="navigation"] li.active{ background-color: var(--color-background); background: linear-gradient(var(--color-background), darkgray); color: var(--color-font-fg); } navigation .navLogo,[data-is="navigation"] .navLogo{ font-weight: bold; }', 'class="header"', function(opts) {
@@ -266,7 +292,7 @@ riot.tag2('search-page', '<card-search class="leftContent" callback="{onSearchEn
 
 });
 
-riot.tag2('set-list', '<set code="{s.code}" if="{this.setTypes[s.set_type]}" onclick="{onSetClick(s)}" each="{s in this.opts.sets}" set="{s}"></set>', '', 'class="list-group scrollable"', function(opts) {
+riot.tag2('set-list', '<set code="{s.code}" if="{this.setTypes[s.set_type]}" onclick="{() => onSetClick(index, s)}" each="{s, index in this.opts.sets}" set="{s}"></set>', '', 'class="list-group scrollable"', function(opts) {
 
         this.setTypes = null;
 
@@ -281,16 +307,12 @@ riot.tag2('set-list', '<set code="{s.code}" if="{this.setTypes[s.set_type]}" onc
             }
         });
 
-        this.onSetClick = function(set) {
-            var callback = this.opts.callback;
-            var sets = this.root.querySelectorAll('set');
-            return function(e) {
-                sets.forEach(function(setElement) {
-                    setElement.classList.remove('list-group-item-info');
-                });
-                $(e.srcElement).closest('set').toggleClass('list-group-item-info');
-                callback(set);
-            }
+        this.onSetClick = function(index, set) {
+            let selectionClassName = 'list-group-item-info';
+            let tagSet = this.tags['set'][index];
+            $('set.' + selectionClassName).removeClass(selectionClassName);
+            tagSet.root.classList.add(selectionClassName);
+            this.opts.callback(set);
         }.bind(this)
 });
 

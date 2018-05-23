@@ -1,9 +1,11 @@
-<decks-page class="fullHeight">
-    <div class="box scrollable">
-        <label tabindex="0" onClick={onClick(d)} each={d in this.decks}>{d.name}</label>
-    </div>
-    <div class="box scrollable">
-        <card-list></card-list>
+<decks-page>
+    
+        <div class="scrollable">
+            <deck-list decks={ this.decks } selectedDeck={ this.selectedDeck } callback={ onDeckClicked }></deck-list>
+        </div>
+        <div class="scrollable">
+            <card-list></card-list>
+        </div>
     </div>
 
 
@@ -11,29 +13,41 @@
         decks-page {
             display: grid;
             grid-gap: 10px;
-            grid-template-columns: 250px 1fr;
+            grid-template-columns: 300px 1fr;
         }
     </style>
     <script>
-        this.decks = []
+        var self = this;
+        this.decks = [];
+        this.selectedDeck = null;
+
         this.on('mount', function() {
             this.decks = deck.getDecks(this.setDecks);
+        });
+
+        this.on('update', function() {
+            if (this.selectedDeck == null && this.decks.length > 0) {
+                this.selectedDeck = this.decks[0];
+            }
         });
 
         setDecks(decks) {
             this.decks = decks;
         };
 
-        onClick(d) {
-            return function(e) {
-                var cards = []
-                var cardList = this.parent.tags['card-list'];
-                deck.getCardsOfDeck(d.name, function(card) {
-                    cards.push(card);
-                    cardList.opts.cards = cards;
-                    cardList.update();
-                });
-            }
+        showCardsOfDeck(d) {
+            var cards = []
+            var cardList = this.tags['card-list'];
+            deck.getCardsOfDeck(d.name, function(card) {
+                cards.push(card);
+                cardList.opts.cards = cards;
+                cardList.update();
+            });
+            this.visibleDeck = d;
         }
+
+        events.on('deck:onClick', function(element) {
+            self.showCardsOfDeck(element.opts.deck);
+        });
     </script>
 </decks-page>

@@ -1,5 +1,5 @@
 <set-list class="list-group scrollable">
-    <set code={ s.code }  if={ this.setTypes[s.set_type] } } onClick={onSetClick(s)} each={s in this.opts.sets} set={s}></set>
+    <set code={ s.code }  if={ this.setTypes[s.set_type] } } onClick={ () => onSetClick(index, s) } each={s, index in this.opts.sets} set={s}></set>
 
     <style>
     </style>
@@ -18,16 +18,12 @@
             }
         });
 
-        onSetClick(set) {
-            var callback = this.opts.callback;
-            var sets = this.root.querySelectorAll('set');
-            return function(e) {
-                sets.forEach(function(setElement) {
-                    setElement.classList.remove('list-group-item-info');
-                });
-                $(e.srcElement).closest('set').toggleClass('list-group-item-info');
-                callback(set);
-            }
+        onSetClick(index, set) {
+            let selectionClassName = 'list-group-item-info';
+            let tagSet = this.tags['set'][index];
+            $('set.' + selectionClassName).removeClass(selectionClassName);
+            tagSet.root.classList.add(selectionClassName);
+            this.opts.callback(set);
         }
     </script>
 </set-list>
