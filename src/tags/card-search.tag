@@ -22,15 +22,17 @@
             grid-template-columns: 60px 1fr;
         }
     </style>
-    <script>
-        onSearch(e) {
+    <script type="es6">
+        /* global scry */
+
+        this.onSearch = e => {
             e.preventDefault();
 
-            filter = scry.getSearchFilter(this.refs.searchName.value,
-                                          this.refs.searchType.value,
-                                          this.refs.searchText.value,
-                                          this.refs.searchEdition.value)
+            let filter = scry.getSearchFilter(this.refs.searchName.value,
+                this.refs.searchType.value,
+                this.refs.searchText.value,
+                this.refs.searchEdition.value);
             this.opts.callback(filter);
-        }
+        };
     </script>
 </card-search>

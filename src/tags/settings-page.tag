@@ -5,8 +5,8 @@
             <input onClick={ onSetTypeClicked() } type="checkbox" value={ name } checked={ value }>{ name }</input>
         </li>
     <ul>
-    <script>
-        var fs = require('fs');
+    <script type="es6">
+        let fs = require("fs");
         var settingsPath = "/home/maximilian/.umtg";
         var settingsFile = settingsPath + "/settings.json";
 
@@ -35,39 +35,33 @@
             }
         };
 
-        this.on('update', function() {
-            console.log("update");
-            console.log(this.settings);
-        });
 
-        this.on('mount', function() {
+        this.on("mount", function() {
             this.loadSettingsFromFile();
             this.update();
         });
 
-        onSetTypeClicked() {
-            return function(e) {
+        this.onSetTypeClicked = () => {
+            return (e) => {
                 this.settings.setTypes[e.srcElement.value] = e.srcElement.checked;
                 this.settingsToFile();
-            }
-        }
+            };
+        };
 
-        settingsToFile() {
-            fs.mkdir(settingsPath, function(err) {
+        this.settingsToFile = () => {
+            fs.mkdir(settingsPath, () => {
             });
-            fs.writeFile(settingsFile, JSON.stringify(this.settings, null, 4), function(err) {
-                console.log(err);
+            fs.writeFile(settingsFile, JSON.stringify(this.settings, null, 4), () => {
             });
-        }
+        };
 
-        loadSettingsFromFile() {
-            var settings = this.settings;
-            fs.readFile(settingsFile, 'ascii', this.setSettings);
-        }
+        this.loadSettingsFromFile = () => {
+            fs.readFile(settingsFile, "ascii", this.setSettings);
+        };
 
-        setSettings(err, data) {
+        this.setSettings = (err, data) => {
             this.settings = JSON.parse(data);
-        }
+        };
 
 
     </script>

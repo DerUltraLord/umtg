@@ -12,28 +12,27 @@
 
     </style>
    
-    <script>
-        riot.mount('card-search');
-        riot.mount('card-list'); 
+    <script type="es6">
+        /* global riot, scry */
+        riot.mount("card-search");
+        riot.mount("card-list"); 
 
-        onSearchEntered(filter) {
+        this.onSearchEntered = filter => {
             //scry.search(searchText, this.onDataAvailable, this.onDataNotAvailable)
             scry.searchByFilter(filter, this.onDataAvailable, this.onDataNotAvailable);
             
-        }
+        };
 
-        onDataAvailable(data) {
-            console.log(data);
-            //this.tags['card-list'].trigger('data_loaded', data.data);
-            this.tags['card-list'].opts.cards = data.data;
-            this.tags['card-list'].update();
+        this.onDataAvailable = data => {
+            this.tags["card-list"].opts.cards = data.data;
+            this.tags["card-list"].update();
             
-        }
+        };
 
-        onDataNotAvailable() {
-            this.tags['card-list'].trigger('data_loaded', {});
+        this.onDataNotAvailable = () => {
+            this.tags["card-list"].trigger("data_loaded", {});
             
-        }
+        };
 
     
     </script>

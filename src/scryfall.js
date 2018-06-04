@@ -18,15 +18,17 @@ exports.getCardByName = function(name, successCallback) {
 };
 
 exports.search = function(searchText, success, fail) {
-    console.log(searchText);
+    if (fail) {
+        throw new Error(fail);
+    }
     getJSON("https://api.scryfall.com/cards/search?order=cmc&q=" + searchText, success);
 };
 
 exports.buildSearchString = function(filter) {
-    res = filter["name"];
+    let res = filter["name"];
     for (var property in filter) {
         if (property != "name") {
-            splitted = filter[property].split(" ");
+            let splitted = filter[property].split(" ");
             for (var index in splitted) {
                 res += " " + property + splitted[index];
             }
@@ -37,15 +39,15 @@ exports.buildSearchString = function(filter) {
 };
 
 exports.searchByFilter = function(filter, success, fail) {
-    searchString = this.buildSearchString(filter);
+    let searchString = this.buildSearchString(filter);
     exports.search(searchString, success, fail);
 };
 
 exports.getSearchFilter = function(name, type, text, edition) {
-    res = {};
+    let res = {};
     // type
-    reType = /\s?t:(\w+)/g;
-    regResult = applyRegex(reType, name, type);
+    let reType = /\s?t:(\w+)/g;
+    let regResult = applyRegex(reType, name, type);
     name = regResult[0];
     type = regResult[1];
 
@@ -78,18 +80,21 @@ exports.getSearchFilter = function(name, type, text, edition) {
     return res;
 };
 
-applyRegex = function(re, a, b) {
-    while (m = re.exec(a)) {
+let applyRegex = function(re, a, b) {
+    let m;
+    m = re.exec(a);
+    while (m != null) {
         a = a.replace(m[0], "");
         b += " " + m[1];
+        m = re.exec(a);
     }
     return [a, b];
 };
 
 
-getJSON = function(url, callback, fail) {
+let getJSON = function(url, callback, fail) {
     
-    res = https.get(url, res => {
+    https.get(url, res => {
         res.setEncoding("utf8");
         let body = "";
         res.on("data", data => {
@@ -100,7 +105,7 @@ getJSON = function(url, callback, fail) {
             callback(body);
         });
         if (fail) {
-            res.on("error", (e) => {
+            res.on("error", () => {
                 fail();
             });
         }

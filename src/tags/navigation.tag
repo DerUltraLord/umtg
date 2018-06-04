@@ -56,10 +56,12 @@
         }
     </style>
 
-    <script>
-        onClick(page) {
-            return function(e) {
-                this.opts.onPageSelected(page)
+    <script style="es6">
+        /* globals document */
+
+        this.onClick = page => {
+            return () => {
+                this.opts.onPageSelected(page);
                 var elements = document.getElementsByClassName("nav-item");
                 for (var i = 0; i < elements.length; ++i) {
                     elements[i].classList.remove("active");
@@ -69,15 +71,14 @@
 
                 }
 
-            }
-        }
+            };
+        };
 
-
-
-        this.on("mount", function () {
+        this.on("mount", () => {
             var elements = document.getElementsByClassName("nav-item");
-            elements[0].classList.add("active")
+            elements[0].classList.add("active");
         });
+
     </script>
 
 </navigation>

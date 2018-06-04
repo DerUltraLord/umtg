@@ -60,7 +60,7 @@ exports.addCardToDeck = function(card, deck) {
 
     exports.getCardsOfDeck(deck, (c) => {
         if (card.name == c.name) {
-            
+            throw new Error("TODO");    
         }
     });
 };
@@ -106,7 +106,7 @@ exports.traverseCards = (content) => {
             let cardlist;
             cardlist = isSideboardActive ? result["sideboard"] : result["cards"];
 
-            matchCard = exports._lineMatchCard(line);
+            let matchCard = exports._lineMatchCard(line);
             matchCard != null ? cardlist.push(matchCard) // matching card
                 : !isSideboardActive ? isSideboardActive = exports._lineMatchSideboard(line) // Sideboard expressing
                     : exports._lineNotMatching(line); // matching error

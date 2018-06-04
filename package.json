@@ -8,7 +8,8 @@
     "start": "electron main.js",
     "watch": "riot -w src/tags src/tags/all.js",
     "postinstall": "electron-builder install-app-deps",
-    "package-linux": "./node_modules/.bin/electron-packager . --overwrite --platform=linux --out=dist"
+    "package-linux": "./node_modules/.bin/electron-packager . --overwrite --platform=linux --out=dist",
+    "lint": "./node_modules/.bin/eslint --ignore-pattern all.js --ext .tag,.js src || true"
   },
   "author": "fackler_m",
   "license": "GNU",

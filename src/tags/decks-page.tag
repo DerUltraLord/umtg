@@ -17,37 +17,38 @@
             grid-template-columns: 300px 1fr;
         }
     </style>
-    <script>
+    <script type="es6">
+        /* globals deck, events */
         var self = this;
         this.decks = [];
         this.selectedDeck = null;
 
-        this.on('mount', function() {
+        this.on("mount", () => {
             this.decks = deck.getDecks(this.setDecks);
         });
 
-        this.on('update', function() {
+        this.on("update", () => {
             if (this.selectedDeck == null && this.decks.length > 0) {
                 this.selectedDeck = this.decks[0];
             }
         });
 
-        setDecks(decks) {
+        this.setDecks = decks => {
             this.decks = decks;
         };
 
-        showCardsOfDeck(d) {
-            var cards = []
-            var cardList = this.tags['card-list'];
+        this.showCardsOfDeck = d => {
+            var cards = [];
+            var cardList = this.tags["card-list"];
             deck.getCardsOfDeck(d.name, function(card) {
                 cards.push(card);
                 cardList.opts.cards = cards;
                 cardList.update();
             });
             this.visibleDeck = d;
-        }
+        };
 
-        events.on('deck:onClick', function(element) {
+        events.on("deck:onClick", function(element) {
             self.showCardsOfDeck(element.opts.deck);
         });
     </script>

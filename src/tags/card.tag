@@ -74,61 +74,65 @@
             width: 120px;
         }
     </style>
-    <script>
-        var db = require("./src/db.js");
-        this.availableDecks = ['one', 'two'];
+    <script type="es6">
+        /* global document, db, alert, $ */
+        this.availableDecks = ["one", "two"];
+        // TODO: move logic extra module (testable)
 
-        getTagsForMana(card) {
+        this.getTagsForMana = card => {
 
-            var re = /\{\w\}/g;
+            let re = /\{\w\}/g;
             
-            res = '';
+            let res = "";
            
-            while (m = re.exec(card.mana_cost)) {
-                var manaString = m[0].substring(1, m[0].length -1);
+            let m;
+            m = re.exec(card.mana_cost);
+            while (m != null) {
+                let manaString = m[0].substring(1, m[0].length -1);
                 manaString = `<svg class="icon24 float-lg-right" viewBox="0 0 600 600">
                     <use xlink:href="res/svg.svg#` + manaString + `"></use>
-                    </svg>`
+                    </svg>`;
 
                 res = manaString + res;
+                m = re.exec(card.mana_cost);
             }
             return res;
         };
 
-        this.on('mount', function() {
+        this.on("mount", function() {
             //var cardImage = document.getElementById("image" + this.opts.card.id);
             //if (this.opts.card.image_uris) {
-            //    cardImage.setAttribute('src', this.opts.card.image_uris.art_crop);
+            //    cardImage.setAttribute("src", this.opts.card.image_uris.art_crop);
             //}
 
             var cardName = document.getElementById("cardMana" + this.opts.card.id);
-            cardName.insertAdjacentHTML('beforeend', this.getTagsForMana(this.opts.card));
+            cardName.insertAdjacentHTML("beforeend", this.getTagsForMana(this.opts.card));
 
             var colorIdentity = this.opts.card.color_identity;
 
             if (colorIdentity.length == 1) {
-                var typeToAdd = '';
+                var typeToAdd = "";
                 if (colorIdentity[0] === "W") {
-                    typeToAdd = 'warning';
+                    typeToAdd = "warning";
                 } else if (colorIdentity[0] === "U") {
-                    typeToAdd = 'info';
+                    typeToAdd = "info";
                 } else if (colorIdentity[0] === "B") {
-                    typeToAdd = 'dark';
+                    typeToAdd = "dark";
                 } else if (colorIdentity[0] === "G") {
-                    typeToAdd = 'success';
+                    typeToAdd = "success";
                 } else if (colorIdentity[0] === "R") {
-                    typeToAdd = 'danger';
+                    typeToAdd = "danger";
                 }
                 this.root.classList.add("list-group-item-" + typeToAdd);
 
-                var buttons = this.root.querySelectorAll('button');
+                var buttons = this.root.querySelectorAll("button");
                 buttons.forEach(function(button) {
-                    button.classList.remove('btn-default');
-                    button.classList.add('btn-' + typeToAdd);
+                    button.classList.remove("btn-default");
+                    button.classList.add("btn-" + typeToAdd);
                 });
             }
 
-            //this.root.querySelector('#addButton').insertAdjacentHTML('beforeend', octicons.calendar.toSVG());
+            //this.root.querySelector("#addButton").insertAdjacentHTML("beforeend", octicons.calendar.toSVG());
 
 
 
@@ -137,31 +141,31 @@
 
         this.on("update", function() {
             if (this.opts.card.image_uris) {
-                this.root.querySelector('img').setAttribute('src', this.opts.card.image_uris.art_crop);
+                this.root.querySelector("img").setAttribute("src", this.opts.card.image_uris.art_crop);
             }
             db.getAmountOfCard(this.opts.card.id, this.updateAmount);
         });
 
-        updateAmount(amount) {
+        this.updateAmount = amount => {
             var lblAmount = this.root.querySelector("#lblAmount");
             lblAmount.innerHTML = amount;
-        }
+        };
 
-        addCardToCollection() {
+        this.addCardToCollection = () => {
             db.cardAdjustAmount(this.opts.card, 1, this.update);
-        }
+        };
 
-        removeCardFromCollection() {
+        this.removeCardFromCollection = () => {
             db.cardAdjustAmount(this.opts.card, -1, this.update);
-        }
+        };
 
-        addCardToDeck() {
+        this.addCardToDeck = () => {
             alert(this.opts.card);
-        }
+        };
 
-        deckSelected(d) {
-            $('.btnDeck').html(d);
-        }
+        this.deckSelected = d => {
+            $(".btnDeck").html(d);
+        };
     </script>
 
 </card>

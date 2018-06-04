@@ -15,63 +15,62 @@
 
     </style>
 
-    <script>
+    <script type="es6">
+        /* globals db, scry, getJSON */
 
         this.currentSet = null;
 
-        this.on('mount', function() {
+        this.on("mount", () => {
             db.getSets(this.checkIfSetsAreInDb);
         });
 
-        checkIfSetsAreInDb(res) {
+        this.checkIfSetsAreInDb = res => {
             if (res.length == 0) {
                 scry.scryfallGetSets(this.onSetsFromScryfall);
             }
             this.onGetSetsFromDb(res);
-        }
+        };
 
-        onGetSetsFromDb(res) {
+        this.onGetSetsFromDb = res => {
             var sets = [];
             for (var i = 0; i < res.length; ++i) {
-                var code = res[i].code;
                 var set = JSON.parse(res[i].jsonString);
                 sets.push(set);
             }
-            opts.sets = sets;
+            this.opts.sets = sets;
             
-            this.tags['set-list'].update();
-            if (this.tags['card-list'].opts.cards == undefined) {
-                var setToShow = this.tags['set-list'].tags['set'][0];
+            this.tags["set-list"].update();
+            if (this.tags["card-list"].opts.cards == undefined) {
+                var setToShow = this.tags["set-list"].tags["set"][0];
                 this.showCardsOfSet(setToShow.opts.set);
                 
             }
-        }
+        };
 
-        onSetsFromScryfall(res) {
+        this.onSetsFromScryfall = res => {
             res.data.forEach(function(set) {
                 db.setAdd(set);
             });
             db.getSets(this.onGetSetsFromDb);
-        }
+        };
 
 
-        showCardsOfSet(set) {
+        this.showCardsOfSet = set => {
             this.currentSet = set;
             db.getCardsOfSet(set, this.onCardsFromDb);
 
-        }
+        };
 
-        onCardsFromDb(res) {
+        this.onCardsFromDb = res => {
+            // TODO: getJSON to module
             if (res.length < this.currentSet.card_count) {
                 getJSON(this.currentSet.search_uri, this.onCardsFromScryfall);
             } else {
-                console.log("set already stored " + this.currentSet.name);
                 this.showCards(res);
-                console.log(res);
             }
-        }
+        };
 
-        onCardsFromScryfall(res) {
+        this.onCardsFromScryfall = res => {
             for (var i = 0; i < res.data.length; ++i) {
                 var card = res.data[i];
                 db.cardAdd(card, 0);
@@ -83,16 +82,16 @@
                 db.getCardsOfSet(this.currentSet, this.onCardsFromDb);
             }
 
-        }
+        };
 
-        showCards(cards) {
-            this.tags['card-list'].opts.cards = cards;
-            this.tags['card-list'].update();
-        }
+        this.showCards = cards => {
+            this.tags["card-list"].opts.cards = cards;
+            this.tags["card-list"].update();
+        };
 
-        onSetClicked(set) {
+        this.onSetClicked = set => {
             this.showCardsOfSet(set);
-        }
+        };
 
     </script>
 </collection-page>
