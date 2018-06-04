@@ -10,14 +10,11 @@
                         <button id="addButton" onClick="{addCardToCollection}" class="btn btn-default add" role="group"><span class="glyphicon glyphicon-search"></span></button>
                     </div>
                     <div class="btn-group btn-group-sm float-lg-right" role="group">
-                        <button type="button" id="btnAddToDeck" onClick="{addCardToDeck}" class="btn btn-default plus"></button>
+                        <button type="button" id="btnAddToDeck" onClick={ addCardToDeck } class="btn btn-default plus"></button>
                         <div class="btn-group btn-group-sm" role="group">
-                            <button id="btnDeck" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                MyDeck
-                            </button>
+                            <button type="button" class="btn btn-default dropdown-toggle btnDeck" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">choose deck</button>
                             <div class="dropdown-menu" aria-labelledby="btnDeck">
-                                <a class="dropdown-item" href="#">foo</a>
-                                <a class="dropdown-item" href="#">foo</a>
+                                <a class="dropdown-item" each={ d in this.availableDecks } onClick={ () => deckSelected(d) }>{ d }</a>
                             </div>
                         </div>
                     </div>
@@ -36,6 +33,7 @@
 
 
     <style>
+
 
         h2 {
             overflow: hidden;
@@ -71,9 +69,14 @@
             margin-right: 10px;
             margin-top: 3px;
         }
+
+        .btnDeck {
+            width: 120px;
+        }
     </style>
     <script>
         var db = require("./src/db.js");
+        this.availableDecks = ['one', 'two'];
 
         getTagsForMana(card) {
 
@@ -150,6 +153,14 @@
 
         removeCardFromCollection() {
             db.cardAdjustAmount(this.opts.card, -1, this.update);
+        }
+
+        addCardToDeck() {
+            alert(this.opts.card);
+        }
+
+        deckSelected(d) {
+            $('.btnDeck').html(d);
         }
     </script>
 

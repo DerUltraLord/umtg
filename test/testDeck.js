@@ -33,11 +33,56 @@ describe('deck.js', function() {
 
     it('getCardsOfDeck()', function() {
 
-            deck.getCardsOfDeck('test1.txt', function(card) {
+        deck.getCardsOfDeck('test1.txt', function(card) {
         });
 
     });
 
+    it('_lineMatchSideboard()', function() {
+        assert.equal(deck._lineMatchSideboard("Sideboard: "), true);
+        assert.equal(deck._lineMatchSideboard("Sideboard:"), true);
+        assert.equal(deck._lineMatchSideboard("Sideboard"), false);
+    });
 
+    it('_lineMatchSideboard()', function() {
+        let result = deck._lineMatchCard("4 Ichor Wellspring");
+        assert.equal(result.name, "Ichor Wellspring");
+        assert.equal(result.amount, 4);
+
+        result = deck._lineMatchCard("4Ichor Wellspring");
+        assert.equal(result, null);
+    });
+
+
+    it('traverseCards() without sideboard', function() {
+        let content = "4 Ichor Wellspring\n2 Lightning bolt";
+
+        let result = deck.traverseCards(content);
+        cards = result.cards;
+        assert.equal(cards.length, 2);
+        assert.equal(cards[0].name, 'Ichor Wellspring');
+        assert.equal(cards[0].amount, 4);
+
+        assert.equal(result.sideboard.length, 0);
+
+    });
+
+    it('traverseCards() with sideboard', function() {
+        // TODO: how to handle double entries
+        let content = "4 Ichor Wellspring\n2 Lightning bolt\nSideboard: \n2 Lightning bolt";
+
+        let result = deck.traverseCards(content);
+        cards = result.cards;
+        assert.equal(cards.length, 2);
+        assert.equal(cards[0].name, 'Ichor Wellspring');
+        assert.equal(cards[0].amount, 4);
+        assert.equal(cards[1].name, 'Lightning bolt');
+        assert.equal(cards[1].amount, 2);
+
+        assert.equal(result.sideboard.length, 1);
+        assert.equal(result.sideboard[0].name, 'Lightning bolt');
+        assert.equal(result.sideboard[0].amount, 2);
+
+    });
 
 });

@@ -1,4 +1,5 @@
 <decks-page>
+        <span show={ this.decks == null || this.decks.length == 0 } class="badge badge-warning">No decks found.<br>Copy decklist text files into ~/.umtg/decks<br>and reload</span>
     
         <div class="scrollable">
             <deck-list decks={ this.decks } selectedDeck={ this.selectedDeck } callback={ onDeckClicked }></deck-list>
