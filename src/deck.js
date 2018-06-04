@@ -1,7 +1,7 @@
-var fs = require('fs');
-var db = require('./db.js');
-var scry = require('./scryfall.js');
-var decksPath = process.env.HOME + '/.umtg/decks';
+var fs = require("fs");
+var db = require("./db.js");
+var scry = require("./scryfall.js");
+var decksPath = process.env.HOME + "/.umtg/decks";
 
 if (!fs.existsSync(decksPath)) {
     fs.mkdirSync(decksPath);
@@ -20,18 +20,18 @@ exports.getDecks = function(callback) {
         var res = [];
         files.forEach(file => {
             res.push(new Deck(file));
-        })
+        });
         callback(res);
     });
-}
+};
 
 exports.getCardsOfDeck = function(deckname, callback) {
-    fs.readFile(decksPath + "/" + deckname, 'ascii', function(err, data) {
+    fs.readFile(decksPath + "/" + deckname, "ascii", function(err, data) {
 
         // TODO: handle sideboard
         let deckResult = exports.traverseCards(data);
 
-        let cards = deckResult['cards'];
+        let cards = deckResult["cards"];
 
 
         var addedIds = [];
@@ -53,8 +53,8 @@ exports.getCardsOfDeck = function(deckname, callback) {
                 }
             });
         });
-    })
-}
+    });
+};
 
 exports.addCardToDeck = function(card, deck) {
 
@@ -63,7 +63,7 @@ exports.addCardToDeck = function(card, deck) {
             
         }
     });
-}
+};
 
 exports._lineMatchCard = (line) => {
     let re = /(\d+)\s(.*)/;
@@ -77,7 +77,7 @@ exports._lineMatchCard = (line) => {
     }
 
     return result;
-}
+};
 
 exports._lineMatchSideboard = (line) => {
     let res = /Sideboard:\s*/;
@@ -87,8 +87,8 @@ exports._lineMatchSideboard = (line) => {
 
 
 exports._lineNotMatching = (line) => {
-    throw new Error('not matching line: ' + line);
-}
+    throw new Error("not matching line: " + line);
+};
 
 exports.traverseCards = (content) => {
 
@@ -98,18 +98,18 @@ exports.traverseCards = (content) => {
 
     result = content
         .trim()
-        .split('\n')
+        .split("\n")
         .reduce((result, line) => {
-            result['cards'] = result['cards'] || [];
-            result['sideboard'] = result['sideboard'] || [];
+            result["cards"] = result["cards"] || [];
+            result["sideboard"] = result["sideboard"] || [];
 
             let cardlist;
-            cardlist = isSideboardActive ? result['sideboard'] : result['cards']
+            cardlist = isSideboardActive ? result["sideboard"] : result["cards"];
 
             matchCard = exports._lineMatchCard(line);
             matchCard != null ? cardlist.push(matchCard) // matching card
-            : !isSideboardActive ? isSideboardActive = exports._lineMatchSideboard(line) // Sideboard expressing
-            : exports._lineNotMatching(line); // matching error
+                : !isSideboardActive ? isSideboardActive = exports._lineMatchSideboard(line) // Sideboard expressing
+                    : exports._lineNotMatching(line); // matching error
 
             return result;
         }, initialValue);
