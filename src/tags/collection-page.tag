@@ -16,7 +16,7 @@
     </style>
 
     <script type="es6">
-        /* globals db, scry, getJSON */
+        /* globals db, scry, utils */
 
         this.currentSet = null;
 
@@ -62,9 +62,8 @@
         };
 
         this.onCardsFromDb = res => {
-            // TODO: getJSON to module
             if (res.length < this.currentSet.card_count) {
-                getJSON(this.currentSet.search_uri, this.onCardsFromScryfall);
+                utils.getJSON(this.currentSet.search_uri, this.onCardsFromScryfall);
             } else {
                 this.showCards(res);
             }
@@ -77,7 +76,7 @@
             }
 
             if (res.has_more == true) {
-                getJSON(res.next_page, this.onCardsFromScryfall);
+                utils.getJSON(res.next_page, this.onCardsFromScryfall);
             } else {
                 db.getCardsOfSet(this.currentSet, this.onCardsFromDb);
             }

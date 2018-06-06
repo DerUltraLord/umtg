@@ -1,8 +1,8 @@
-var https = require("https");
+const utils = require("./utils.js");
 
 
 exports.scryfallGetSets = function(successCallback) {
-    getJSON("https://api.scryfall.com/sets", successCallback);
+    utils.getJSON("https://api.scryfall.com/sets", successCallback);
 };
 
 exports.getCardByName = function(name, successCallback) {
@@ -14,14 +14,14 @@ exports.getCardByName = function(name, successCallback) {
         }
 
     }
-    getJSON("https://api.scryfall.com/cards/search?q=%21\"" + name.replace(" ", "+") + "\"", onResponse);
+    utils.getJSON("https://api.scryfall.com/cards/search?q=%21\"" + name.replace(" ", "+") + "\"", onResponse);
 };
 
 exports.search = function(searchText, success, fail) {
     if (fail) {
         throw new Error(fail);
     }
-    getJSON("https://api.scryfall.com/cards/search?order=cmc&q=" + searchText, success);
+    utils.getJSON("https://api.scryfall.com/cards/search?order=cmc&q=" + searchText, success);
 };
 
 exports.buildSearchString = function(filter) {
@@ -92,23 +92,3 @@ let applyRegex = function(re, a, b) {
 };
 
 
-let getJSON = function(url, callback, fail) {
-    
-    https.get(url, res => {
-        res.setEncoding("utf8");
-        let body = "";
-        res.on("data", data => {
-            body += data;
-        });
-        res.on("end", () => {
-            body = JSON.parse(body);
-            callback(body);
-        });
-        if (fail) {
-            res.on("error", () => {
-                fail();
-            });
-        }
-    });
-
-};
