@@ -18,10 +18,7 @@ exports.getCardByName = function(name, successCallback) {
 };
 
 exports.search = function(searchText, success, fail) {
-    if (fail) {
-        throw new Error(fail);
-    }
-    utils.getJSON("https://api.scryfall.com/cards/search?order=cmc&q=" + searchText, success);
+    utils.getJSON("https://api.scryfall.com/cards/search?order=cmc&q=" + searchText, success, fail);
 };
 
 exports.buildSearchString = function(filter) {
