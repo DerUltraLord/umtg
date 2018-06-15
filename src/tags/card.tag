@@ -12,9 +12,9 @@
                     <div class="btn-group btn-group-sm float-lg-right" role="group">
                         <button type="button" id="btnAddToDeck" onClick={ addCardToDeck } class="btn btn-default plus"></button>
                         <div class="btn-group btn-group-sm" role="group">
-                            <button type="button" class="btn btn-default dropdown-toggle btnDeck" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">choose deck</button>
+                            <button type="button" class="textOverflowHidden btn btn-default dropdown-toggle btnDeck" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">choose deck</button>
                             <div class="dropdown-menu" aria-labelledby="btnDeck">
-                                <a class="dropdown-item" each={ d in this.availableDecks } onClick={ () => deckSelected(d) }>{ d }</a>
+                                <a class="dropdown-item" each={ d in this.availableDecks } onClick={ () => deckSelected(d) }>{ d.name }</a>
                             </div>
                         </div>
                     </div>
@@ -49,6 +49,12 @@
             margin-right: 20px;
         }
 
+        .textOverflowHidden {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
 
 
         .plus:before {
@@ -75,9 +81,8 @@
         }
     </style>
     <script type="es6">
-        /* global document, db, alert, $ */
-        this.availableDecks = ["one", "two"];
-        // TODO: move logic extra module (testable)
+        /* global deck, document, db, alert, $ */
+        this.availableDecks = null;
 
         this.getTagsForMana = card => {
 
@@ -134,8 +139,7 @@
 
             //this.root.querySelector("#addButton").insertAdjacentHTML("beforeend", octicons.calendar.toSVG());
 
-
-
+            deck.getDecks(this.onDecks);
             this.update();
         });
 
@@ -144,7 +148,12 @@
                 this.root.querySelector("img").setAttribute("src", this.opts.card.image_uris.art_crop);
             }
             db.getAmountOfCard(this.opts.card.id, this.updateAmount);
+
         });
+
+        this.onDecks = decks => {
+            this.availableDecks = decks;
+        };
 
         this.updateAmount = amount => {
             var lblAmount = this.root.querySelector("#lblAmount");
@@ -164,7 +173,7 @@
         };
 
         this.deckSelected = d => {
-            $(".btnDeck").html(d);
+            $(".btnDeck").html(d.name);
         };
     </script>
 

@@ -1,25 +1,14 @@
-const utils = require("./utils.js");
+const base = require('./base.js');
 
 
-exports.scryfallGetSets = function(successCallback) {
-    utils.getJSON("https://api.scryfall.com/sets", successCallback);
-};
+exports.scryfallGetSets = () =>
+    base.getJSON("https://api.scryfall.com/sets");
 
-exports.getCardByName = function(name, successCallback) {
-    function onResponse(res) {
-        if (res.total_cards != 1) {
-            throw "Error getting card " + name + " from scryfall";
-        } else {
-            successCallback(res.data[0]);
-        }
+exports.getCardByName = name =>
+    base.getJSONTransformed("https://api.scryfall.com/cards/search?q=%21\"" + name.replace(" ", "+") + "\"", res => res[0]);
 
-    }
-    utils.getJSON("https://api.scryfall.com/cards/search?q=%21\"" + name.replace(" ", "+") + "\"", onResponse);
-};
-
-exports.search = function(searchText, success, fail) {
-    utils.getJSON("https://api.scryfall.com/cards/search?order=cmc&q=" + searchText, success, fail);
-};
+exports.search = searchText => 
+    base.getJSON("https://api.scryfall.com/cards/search?order=cmc&q=" + searchText);
 
 exports.buildSearchString = function(filter) {
     let res = filter["name"];

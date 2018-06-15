@@ -24,18 +24,15 @@ exports.cardAdd = function(card, amount) {
     stmt.finalize();
 };
 
-exports.setAdd = function(set, callback) {
+exports.setAdd = function(set) {
     var stmt = db.prepare("INSERT INTO [Set] VALUES(?, ?)");
-    stmt.run(set.code, JSON.stringify(set), callback);
+    stmt.run(set.code, JSON.stringify(set));
     stmt.finalize();
 };
 
-exports.cardExistsByName = function(cardname, callback) {
-    function stmtFinished(err, res) {
-        callback(res[0].ex > 0);
-    }
-
-    db.all("SELECT EXISTS(SELECT * FROM Card where json_extract(Card.jsonString, '$.name') = '" + dbString(cardname) + "') as ex", stmtFinished);
+exports.cardExistsByName = function(cardname) {
+    let stmt = "SELECT EXISTS(SELECT * FROM Card where json_extract(Card.jsonString, '$.name') = '" + dbString(cardname) + "') as ex";
+    return exports._promiseStatementWithDataTransform(stmt, res => res[0].ex > 0);
 };
 
 exports.cardAdjustAmount = function(card, amount, callback) {
@@ -77,48 +74,54 @@ exports.getAmountOfCard = function(id, callback) {
 
 };
 
-exports.getCardByName = function(name, callback) {
-    function stmtFinished(err, res) {
+exports.getCardByName = function(name) {
+    function transform(res) {
         if (res.length == 1) {
-            callback(JSON.parse(res[0].jsonString));
+            return JSON.parse(res[0].jsonString);
         }
     }
-
-    db.all("SELECT * FROM Card where json_extract(Card.jsonString, '$.name') = '" + dbString(name) + "'", stmtFinished);
+    return exports._promiseStatementWithDataTransform("SELECT * FROM Card where json_extract(Card.jsonString, '$.name') = '" + dbString(name) + "'",
+        transform);
 };
 
-exports.cardInDbByName = function(name, callback) {
+exports.getSets = function(types) {
 
-    function stmtFinished(err, res) {
-        callback(res.length > 0);
-    }
-    db.all("SELECT * FROM Card where json_extract(Card.jsonString, '$.name') = '" + dbString(name) + "'", stmtFinished);
-};
-
-exports.getSets = function(callback, types) {
-    function stmtFinished(err, res) {
-        callback(res);
-    }
     let stmt = "SELECT *, json_extract([Set].jsonString, '$.released_at') as released_at FROM [Set]";
     if (types != undefined) {
         stmt += " WHERE json_extract([Set].jsonString, '$.set_type') in (" + types.map(type => `'${type}'`).join(",") + ")";
-        
     }
     stmt += " ORDER BY released_at desc";
-    db.all(stmt, stmtFinished);
+
+    return exports._promiseStatement(stmt);
 };
 
-exports.getCardsOfSet = function(set, callback) {
 
-    function stmtFinished(err, res) {
-        var cards = [];
-        for (var i = 0; i < res.length; ++i) {
-            cards.push(JSON.parse(res[i].jsonString));
-        }
-        callback(cards);
-    }
+exports.getCardsOfSet = function(set, callback) {
     let stmt = "SELECT * from [Card] WHERE json_extract([Card].jsonString, '$.set') = '" + set.code + "'";
-    db.all(stmt, stmtFinished);
+    return exports._promiseStatementWithDataTransform(stmt, cards => cards.map(card => JSON.parse(card.jsonString)));
+
+};
+
+exports._promiseStatement = stmt => {
+    let res = new Promise((resolve, reject) => {
+        function onFinished(err, dbResult) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(dbResult);
+            }
+        }
+        db.all(stmt, onFinished);
+    });
+    return res;
+};
+
+exports._promiseStatementWithDataTransform = (stmt, transformFunc) => {
+    return new Promise((success, failure) => {
+        exports._promiseStatement(stmt)
+        .then((res) => success(transformFunc(res)))
+        .catch(failure);
+    });
 };
 
 

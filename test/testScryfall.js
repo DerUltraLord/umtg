@@ -1,9 +1,27 @@
 var assert = require('assert');
 var scry = require('../src/scryfall.js');
+const testUtils = require('./testUtils.js');
 
 describe('scryfall.js', function() {
 
-    it('getSearchFilter()', function() {
+    before(() => {
+        testUtils.mockGetJson([{name: 'Ichor Wellspring'}]);
+    });
+
+    after(() => testUtils.shutdown);
+
+    it('can search for card by name', (done) => {
+        let p = scry.getCardByName('Ichor Wellspring')
+        testUtils.assertPromiseResult(p, done, (res) => {
+            res.name.should.be.equal('Ichor Wellspring');
+        });
+    });
+
+    it('can do a generic scyfall search', () => {
+        return scry.search("e:xln");
+    });
+
+    it('transform search fields to scryfall search', function() {
         res = scry.getSearchFilter('Ichor');
         assert.equal(res['name'], 'Ichor');
 
@@ -40,7 +58,7 @@ describe('scryfall.js', function() {
 
     });
 
-    it('buildSearchString()', function() {
+    it('build a search string for from object', function() {
         filter = {
             'name': 'foo',
             't:': 'enchantment creature',

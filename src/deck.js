@@ -1,89 +1,76 @@
-var fs = require("fs");
 var db = require("./db.js");
 var scry = require("./scryfall.js");
 var decksPath = process.env.HOME + "/.umtg/decks";
+const fs = require('fs');
+const base = require('./base.js');
 
 if (!fs.existsSync(decksPath)) {
     fs.mkdirSync(decksPath);
 }
 
+exports.getDecks = function() {
+    return base.ls(decksPath);
+};
 
-class Deck {
-    constructor(name) {
-        this.name = name;
+exports.getCardsOfDeck = async deckname => {
+    let contents = await base.readFile(decksPath + "/" + deckname);
+    let deckResult = exports.traverseCards(contents);
+
+    cards = await exports.getCardObjectsFromCardNames(deckResult.cards);
+    sideboard = await exports.getCardObjectsFromCardNames(deckResult.sideboard);
+
+    return {
+        cards: cards,
+        sideboard: sideboard,
     }
-}
-
-
-exports.getDecks = function(callback) {
-    fs.readdir(decksPath, function(err, files) {
-        var res = [];
-        files.forEach(file => {
-            res.push(new Deck(file));
-        });
-        callback(res);
-    });
 };
 
-exports.getCardsOfDeck = function(deckname, callback) {
-    fs.readFile(decksPath + "/" + deckname, "ascii", function(err, data) {
-
-        // TODO: handle sideboard
-        let deckResult = exports.traverseCards(data);
-
-        let cards = deckResult["cards"];
-
-
-        var addedIds = [];
-
-        cards.forEach((card) => {
-            db.cardExistsByName(card.name, function(exists) {
-                if (exists == false) {
-                    scry.getCardByName(card.name, function(card) {
-                        if (addedIds.indexOf(card.id, addedIds) == -1) {
-                            db.cardAdd(card, 0);
-                            addedIds.push(card.id);
-                            callback(card);
-                        }
-                    });
-                } else {
-                    db.getCardByName(card.name, function(card) {
-                        callback(card);
-                    });
-                }
-            });
-        });
-    });
-};
-
-exports.addCardToDeck = function(card, deck) {
-
-    exports.getCardsOfDeck(deck, (c) => {
-        if (card.name == c.name) {
-            throw new Error("TODO");    
+exports.getCardObjectsFromCardNames = cards => {
+    let addedIds = [];
+    return cards.reduce(async (p, card) => {
+        let data = await p;
+        let exists = await db.cardExistsByName(card.name);
+        let dbCard = null;
+        if (exists) {
+            dbCard = await db.getCardByName(card.name);
+        } else {
+            dbCard = await scry.getCardByName(card.name);
+            if (addedIds.indexOf(dbCard.id) == -1) {
+                db.cardAdd(card, 0);
+                addedIds.push(dbCard.id);
+            }
         }
+        dbCard['amount'] = Number(card.amount);
+        data.push(dbCard);
+        return Promise.resolve(data);
+    }, Promise.resolve([]));
+};
+
+exports.addCardToDeck = function(deck, card) {
+
+    exports.getDecks(decks => {
+        let decknames = decks.map(deck => deck.name);
+        if (decknames.includes(deck)) {
+            let cards = [];
+            onCard = (card) => {
+                cards.push(card);
+            };
+            exports.getCardsOfDeck(deck, onCard);
+            
+        } else {
+            throw new Error("Deck " + deck + " not found");
+        }
+
     });
+
+
 };
 
-exports._lineMatchCard = (line) => {
-    let re = /(\d+)\s(.*)/;
-    let match = re.exec(line);
+exports._lineMatchCard = line =>
+    base.matchRegexGroup(/(?<amount>\d+)\s(?<name>.*)/)(line)
 
-    let result = null;
-    if (match) {
-        let cardname = match[2];
-        let amount = match[1];
-        result = {name: cardname, amount: amount};
-    }
-
-    return result;
-};
-
-exports._lineMatchSideboard = (line) => {
-    let res = /Sideboard:\s*/;
-    let match = res.exec(line);
-    return match != null;
-};
+exports._lineMatchSideboard = line => 
+    base.matchRegex(/Sideboard:\s*/)(line)
 
 
 exports._lineNotMatching = (line) => {
@@ -106,10 +93,19 @@ exports.traverseCards = (content) => {
             let cardlist;
             cardlist = isSideboardActive ? result["sideboard"] : result["cards"];
 
-            let matchCard = exports._lineMatchCard(line);
-            matchCard != null ? cardlist.push(matchCard) // matching card
-                : !isSideboardActive ? isSideboardActive = exports._lineMatchSideboard(line) // Sideboard expressing
-                    : exports._lineNotMatching(line); // matching error
+            let cardResult = exports._lineMatchCard(line);
+            let sideboardResult = exports._lineMatchSideboard(line);
+
+            if (sideboardResult) {
+                isSideboardActive = true;
+            } else {
+                if (cardResult) {
+                    cardlist.push(cardResult);
+                } else {
+                    exports._lineNotMatching(line);
+                }
+            }
+
 
             return result;
         }, initialValue);

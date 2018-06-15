@@ -26,12 +26,11 @@ this.onSearch = e => {
 };
 });
 
-riot.tag2('card', '<div class="media"> <div class="m20"> <img id="image{this.opts.card.id}" width="250" height="200"></img> <div> <div> <div class="btn-group btn-group-sm"> <button id="removeButton" onclick="{removeCardFromCollection}" class="btn btn-default delete" role="group"></button> <button id="lblAmount" class="btn btn-default" role="group">?</label> <button id="addButton" onclick="{addCardToCollection}" class="btn btn-default add" role="group"><span class="glyphicon glyphicon-search"></span></button> </div> <div class="btn-group btn-group-sm float-lg-right" role="group"> <button type="button" id="btnAddToDeck" onclick="{addCardToDeck}" class="btn btn-default plus"></button> <div class="btn-group btn-group-sm" role="group"> <button type="button" class="btn btn-default dropdown-toggle btnDeck" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">choose deck</button> <div class="dropdown-menu" aria-labelledby="btnDeck"> <a class="dropdown-item" each="{d in this.availableDecks}" onclick="{() => deckSelected(d)}">{d}</a> </div> </div> </div> </div> </div> </div> <div class="media-body"> <div class="row"> <h2 id="cardName{this.opts.card.id}" class="col-lg-8">{this.opts.card.name}</h2> <div id="cardMana{this.opts.card.id}" class="col-lg-4"></div> </div> <h3 id="cardType{this.opts.card.id}" class="cardType">{this.opts.card.type_line}</h3> <p class="cardText">{this.opts.card.oracle_text}</p> </div> <div>', 'card h2,[data-is="card"] h2{ overflow: hidden; font-size: 100%; font-weight: bold; } card h3,[data-is="card"] h3{ font-size: 90%; } card .m20,[data-is="card"] .m20{ margin-right: 20px; } card .plus:before,[data-is="card"] .plus:before{ content: "\\002B"; } card .add:before,[data-is="card"] .add:before{ content: "\\25B6"; } card .delete:before,[data-is="card"] .delete:before{ content: "\\25C0"; } card .cardMana,[data-is="card"] .cardMana{ grid-area: cardMana; text-align: right; margin-right: 10px; margin-top: 3px; } card .btnDeck,[data-is="card"] .btnDeck{ width: 120px; }', 'class="list-group-item"', function(opts) {
+riot.tag2('card', '<div class="media"> <div class="m20"> <img id="image{this.opts.card.id}" width="250" height="200"></img> <div> <div> <div class="btn-group btn-group-sm"> <button id="removeButton" onclick="{removeCardFromCollection}" class="btn btn-default delete" role="group"></button> <button id="lblAmount" class="btn btn-default" role="group">?</label> <button id="addButton" onclick="{addCardToCollection}" class="btn btn-default add" role="group"><span class="glyphicon glyphicon-search"></span></button> </div> <div class="btn-group btn-group-sm float-lg-right" role="group"> <button type="button" id="btnAddToDeck" onclick="{addCardToDeck}" class="btn btn-default plus"></button> <div class="btn-group btn-group-sm" role="group"> <button type="button" class="textOverflowHidden btn btn-default dropdown-toggle btnDeck" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">choose deck</button> <div class="dropdown-menu" aria-labelledby="btnDeck"> <a class="dropdown-item" each="{d in this.availableDecks}" onclick="{() => deckSelected(d)}">{d.name}</a> </div> </div> </div> </div> </div> </div> <div class="media-body"> <div class="row"> <h2 id="cardName{this.opts.card.id}" class="col-lg-8">{this.opts.card.name}</h2> <div id="cardMana{this.opts.card.id}" class="col-lg-4"></div> </div> <h3 id="cardType{this.opts.card.id}" class="cardType">{this.opts.card.type_line}</h3> <p class="cardText">{this.opts.card.oracle_text}</p> </div> <div>', 'card h2,[data-is="card"] h2{ overflow: hidden; font-size: 100%; font-weight: bold; } card h3,[data-is="card"] h3{ font-size: 90%; } card .m20,[data-is="card"] .m20{ margin-right: 20px; } card .textOverflowHidden,[data-is="card"] .textOverflowHidden{ overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } card .plus:before,[data-is="card"] .plus:before{ content: "\\002B"; } card .add:before,[data-is="card"] .add:before{ content: "\\25B6"; } card .delete:before,[data-is="card"] .delete:before{ content: "\\25C0"; } card .cardMana,[data-is="card"] .cardMana{ grid-area: cardMana; text-align: right; margin-right: 10px; margin-top: 3px; } card .btnDeck,[data-is="card"] .btnDeck{ width: 120px; }', 'class="list-group-item"', function(opts) {
 var _this = this;
 
-/* global document, db, alert, $ */
-this.availableDecks = ["one", "two"];
-// TODO: move logic extra module (testable)
+/* global deck, document, db, alert, $ */
+this.availableDecks = null;
 
 this.getTagsForMana = card => {
 
@@ -88,6 +87,7 @@ this.on("mount", function () {
 
     //this.root.querySelector("#addButton").insertAdjacentHTML("beforeend", octicons.calendar.toSVG());
 
+    deck.getDecks(this.onDecks);
     this.update();
 });
 
@@ -97,6 +97,10 @@ this.on("update", function () {
     }
     db.getAmountOfCard(this.opts.card.id, this.updateAmount);
 });
+
+this.onDecks = decks => {
+    _this.availableDecks = decks;
+};
 
 this.updateAmount = amount => {
     var lblAmount = _this.root.querySelector("#lblAmount");
@@ -116,7 +120,7 @@ this.addCardToDeck = () => {
 };
 
 this.deckSelected = d => {
-    $(".btnDeck").html(d);
+    $(".btnDeck").html(d.name);
 };
 });
 
