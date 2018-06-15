@@ -36,7 +36,7 @@ describe('Test Deck management and parsing', function() {
     it('parsing Card definitions', () => {
         let res = deck._lineMatchCard("4 Ichor Wellspring");
         res.name.should.equal('Ichor Wellspring');
-        res.amount.should.equal('4');
+        res.amount.should.equal(4);
         res = deck._lineMatchCard("4Ichor Wellspring");
         should.equal(res, null);
     });

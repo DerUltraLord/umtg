@@ -66,8 +66,13 @@ exports.addCardToDeck = function(deck, card) {
 
 };
 
-exports._lineMatchCard = line =>
-    base.matchRegexGroup(/(?<amount>\d+)\s(?<name>.*)/)(line)
+exports._lineMatchCard = line => {
+    let res = base.matchRegexGroup(/(?<amount>\d+)\s(?<name>.*)/)(line);
+    if (res) {
+        res.amount = Number(res.amount);
+    }
+    return res;
+};
 
 exports._lineMatchSideboard = line => 
     base.matchRegex(/Sideboard:\s*/)(line)
