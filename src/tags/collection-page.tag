@@ -5,6 +5,7 @@
     <div class="scrollable">
         <card-list><card-list>
     </div>
+    <loader></loader>
 
     <style>
         collection-page {
@@ -60,10 +61,12 @@
 
         this.onCardsFromDb = res => {
             if (res.length < this.currentSet.card_count) {
+                this.tags['loader'].show();
                 base.getJSON(this.currentSet.search_uri)
                 .then(this.onCardsFromScryfall);
             } else {
                 this.showCards(res);
+                this.tags['loader'].hide();
             }
         };
 
@@ -80,6 +83,7 @@
                 db.getCardsOfSet(this.currentSet)
                 .then(this.onCardsFromDb);
             }
+
 
         };
 

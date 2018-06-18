@@ -1,6 +1,9 @@
 <search-page>
     <card-search class="leftContent" callback={onSearchEntered}></card-search>
+
     <card-list></card-list>
+    <loader></loader>
+
 
     <style>
         search-page {
@@ -16,8 +19,10 @@
         /* global riot, scry */
         riot.mount("card-search");
         riot.mount("card-list"); 
+        this.loading = false;
 
         this.onSearchEntered = filter => {
+            this.tags['loader'].show();
             scry.searchByFilter(filter)
             .then(this.onDataAvailable)
             .catch(this.onDataNotAvailable);
@@ -26,12 +31,13 @@
         this.onDataAvailable = data => {
             this.tags["card-list"].opts.cards = data.data;
             this.tags["card-list"].update();
+            this.tags['loader'].hide();
             
         };
 
         this.onDataNotAvailable = () => {
             this.tags["card-list"].trigger("data_loaded", {});
-            
+            this.tags['loader'].hide();
         };
 
     

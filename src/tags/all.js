@@ -124,7 +124,7 @@ this.deckSelected = d => {
 };
 });
 
-riot.tag2('collection-page', '<div class="scrollable leftContent"> <set-list callback="{showCardsOfSet}" sets="{this.opts.sets}"></set-list> </div> <div class="scrollable"> <card-list><card-list> </div>', 'collection-page { display: grid; grid-gap: 10px; grid-template-columns: 300px 1fr; }', '', function(opts) {
+riot.tag2('collection-page', '<div class="scrollable leftContent"> <set-list callback="{showCardsOfSet}" sets="{this.opts.sets}"></set-list> </div> <div class="scrollable"> <card-list><card-list> </div> <loader></loader>', 'collection-page { display: grid; grid-gap: 10px; grid-template-columns: 300px 1fr; }', '', function(opts) {
 var _this = this;
 
 /* globals db, scry */
@@ -164,9 +164,11 @@ this.showCardsOfSet = set => {
 
 this.onCardsFromDb = res => {
     if (res.length < _this.currentSet.card_count) {
+        _this.tags['loader'].show();
         base.getJSON(_this.currentSet.search_uri).then(_this.onCardsFromScryfall);
     } else {
         _this.showCards(res);
+        _this.tags['loader'].hide();
     }
 };
 
@@ -244,6 +246,22 @@ events.on("deck:onClick", function (element) {
 riot.tag2('deck', '<p>{this.opts.deck}</p>', '', '', function(opts) {
 });
 
+riot.tag2('loader', '<div show="{this.loading}" class="background"><div> <div show="{this.loading}" class="loader" id="loader"></div>', 'loader .old,[data-is="loader"] .old{ margin: auto; margin-top: 100px; border: 16px solid #f3f3f3; border-top: 16px solid #3498db; border-radius: 50%; width: 120px; height: 120px; animation: spin 2s linear infinite; } loader .background,[data-is="loader"] .background{ position: fixed; top: 0; bottom: 0; left: 0; right: 0; background-color: #000; opacity: 0.5; z-index: 1000; } loader .loader,[data-is="loader"] .loader{ position: absolute; top: 20%; left: 50%; z-index: 99; border: 16px solid #f3f3f3; border-top: 16px solid #3498db; border-radius: 50%; width: 120px; height: 120px; animation: spin 2s linear infinite; } @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } } loader .hide-loader,[data-is="loader"] .hide-loader{ display:none; }', '', function(opts) {
+var _this = this;
+
+this.loading = false;
+
+this.show = () => {
+    _this.loading = true;
+    _this.update();
+};
+
+this.hide = () => {
+    _this.loading = false;
+    _this.update();
+};
+});
+
 riot.tag2('navigation', '<nav class="navbar navbar-expand-lg navbar-dark bg-dark"> <a class="navbar-brand" href="#">UMTG</a> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse" id="navbarNavAltMarkup"> <div class="navbar-nav"> <a id="navPage{pageKey}" class="nav-item nav-link" onclick="{onClick(pageKey)}" each="{pageKey in this.opts.pages}" href="#">{pageKey}</a> </div> </div> </nav>', 'navigation { background: linear-gradient(var(--color-header), black); color: white; } navigation ul,[data-is="navigation"] ul{ list-style-type: none; margin: 0; padding: 0; overflow: hidden; } navigation li,[data-is="navigation"] li{ float: left; } navigation a,[data-is="navigation"] a{ display: block; text-align: center; padding: 14px 16px; text-decoration: none; color: var(--color--background); } navigation li:hover,[data-is="navigation"] li:hover{ background-color: var(--color-background); color: var(--color-font-fg); } navigation li.active:hover,[data-is="navigation"] li.active:hover{ } navigation li.active,[data-is="navigation"] li.active{ background-color: var(--color-background); background: linear-gradient(var(--color-background), darkgray); color: var(--color-font-fg); } navigation .navLogo,[data-is="navigation"] .navLogo{ font-weight: bold; }', 'class="header"', function(opts) {
 
 
@@ -269,24 +287,28 @@ riot.tag2('navigation', '<nav class="navbar navbar-expand-lg navbar-dark bg-dark
 
 });
 
-riot.tag2('search-page', '<card-search class="leftContent" callback="{onSearchEntered}"></card-search> <card-list></card-list>', 'search-page { height: 100%; display: grid; grid-gap: 10px; grid-template-columns: 300px 3fr; }', '', function(opts) {
+riot.tag2('search-page', '<card-search class="leftContent" callback="{onSearchEntered}"></card-search> <card-list></card-list> <loader></loader>', 'search-page { height: 100%; display: grid; grid-gap: 10px; grid-template-columns: 300px 3fr; }', '', function(opts) {
 var _this = this;
 
 /* global riot, scry */
 riot.mount("card-search");
 riot.mount("card-list");
+this.loading = false;
 
 this.onSearchEntered = filter => {
+    _this.tags['loader'].show();
     scry.searchByFilter(filter).then(_this.onDataAvailable).catch(_this.onDataNotAvailable);
 };
 
 this.onDataAvailable = data => {
     _this.tags["card-list"].opts.cards = data.data;
     _this.tags["card-list"].update();
+    _this.tags['loader'].hide();
 };
 
 this.onDataNotAvailable = () => {
     _this.tags["card-list"].trigger("data_loaded", {});
+    _this.tags['loader'].hide();
 };
 });
 
@@ -320,7 +342,7 @@ this.onSetClick = (index, set) => {
 riot.tag2('set', '<div class="row"> <div class="col-2"> <img class="" riot-src="{this.opts.set.icon_svg_uri}"></img> </div> <div class="col-10"> <span class="badge badge-default">{this.opts.set.name}</span> <div class="progress"> <div class="progress-bar" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div> </div> </div>', 'set img,[data-is="set"] img{ width: 20px; height: 20px; margin-left: 5px; }', 'class="list-group-item"', function(opts) {
 });
 
-riot.tag2('settings-page', '<p>Settings Page</p> <ul> <li each="{value, name in settings.setTypes}"> <input onclick="{onSetTypeClicked()}" type="checkbox" riot-value="{name}" checked="{value}">{name}</input> </li> <ul>', '', '', function(opts) {
+riot.tag2('settings-page', '<p>Settings Page</p> <ul> <li each="{value, name in settings.setTypes}"> <input onclick="{onSetTypeClicked()}" class="form-check-input" type="checkbox" riot-value="{name}" checked="{value}">{name}</input> </li> <ul>', '', '', function(opts) {
 var _this = this;
 
 let fs = require("fs");

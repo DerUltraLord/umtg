@@ -2,7 +2,7 @@
     <p>Settings Page</p>
     <ul>
         <li each="{ value, name in settings.setTypes }">
-            <input onClick={ onSetTypeClicked() } type="checkbox" value={ name } checked={ value }>{ name }</input>
+            <input onClick={ onSetTypeClicked() } class="form-check-input" type="checkbox" value={ name } checked={ value }>{ name }</input>
         </li>
     <ul>
     <script type="es6">
