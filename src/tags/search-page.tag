@@ -18,9 +18,9 @@
         riot.mount("card-list"); 
 
         this.onSearchEntered = filter => {
-            //scry.search(searchText, this.onDataAvailable, this.onDataNotAvailable)
-            scry.searchByFilter(filter, this.onDataAvailable, this.onDataNotAvailable);
-            
+            scry.searchByFilter(filter)
+            .then(this.onDataAvailable)
+            .catch(this.onDataNotAvailable);
         };
 
         this.onDataAvailable = data => {

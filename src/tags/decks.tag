@@ -1,3 +1,3 @@
 <deck>
-    <p>{ this.opts.deck.name }</p>
+    <p>{ this.opts.deck }</p>
 </deck>

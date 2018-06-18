@@ -26,7 +26,7 @@ this.onSearch = e => {
 };
 });
 
-riot.tag2('card', '<div class="media"> <div class="m20"> <img id="image{this.opts.card.id}" width="250" height="200"></img> <div> <div> <div class="btn-group btn-group-sm"> <button id="removeButton" onclick="{removeCardFromCollection}" class="btn btn-default delete" role="group"></button> <button id="lblAmount" class="btn btn-default" role="group">?</label> <button id="addButton" onclick="{addCardToCollection}" class="btn btn-default add" role="group"><span class="glyphicon glyphicon-search"></span></button> </div> <div class="btn-group btn-group-sm float-lg-right" role="group"> <button type="button" id="btnAddToDeck" onclick="{addCardToDeck}" class="btn btn-default plus"></button> <div class="btn-group btn-group-sm" role="group"> <button type="button" class="textOverflowHidden btn btn-default dropdown-toggle btnDeck" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">choose deck</button> <div class="dropdown-menu" aria-labelledby="btnDeck"> <a class="dropdown-item" each="{d in this.availableDecks}" onclick="{() => deckSelected(d)}">{d.name}</a> </div> </div> </div> </div> </div> </div> <div class="media-body"> <div class="row"> <h2 id="cardName{this.opts.card.id}" class="col-lg-8">{this.opts.card.name}</h2> <div id="cardMana{this.opts.card.id}" class="col-lg-4"></div> </div> <h3 id="cardType{this.opts.card.id}" class="cardType">{this.opts.card.type_line}</h3> <p class="cardText">{this.opts.card.oracle_text}</p> </div> <div>', 'card h2,[data-is="card"] h2{ overflow: hidden; font-size: 100%; font-weight: bold; } card h3,[data-is="card"] h3{ font-size: 90%; } card .m20,[data-is="card"] .m20{ margin-right: 20px; } card .textOverflowHidden,[data-is="card"] .textOverflowHidden{ overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } card .plus:before,[data-is="card"] .plus:before{ content: "\\002B"; } card .add:before,[data-is="card"] .add:before{ content: "\\25B6"; } card .delete:before,[data-is="card"] .delete:before{ content: "\\25C0"; } card .cardMana,[data-is="card"] .cardMana{ grid-area: cardMana; text-align: right; margin-right: 10px; margin-top: 3px; } card .btnDeck,[data-is="card"] .btnDeck{ width: 120px; }', 'class="list-group-item"', function(opts) {
+riot.tag2('card', '<div class="media"> <div class="m20"> <img id="image{this.opts.card.id}" width="250" height="200"></img> <div> <div> <div class="btn-group btn-group-sm"> <button id="removeButton" onclick="{removeCardFromCollection}" class="btn btn-default delete" role="group"></button> <button id="lblAmount" class="btn btn-default" role="group">?</label> <button id="addButton" onclick="{addCardToCollection}" class="btn btn-default add" role="group"><span class="glyphicon glyphicon-search"></span></button> </div> <div class="btn-group btn-group-sm float-lg-right" role="group"> <button type="button" id="btnAddToDeck" onclick="{addCardToDeck}" class="btn btn-default plus"></button> <div class="btn-group btn-group-sm" role="group"> <button type="button" class="textOverflowHidden btn btn-default dropdown-toggle btnDeck" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">choose deck</button> <div class="dropdown-menu" aria-labelledby="btnDeck"> <a class="dropdown-item" each="{d in this.availableDecks}" onclick="{() => deckSelected(d)}">{d}</a> </div> </div> </div> </div> </div> </div> <div class="media-body"> <div class="row"> <h2 id="cardName{this.opts.card.id}" class="col-lg-8">{this.opts.card.name}</h2> <div id="cardMana{this.opts.card.id}" class="col-lg-4"></div> </div> <h3 id="cardType{this.opts.card.id}" class="cardType">{this.opts.card.type_line}</h3> <p class="cardText">{this.opts.card.oracle_text}</p> </div> <div>', 'card h2,[data-is="card"] h2{ overflow: hidden; font-size: 100%; font-weight: bold; } card h3,[data-is="card"] h3{ font-size: 90%; } card .m20,[data-is="card"] .m20{ margin-right: 20px; } card .textOverflowHidden,[data-is="card"] .textOverflowHidden{ overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } card .plus:before,[data-is="card"] .plus:before{ content: "\\002B"; } card .add:before,[data-is="card"] .add:before{ content: "\\25B6"; } card .delete:before,[data-is="card"] .delete:before{ content: "\\25C0"; } card .cardMana,[data-is="card"] .cardMana{ grid-area: cardMana; text-align: right; margin-right: 10px; margin-top: 3px; } card .btnDeck,[data-is="card"] .btnDeck{ width: 120px; }', 'class="list-group-item"', function(opts) {
 var _this = this;
 
 /* global deck, document, db, alert, $ */
@@ -87,7 +87,7 @@ this.on("mount", function () {
 
     //this.root.querySelector("#addButton").insertAdjacentHTML("beforeend", octicons.calendar.toSVG());
 
-    deck.getDecks(this.onDecks);
+    deck.getDecks().then(this.onDecks);
     this.update();
 });
 
@@ -124,32 +124,25 @@ this.deckSelected = d => {
 };
 });
 
-riot.tag2('collection-page', '<div class="scrollable leftContent"> <set-list callback="{onSetClicked}" sets="{this.opts.sets}"></set-list> </div> <div class="scrollable"> <card-list><card-list> </div>', 'collection-page { display: grid; grid-gap: 10px; grid-template-columns: 300px 1fr; }', '', function(opts) {
+riot.tag2('collection-page', '<div class="scrollable leftContent"> <set-list callback="{showCardsOfSet}" sets="{this.opts.sets}"></set-list> </div> <div class="scrollable"> <card-list><card-list> </div>', 'collection-page { display: grid; grid-gap: 10px; grid-template-columns: 300px 1fr; }', '', function(opts) {
 var _this = this;
 
-/* globals db, scry, utils */
+/* globals db, scry */
 
 this.currentSet = null;
 
 this.on("mount", () => {
-    db.getSets(_this.checkIfSetsAreInDb);
+    db.getSets().then(sets => {
+        if (sets.length == 0) {
+            scry.scryfallGetSets().then(_this.onSetsFromScryfall);
+        } else {
+            _this.onGetSetsFromDb(sets);
+        }
+    });
 });
 
-this.checkIfSetsAreInDb = res => {
-    if (res.length == 0) {
-        scry.scryfallGetSets(_this.onSetsFromScryfall);
-    }
-    _this.onGetSetsFromDb(res);
-};
-
 this.onGetSetsFromDb = res => {
-    var sets = [];
-    for (var i = 0; i < res.length; ++i) {
-        var set = JSON.parse(res[i].jsonString);
-        sets.push(set);
-    }
-    _this.opts.sets = sets;
-
+    _this.opts.sets = res;
     _this.tags["set-list"].update();
     if (_this.tags["card-list"].opts.cards == undefined) {
         var setToShow = _this.tags["set-list"].tags["set"][0];
@@ -158,20 +151,20 @@ this.onGetSetsFromDb = res => {
 };
 
 this.onSetsFromScryfall = res => {
-    res.data.forEach(function (set) {
+    res.data.forEach(set => {
         db.setAdd(set);
     });
-    db.getSets(_this.onGetSetsFromDb);
+    db.getSets().then(_this.onGetSetsFromDb);
 };
 
 this.showCardsOfSet = set => {
     _this.currentSet = set;
-    db.getCardsOfSet(set, _this.onCardsFromDb);
+    db.getCardsOfSet(set).then(_this.onCardsFromDb);
 };
 
 this.onCardsFromDb = res => {
     if (res.length < _this.currentSet.card_count) {
-        utils.getJSON(_this.currentSet.search_uri, _this.onCardsFromScryfall);
+        base.getJSON(_this.currentSet.search_uri).then(_this.onCardsFromScryfall);
     } else {
         _this.showCards(res);
     }
@@ -184,19 +177,15 @@ this.onCardsFromScryfall = res => {
     }
 
     if (res.has_more == true) {
-        utils.getJSON(res.next_page, _this.onCardsFromScryfall);
+        base.getJSON(res.next_page).then(_this.onCardsFromScryfall);
     } else {
-        db.getCardsOfSet(_this.currentSet, _this.onCardsFromDb);
+        db.getCardsOfSet(_this.currentSet).then(_this.onCardsFromDb);
     }
 };
 
 this.showCards = cards => {
     _this.tags["card-list"].opts.cards = cards;
     _this.tags["card-list"].update();
-};
-
-this.onSetClicked = set => {
-    _this.showCardsOfSet(set);
 };
 });
 
@@ -223,7 +212,7 @@ this.decks = [];
 this.selectedDeck = null;
 
 this.on("mount", () => {
-    _this.decks = deck.getDecks(_this.setDecks);
+    _this.decks = deck.getDecks().then(_this.setDecks);
 });
 
 this.on("update", () => {
@@ -233,15 +222,15 @@ this.on("update", () => {
 });
 
 this.setDecks = decks => {
+    console.log(decks);
     _this.decks = decks;
 };
 
 this.showCardsOfDeck = d => {
-    var cards = [];
     var cardList = _this.tags["card-list"];
-    deck.getCardsOfDeck(d.name, function (card) {
-        cards.push(card);
-        cardList.opts.cards = cards;
+    deck.getCardsOfDeck(d).then(deck => {
+        // TODO: sideboard
+        cardList.opts.cards = deck.cards;
         cardList.update();
     });
     _this.visibleDeck = d;
@@ -252,7 +241,7 @@ events.on("deck:onClick", function (element) {
 });
 });
 
-riot.tag2('deck', '<p>{this.opts.deck.name}</p>', '', '', function(opts) {
+riot.tag2('deck', '<p>{this.opts.deck}</p>', '', '', function(opts) {
 });
 
 riot.tag2('navigation', '<nav class="navbar navbar-expand-lg navbar-dark bg-dark"> <a class="navbar-brand" href="#">UMTG</a> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button> <div class="collapse navbar-collapse" id="navbarNavAltMarkup"> <div class="navbar-nav"> <a id="navPage{pageKey}" class="nav-item nav-link" onclick="{onClick(pageKey)}" each="{pageKey in this.opts.pages}" href="#">{pageKey}</a> </div> </div> </nav>', 'navigation { background: linear-gradient(var(--color-header), black); color: white; } navigation ul,[data-is="navigation"] ul{ list-style-type: none; margin: 0; padding: 0; overflow: hidden; } navigation li,[data-is="navigation"] li{ float: left; } navigation a,[data-is="navigation"] a{ display: block; text-align: center; padding: 14px 16px; text-decoration: none; color: var(--color--background); } navigation li:hover,[data-is="navigation"] li:hover{ background-color: var(--color-background); color: var(--color-font-fg); } navigation li.active:hover,[data-is="navigation"] li.active:hover{ } navigation li.active,[data-is="navigation"] li.active{ background-color: var(--color-background); background: linear-gradient(var(--color-background), darkgray); color: var(--color-font-fg); } navigation .navLogo,[data-is="navigation"] .navLogo{ font-weight: bold; }', 'class="header"', function(opts) {
@@ -288,8 +277,7 @@ riot.mount("card-search");
 riot.mount("card-list");
 
 this.onSearchEntered = filter => {
-    //scry.search(searchText, this.onDataAvailable, this.onDataNotAvailable)
-    scry.searchByFilter(filter, _this.onDataAvailable, _this.onDataNotAvailable);
+    scry.searchByFilter(filter).then(_this.onDataAvailable).catch(_this.onDataNotAvailable);
 };
 
 this.onDataAvailable = data => {

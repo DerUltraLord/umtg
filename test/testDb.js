@@ -70,11 +70,11 @@ describe('Test Database', function() {
                 // alltypes
                 let res = values[0];
                 assert.equal(res.length, 2);
-                let set = JSON.parse(res[0].jsonString);
+                let set = res[0];
                 assert.equal(set.code, "ultra");
                 assert.equal(set.name, "ultra lord set");
                 assert.equal(set.set_type, "ultratype");
-                set = JSON.parse(res[1].jsonString);
+                set = res[1];
                 assert.equal(set.code, "foo");
                 assert.equal(set.name, "bar");
                 assert.equal(set.set_type, "othertype");

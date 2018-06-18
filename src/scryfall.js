@@ -24,9 +24,9 @@ exports.buildSearchString = function(filter) {
     return res;
 };
 
-exports.searchByFilter = function(filter, success, fail) {
+exports.searchByFilter = function(filter) {
     let searchString = this.buildSearchString(filter);
-    exports.search(searchString, success, fail);
+    return exports.search(searchString);
 };
 
 exports.getSearchFilter = function(name, type, text, edition) {

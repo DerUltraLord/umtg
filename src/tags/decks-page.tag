@@ -24,7 +24,8 @@
         this.selectedDeck = null;
 
         this.on("mount", () => {
-            this.decks = deck.getDecks(this.setDecks);
+            this.decks = deck.getDecks()
+            .then(this.setDecks);
         });
 
         this.on("update", () => {
@@ -34,15 +35,16 @@
         });
 
         this.setDecks = decks => {
+            console.log(decks);
             this.decks = decks;
         };
 
         this.showCardsOfDeck = d => {
-            var cards = [];
             var cardList = this.tags["card-list"];
-            deck.getCardsOfDeck(d.name, function(card) {
-                cards.push(card);
-                cardList.opts.cards = cards;
+            deck.getCardsOfDeck(d)
+            .then((deck) => {
+                // TODO: sideboard
+                cardList.opts.cards = deck.cards;
                 cardList.update();
             });
             this.visibleDeck = d;

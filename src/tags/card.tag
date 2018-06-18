@@ -14,7 +14,7 @@
                         <div class="btn-group btn-group-sm" role="group">
                             <button type="button" class="textOverflowHidden btn btn-default dropdown-toggle btnDeck" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">choose deck</button>
                             <div class="dropdown-menu" aria-labelledby="btnDeck">
-                                <a class="dropdown-item" each={ d in this.availableDecks } onClick={ () => deckSelected(d) }>{ d.name }</a>
+                                <a class="dropdown-item" each={ d in this.availableDecks } onClick={ () => deckSelected(d) }>{ d }</a>
                             </div>
                         </div>
                     </div>
@@ -139,7 +139,8 @@
 
             //this.root.querySelector("#addButton").insertAdjacentHTML("beforeend", octicons.calendar.toSVG());
 
-            deck.getDecks(this.onDecks);
+            deck.getDecks()
+            .then(this.onDecks);
             this.update();
         });
 

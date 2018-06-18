@@ -74,9 +74,9 @@ exports.getAmountOfCard = function(id, callback) {
 
 };
 
-exports.getCardByName = function(name) {
+exports.getCardByName = (name) => {
     function transform(res) {
-        if (res.length == 1) {
+        if (res.length > 0) {
             return JSON.parse(res[0].jsonString);
         }
     }
@@ -84,7 +84,7 @@ exports.getCardByName = function(name) {
         transform);
 };
 
-exports.getSets = function(types) {
+exports.getSets = (types) => {
 
     let stmt = "SELECT *, json_extract([Set].jsonString, '$.released_at') as released_at FROM [Set]";
     if (types != undefined) {
@@ -92,11 +92,11 @@ exports.getSets = function(types) {
     }
     stmt += " ORDER BY released_at desc";
 
-    return exports._promiseStatement(stmt);
+    return exports._promiseStatementWithDataTransform(stmt, sets => sets.map(set => JSON.parse(set.jsonString)));
 };
 
 
-exports.getCardsOfSet = function(set, callback) {
+exports.getCardsOfSet = (set) => {
     let stmt = "SELECT * from [Card] WHERE json_extract([Card].jsonString, '$.set') = '" + set.code + "'";
     return exports._promiseStatementWithDataTransform(stmt, cards => cards.map(card => JSON.parse(card.jsonString)));
 
