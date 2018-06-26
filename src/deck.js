@@ -27,26 +27,19 @@ exports.getCardsOfDeck = async deckname => {
 
 exports.getCardObjectsFromCardNames = cards => {
     let addedIds = [];
-    console.log("Get Card objects");
-    console.log(cards);
     return cards.reduce(async (p, card) => {
         let data = await p;
         let exists = await db.cardExistsByName(card.name);
         let dbCard = null;
-        console.log(card.name);
         if (exists) {
-            console.log("get from db");
             dbCard = await db.getCardByName(card.name);
         } else {
-            console.log("get from scryfall");
             dbCard = await scry.getCardByName(card.name);
             if (addedIds.indexOf(dbCard.id) == -1) {
                 db.cardAdd(card, 0);
                 addedIds.push(dbCard.id);
             }
-            console.log(dbCard);
         }
-        console.log(dbCard);
         dbCard['amount'] = Number(card.amount);
         data.push(dbCard);
         return Promise.resolve(data);
@@ -91,7 +84,6 @@ exports._lineMatchSideboard = line =>
 
 exports._lineNotMatching = (line) => {
     //throw new Error("not matching line: " + line);
-    console.error("not matching line: " + line);
 };
 
 exports.traverseCards = (content) => {

@@ -1,5 +1,5 @@
-<card class="list-group-item">
-    <div class="media">
+<card class="{ this.grid ? '' : 'list-group-item' }">
+    <div show={ !this.opts.grid } class="media">
         <div class="m20">
             <img id="image{this.opts.card.id}" width="250" height="200"></img>
             <div>
@@ -29,7 +29,11 @@
             <h3 id="cardType{this.opts.card.id}" class="cardType">{this.opts.card.type_line}</h3>
             <p class="cardText">{this.opts.card.oracle_text}</p>
         </div>
-    <div>
+    </div>
+
+    <div show={ this.opts.grid }>
+        <img width="250" src={ this.opts.card.image_uris.normal }></img>
+    </div>
 
 
     <style>
@@ -105,36 +109,35 @@
         };
 
         this.on("mount", function() {
-            //var cardImage = document.getElementById("image" + this.opts.card.id);
-            //if (this.opts.card.image_uris) {
-            //    cardImage.setAttribute("src", this.opts.card.image_uris.art_crop);
-            //}
 
-            var cardName = document.getElementById("cardMana" + this.opts.card.id);
-            cardName.insertAdjacentHTML("beforeend", this.getTagsForMana(this.opts.card));
+            if (!this.grid) {
 
-            var colorIdentity = this.opts.card.color_identity;
+                var cardName = document.getElementById("cardMana" + this.opts.card.id);
+                cardName.insertAdjacentHTML("beforeend", this.getTagsForMana(this.opts.card));
 
-            if (colorIdentity.length == 1) {
-                var typeToAdd = "";
-                if (colorIdentity[0] === "W") {
-                    typeToAdd = "warning";
-                } else if (colorIdentity[0] === "U") {
-                    typeToAdd = "info";
-                } else if (colorIdentity[0] === "B") {
-                    typeToAdd = "dark";
-                } else if (colorIdentity[0] === "G") {
-                    typeToAdd = "success";
-                } else if (colorIdentity[0] === "R") {
-                    typeToAdd = "danger";
+                var colorIdentity = this.opts.card.color_identity;
+
+                if (colorIdentity.length == 1) {
+                    var typeToAdd = "";
+                    if (colorIdentity[0] === "W") {
+                        typeToAdd = "warning";
+                    } else if (colorIdentity[0] === "U") {
+                        typeToAdd = "info";
+                    } else if (colorIdentity[0] === "B") {
+                        typeToAdd = "dark";
+                    } else if (colorIdentity[0] === "G") {
+                        typeToAdd = "success";
+                    } else if (colorIdentity[0] === "R") {
+                        typeToAdd = "danger";
+                    }
+                    this.root.classList.add("list-group-item-" + typeToAdd);
+
+                    var buttons = this.root.querySelectorAll("button");
+                    buttons.forEach(function(button) {
+                        button.classList.remove("btn-default");
+                        button.classList.add("btn-" + typeToAdd);
+                    });
                 }
-                this.root.classList.add("list-group-item-" + typeToAdd);
-
-                var buttons = this.root.querySelectorAll("button");
-                buttons.forEach(function(button) {
-                    button.classList.remove("btn-default");
-                    button.classList.add("btn-" + typeToAdd);
-                });
             }
 
             //this.root.querySelector("#addButton").insertAdjacentHTML("beforeend", octicons.calendar.toSVG());

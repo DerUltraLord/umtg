@@ -1,16 +1,12 @@
 <set-list class="list-group scrollable">
-    <set code={ s.code }  if={ this.setTypes[s.set_type] } } onClick={ () => onSetClick(index, s) } each={s, index in this.opts.sets} set={s}></set>
+    <set code={ s.code }  if={ settings.isSetTypeVisible(s.set_type) } } onClick={ () => onSetClick(index, s) } each={s, index in this.opts.sets} set={s}></set>
 
     <style>
     </style>
     <script type="es6">
         /* global document, $ */
 
-        this.setTypes = null;
-
         this.on("update", () => {
-            this.setTypes = document.getElementsByTagName("settings-page")[0]._tag.settings.setTypes;
-
             var sets = $(this.root).children();
             if (sets.length > 0) {
                 if (sets.filter(".list-group-item-info").length == 0) {

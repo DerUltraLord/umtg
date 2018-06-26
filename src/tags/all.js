@@ -1,7 +1,8 @@
 riot.tag2('about-page', '<p>About Page</p>', '', '', function(opts) {
 });
 
-riot.tag2('card-list', '<card each="{c in this.opts.cards}" card="{c}"></card>', 'card-list card:focus,[data-is="card-list"] card:focus{ background-color: var(--color-background-two); }', 'class="list-group scrollable"', function(opts) {
+riot.tag2('card-list', '<card each="{c in this.opts.cards}" card="{c}" grid="{settings.isGridActive()}"></card>', 'card-list card:focus,[data-is="card-list"] card:focus{ background-color: var(--color-background-two); }', 'class="{settings.isGridActive() ? \'d-flex flex-row flex-wrap\' : \'list-group-item\'}"', function(opts) {
+
 this.state = {
     "selectedCard": null,
     "selectedElement": null
@@ -26,7 +27,7 @@ this.onSearch = e => {
 };
 });
 
-riot.tag2('card', '<div class="media"> <div class="m20"> <img id="image{this.opts.card.id}" width="250" height="200"></img> <div> <div> <div class="btn-group btn-group-sm"> <button id="removeButton" onclick="{removeCardFromCollection}" class="btn btn-default delete" role="group"></button> <button id="lblAmount" class="btn btn-default" role="group">?</label> <button id="addButton" onclick="{addCardToCollection}" class="btn btn-default add" role="group"><span class="glyphicon glyphicon-search"></span></button> </div> <div class="btn-group btn-group-sm float-lg-right" role="group"> <button type="button" id="btnAddToDeck" onclick="{addCardToDeck}" class="btn btn-default plus"></button> <div class="btn-group btn-group-sm" role="group"> <button type="button" class="textOverflowHidden btn btn-default dropdown-toggle btnDeck" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">choose deck</button> <div class="dropdown-menu" aria-labelledby="btnDeck"> <a class="dropdown-item" each="{d in this.availableDecks}" onclick="{() => deckSelected(d)}">{d}</a> </div> </div> </div> </div> </div> </div> <div class="media-body"> <div class="row"> <h2 id="cardName{this.opts.card.id}" class="col-lg-8">{this.opts.card.name}</h2> <div id="cardMana{this.opts.card.id}" class="col-lg-4"></div> </div> <h3 id="cardType{this.opts.card.id}" class="cardType">{this.opts.card.type_line}</h3> <p class="cardText">{this.opts.card.oracle_text}</p> </div> <div>', 'card h2,[data-is="card"] h2{ overflow: hidden; font-size: 100%; font-weight: bold; } card h3,[data-is="card"] h3{ font-size: 90%; } card .m20,[data-is="card"] .m20{ margin-right: 20px; } card .textOverflowHidden,[data-is="card"] .textOverflowHidden{ overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } card .plus:before,[data-is="card"] .plus:before{ content: "\\002B"; } card .add:before,[data-is="card"] .add:before{ content: "\\25B6"; } card .delete:before,[data-is="card"] .delete:before{ content: "\\25C0"; } card .cardMana,[data-is="card"] .cardMana{ grid-area: cardMana; text-align: right; margin-right: 10px; margin-top: 3px; } card .btnDeck,[data-is="card"] .btnDeck{ width: 120px; }', 'class="list-group-item"', function(opts) {
+riot.tag2('card', '<div show="{!this.opts.grid}" class="media"> <div class="m20"> <img id="image{this.opts.card.id}" width="250" height="200"></img> <div> <div> <div class="btn-group btn-group-sm"> <button id="removeButton" onclick="{removeCardFromCollection}" class="btn btn-default delete" role="group"></button> <button id="lblAmount" class="btn btn-default" role="group">?</label> <button id="addButton" onclick="{addCardToCollection}" class="btn btn-default add" role="group"><span class="glyphicon glyphicon-search"></span></button> </div> <div class="btn-group btn-group-sm float-lg-right" role="group"> <button type="button" id="btnAddToDeck" onclick="{addCardToDeck}" class="btn btn-default plus"></button> <div class="btn-group btn-group-sm" role="group"> <button type="button" class="textOverflowHidden btn btn-default dropdown-toggle btnDeck" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">choose deck</button> <div class="dropdown-menu" aria-labelledby="btnDeck"> <a class="dropdown-item" each="{d in this.availableDecks}" onclick="{() => deckSelected(d)}">{d}</a> </div> </div> </div> </div> </div> </div> <div class="media-body"> <div class="row"> <h2 id="cardName{this.opts.card.id}" class="col-lg-8">{this.opts.card.name}</h2> <div id="cardMana{this.opts.card.id}" class="col-lg-4"></div> </div> <h3 id="cardType{this.opts.card.id}" class="cardType">{this.opts.card.type_line}</h3> <p class="cardText">{this.opts.card.oracle_text}</p> </div> </div> <div show="{this.opts.grid}"> <img width="250" riot-src="{this.opts.card.image_uris.normal}"></img> </div>', 'card h2,[data-is="card"] h2{ overflow: hidden; font-size: 100%; font-weight: bold; } card h3,[data-is="card"] h3{ font-size: 90%; } card .m20,[data-is="card"] .m20{ margin-right: 20px; } card .textOverflowHidden,[data-is="card"] .textOverflowHidden{ overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } card .plus:before,[data-is="card"] .plus:before{ content: "\\002B"; } card .add:before,[data-is="card"] .add:before{ content: "\\25B6"; } card .delete:before,[data-is="card"] .delete:before{ content: "\\25C0"; } card .cardMana,[data-is="card"] .cardMana{ grid-area: cardMana; text-align: right; margin-right: 10px; margin-top: 3px; } card .btnDeck,[data-is="card"] .btnDeck{ width: 120px; }', 'class="{this.grid ? \'\' : \'list-group-item\'}"', function(opts) {
 var _this = this;
 
 /* global deck, document, db, alert, $ */
@@ -53,36 +54,35 @@ this.getTagsForMana = card => {
 };
 
 this.on("mount", function () {
-    //var cardImage = document.getElementById("image" + this.opts.card.id);
-    //if (this.opts.card.image_uris) {
-    //    cardImage.setAttribute("src", this.opts.card.image_uris.art_crop);
-    //}
 
-    var cardName = document.getElementById("cardMana" + this.opts.card.id);
-    cardName.insertAdjacentHTML("beforeend", this.getTagsForMana(this.opts.card));
+    if (!this.grid) {
 
-    var colorIdentity = this.opts.card.color_identity;
+        var cardName = document.getElementById("cardMana" + this.opts.card.id);
+        cardName.insertAdjacentHTML("beforeend", this.getTagsForMana(this.opts.card));
 
-    if (colorIdentity.length == 1) {
-        var typeToAdd = "";
-        if (colorIdentity[0] === "W") {
-            typeToAdd = "warning";
-        } else if (colorIdentity[0] === "U") {
-            typeToAdd = "info";
-        } else if (colorIdentity[0] === "B") {
-            typeToAdd = "dark";
-        } else if (colorIdentity[0] === "G") {
-            typeToAdd = "success";
-        } else if (colorIdentity[0] === "R") {
-            typeToAdd = "danger";
+        var colorIdentity = this.opts.card.color_identity;
+
+        if (colorIdentity.length == 1) {
+            var typeToAdd = "";
+            if (colorIdentity[0] === "W") {
+                typeToAdd = "warning";
+            } else if (colorIdentity[0] === "U") {
+                typeToAdd = "info";
+            } else if (colorIdentity[0] === "B") {
+                typeToAdd = "dark";
+            } else if (colorIdentity[0] === "G") {
+                typeToAdd = "success";
+            } else if (colorIdentity[0] === "R") {
+                typeToAdd = "danger";
+            }
+            this.root.classList.add("list-group-item-" + typeToAdd);
+
+            var buttons = this.root.querySelectorAll("button");
+            buttons.forEach(function (button) {
+                button.classList.remove("btn-default");
+                button.classList.add("btn-" + typeToAdd);
+            });
         }
-        this.root.classList.add("list-group-item-" + typeToAdd);
-
-        var buttons = this.root.querySelectorAll("button");
-        buttons.forEach(function (button) {
-            button.classList.remove("btn-default");
-            button.classList.add("btn-" + typeToAdd);
-        });
     }
 
     //this.root.querySelector("#addButton").insertAdjacentHTML("beforeend", octicons.calendar.toSVG());
@@ -312,16 +312,12 @@ this.onDataNotAvailable = () => {
 };
 });
 
-riot.tag2('set-list', '<set code="{s.code}" if="{this.setTypes[s.set_type]}" onclick="{() => onSetClick(index, s)}" each="{s, index in this.opts.sets}" set="{s}"></set>', '', 'class="list-group scrollable"', function(opts) {
+riot.tag2('set-list', '<set code="{s.code}" if="{settings.isSetTypeVisible(s.set_type)}" onclick="{() => onSetClick(index, s)}" each="{s, index in this.opts.sets}" set="{s}"></set>', '', 'class="list-group scrollable"', function(opts) {
 var _this = this;
 
 /* global document, $ */
 
-this.setTypes = null;
-
 this.on("update", () => {
-    _this.setTypes = document.getElementsByTagName("settings-page")[0]._tag.settings.setTypes;
-
     var sets = $(_this.root).children();
     if (sets.length > 0) {
         if (sets.filter(".list-group-item-info").length == 0) {
@@ -342,59 +338,17 @@ this.onSetClick = (index, set) => {
 riot.tag2('set', '<div class="row"> <div class="col-2"> <img class="" riot-src="{this.opts.set.icon_svg_uri}"></img> </div> <div class="col-10"> <span class="badge badge-default">{this.opts.set.name}</span> <div class="progress"> <div class="progress-bar" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div> </div> </div>', 'set img,[data-is="set"] img{ width: 20px; height: 20px; margin-left: 5px; }', 'class="list-group-item"', function(opts) {
 });
 
-riot.tag2('settings-page', '<p>Settings Page</p> <ul> <li each="{value, name in settings.setTypes}"> <input onclick="{onSetTypeClicked()}" class="form-check-input" type="checkbox" riot-value="{name}" checked="{value}">{name}</input> </li> <ul>', '', '', function(opts) {
-var _this = this;
-
-let fs = require("fs");
-var settingsPath = "/home/maximilian/.umtg";
-var settingsFile = settingsPath + "/settings.json";
-
-this.settings = {
-    "setTypes": {
-        core: true,
-        expansion: true,
-        masters: true,
-        masterpiece: false,
-        from_the_vault: false,
-        spellbook: false,
-        premium_deck: false,
-        duel_deck: false,
-        commander: false,
-        planechase: false,
-        conspiracy: false,
-        archenemy: false,
-        vanguard: false,
-        funny: false,
-        starter: false,
-        box: false,
-        promo: false,
-        token: false,
-        memorabilia: false
-    }
-};
-
-this.on("mount", function () {
-    this.loadSettingsFromFile();
-    this.update();
-});
+riot.tag2('settings-page', '<div class="container"> <div class="row"> <div class="col-sm"> <h1><span class="badge badge-secondary">Visibile Set Types</span></h1> <ul> <li each="{value, name in settings.getSetTypes()}"> <input onclick="{onSetTypeClicked()}" class="form-check-input" type="checkbox" riot-value="{name}" checked="{value}">{name}</input> </li> <ul> </div> <div class="col-sm"> <h1><span class="badge badge-secondary">Gui Settings</span></h1> <input onclick="{onShowCardImages()}" class="form-check-input" type="checkbox" checked="{settings.isGridActive()}">Show card images</input> </div> </div> </div>', '', '', function(opts) {
 
 this.onSetTypeClicked = () => {
     return e => {
-        _this.settings.setTypes[e.srcElement.value] = e.srcElement.checked;
-        _this.settingsToFile();
+        settings.setSetTypeVisible(e.srcElement.value, e.srcElement.checked);
     };
 };
 
-this.settingsToFile = () => {
-    fs.mkdir(settingsPath, () => {});
-    fs.writeFile(settingsFile, JSON.stringify(_this.settings, null, 4), () => {});
-};
-
-this.loadSettingsFromFile = () => {
-    fs.readFile(settingsFile, "ascii", _this.setSettings);
-};
-
-this.setSettings = (err, data) => {
-    _this.settings = JSON.parse(data);
+this.onShowCardImages = () => {
+    return e => {
+        settings.setGridActive(e.srcElement.checked);
+    };
 };
 });

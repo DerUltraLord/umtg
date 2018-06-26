@@ -1,5 +1,5 @@
-<card-list class="list-group scrollable">
-    <card each={c in this.opts.cards} card={c}></card>
+<card-list class="{ settings.isGridActive() ? 'd-flex flex-row flex-wrap' : 'list-group-item' }">
+    <card each={c in this.opts.cards} card={c} grid={ settings.isGridActive() }></card>
    
    <style>
 
@@ -9,10 +9,12 @@
 
    </style>
     <script type="es6">
+
         this.state = {
             "selectedCard": null,
             "selectedElement": null
         };
+
 
         this.on("data_loaded", function(cards) {
             this.opts.cards = cards;

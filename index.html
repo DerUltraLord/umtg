@@ -22,7 +22,7 @@
             var deck = require('./src/deck.js');
             var scry = require('./src/scryfall.js');
             var base = require('./src/base.js');
-            db.init('test.db');
+            var settings = require('./src/settings.js');
         </script>
 
         <script> if (window.module) module = window.module; </script>
@@ -59,22 +59,26 @@
 
             }
 
-            //riot.mount('card-search')
+            settings.init()
+            .then(() => {
+                db.init('test.db');
+                //riot.mount('card-search')
 
-            function onPageSelected(page) {
-                var oldPage = state.pageInstances[state.currentPage];
-                state.currentPage = page;
-                oldPage.update();
-                state.pageInstances[page].update();
-            }
+                function onPageSelected(page) {
+                    var oldPage = state.pageInstances[state.currentPage];
+                    state.currentPage = page;
+                    oldPage.update();
+                    state.pageInstances[page].update();
+                }
 
-            riot.mount('card-list');
-            state.pageInstances['search'] = riot.mount('search-page')[0];
-            state.pageInstances['collection'] = riot.mount('collection-page')[0];
-            state.pageInstances['decks'] = riot.mount('decks-page')[0];
-            state.pageInstances['settings'] = riot.mount('settings-page')[0];
-            state.pageInstances['about'] = riot.mount('about-page')[0];
-            riot.mount('navigation', { onPageSelected: onPageSelected });
+                riot.mount('card-list');
+                state.pageInstances['search'] = riot.mount('search-page')[0];
+                state.pageInstances['collection'] = riot.mount('collection-page')[0];
+                state.pageInstances['decks'] = riot.mount('decks-page')[0];
+                state.pageInstances['settings'] = riot.mount('settings-page')[0];
+                state.pageInstances['about'] = riot.mount('about-page')[0];
+                riot.mount('navigation', { onPageSelected: onPageSelected });
+            });
         </script>
     </body>
 </html>

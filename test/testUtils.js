@@ -25,13 +25,24 @@ exports.mockReadDir = result => {
     });
 };
 
-exports.mockGetJson = result => {
-    initSandbox();
-    sandbox.stub(base, 'getJSON').callsFake(url => {
-        return Promise.resolve(result);
+exports.mockGetJson = result =>
+    mockSuccessPromise(base)('getJSON')(result)
+
+exports.mockBasicReturn = (module, func, result) =>
+    mock(module)(func)(() => {
+        return result;
     });
 
-};
+exports.mockToDoNothing = (module, func) =>
+    mock(module)(func)((arg) => null);
+
+let mockSuccessPromise = module => func => result =>
+    mock(module)(func)(() => Promise.resolve(result));
+
+let mock = module => func => mockedFunc => {
+    initSandbox();
+    sandbox.stub(module, func).callsFake(mockedFunc);
+}
 
 initSandbox = () => {
     if (!sandbox) {
