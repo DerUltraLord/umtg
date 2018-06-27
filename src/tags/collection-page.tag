@@ -54,6 +54,7 @@
 
         this.showCardsOfSet = set => {
             this.currentSet = set;
+            this.tags['loader'].show();
             db.getCardsOfSet(set)
             .then(this.onCardsFromDb);
 
@@ -61,7 +62,6 @@
 
         this.onCardsFromDb = res => {
             if (res.length < this.currentSet.card_count) {
-                this.tags['loader'].show();
                 base.getJSON(this.currentSet.search_uri)
                 .then(this.onCardsFromScryfall);
             } else {

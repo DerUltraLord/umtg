@@ -141,12 +141,12 @@ this.onSetsFromScryfall = res => {
 
 this.showCardsOfSet = set => {
     _this.currentSet = set;
+    _this.tags['loader'].show();
     db.getCardsOfSet(set).then(_this.onCardsFromDb);
 };
 
 this.onCardsFromDb = res => {
     if (res.length < _this.currentSet.card_count) {
-        _this.tags['loader'].show();
         base.getJSON(_this.currentSet.search_uri).then(_this.onCardsFromScryfall);
     } else {
         _this.showCards(res);
