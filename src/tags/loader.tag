@@ -1,18 +1,8 @@
-<loader>
+<loader show={ this.loading }>
     <div show={ this.loading } class="background"><div>
     <div show={ this.loading } class="loader" id="loader"></div>
 
     <style>
-        .old {
-            margin: auto;
-            margin-top: 100px;
-            border: 16px solid #f3f3f3; /* Light grey */
-            border-top: 16px solid #3498db; /* Blue */
-            border-radius: 50%;
-            width: 120px;
-            height: 120px;
-            animation: spin 2s linear infinite;
-         }
         
         .background {
             position: fixed;
@@ -44,9 +34,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        .hide-loader{
-            display:none;
-        }
     </style>
 
     <script type="es6">

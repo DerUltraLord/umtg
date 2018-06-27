@@ -1,13 +1,15 @@
 <search-page>
     <card-search class="leftContent" callback={onSearchEntered}></card-search>
 
-    <card-list></card-list>
-    <loader></loader>
+    <div>
+        <card-list></card-list>
+        <loader></loader>
+    </div>
 
 
     <style>
         search-page {
-            height: 100%;
+            height: 100vh;
             display: grid;
             grid-gap: 10px;
             grid-template-columns: 300px 3fr;

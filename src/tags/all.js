@@ -246,7 +246,7 @@ events.on("deck:onClick", function (element) {
 riot.tag2('deck', '<p>{this.opts.deck}</p>', '', '', function(opts) {
 });
 
-riot.tag2('loader', '<div show="{this.loading}" class="background"><div> <div show="{this.loading}" class="loader" id="loader"></div>', 'loader .old,[data-is="loader"] .old{ margin: auto; margin-top: 100px; border: 16px solid #f3f3f3; border-top: 16px solid #3498db; border-radius: 50%; width: 120px; height: 120px; animation: spin 2s linear infinite; } loader .background,[data-is="loader"] .background{ position: fixed; top: 0; bottom: 0; left: 0; right: 0; background-color: #000; opacity: 0.5; z-index: 1000; } loader .loader,[data-is="loader"] .loader{ position: absolute; top: 20%; left: 50%; z-index: 99; border: 16px solid #f3f3f3; border-top: 16px solid #3498db; border-radius: 50%; width: 120px; height: 120px; animation: spin 2s linear infinite; } @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } } loader .hide-loader,[data-is="loader"] .hide-loader{ display:none; }', '', function(opts) {
+riot.tag2('loader', '<div show="{this.loading}" class="background"><div> <div show="{this.loading}" class="loader" id="loader"></div>', 'loader .background,[data-is="loader"] .background{ position: fixed; top: 0; bottom: 0; left: 0; right: 0; background-color: #000; opacity: 0.5; z-index: 1000; } loader .loader,[data-is="loader"] .loader{ position: absolute; top: 20%; left: 50%; z-index: 99; border: 16px solid #f3f3f3; border-top: 16px solid #3498db; border-radius: 50%; width: 120px; height: 120px; animation: spin 2s linear infinite; } @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }', 'show="{this.loading}"', function(opts) {
 var _this = this;
 
 this.loading = false;
@@ -287,7 +287,7 @@ riot.tag2('navigation', '<nav class="navbar navbar-expand-lg navbar-dark bg-dark
 
 });
 
-riot.tag2('search-page', '<card-search class="leftContent" callback="{onSearchEntered}"></card-search> <card-list></card-list> <loader></loader>', 'search-page { height: 100%; display: grid; grid-gap: 10px; grid-template-columns: 300px 3fr; }', '', function(opts) {
+riot.tag2('search-page', '<card-search class="leftContent" callback="{onSearchEntered}"></card-search> <div> <card-list></card-list> <loader></loader> </div>', 'search-page { height: 100vh; display: grid; grid-gap: 10px; grid-template-columns: 300px 3fr; }', '', function(opts) {
 var _this = this;
 
 /* global riot, scry */
