@@ -288,7 +288,7 @@ riot.tag2('picture-buttons', '<div class="btn-group btn-group-sm"> <button id="r
         };
 });
 
-riot.tag2('search-page', '<card-search class="leftContent" callback="{onSearchEntered}"></card-search> <div> <card-list></card-list> <loader></loader> </div>', 'search-page { height: 100vh; display: grid; grid-gap: 10px; grid-template-columns: 300px 3fr; }', '', function(opts) {
+riot.tag2('search-page', '<card-search class="leftContent" callback="{onSearchEntered}"></card-search> <div class="scrollable"> <card-list></card-list> <loader></loader> </div>', 'search-page { height: 100vh; display: grid; grid-gap: 10px; grid-template-columns: 300px 3fr; }', '', function(opts) {
 var _this = this;
 
 /* global riot, scry */

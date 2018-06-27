@@ -1,7 +1,7 @@
 <search-page>
     <card-search class="leftContent" callback={onSearchEntered}></card-search>
 
-    <div>
+    <div class="scrollable">
         <card-list></card-list>
         <loader></loader>
     </div>
