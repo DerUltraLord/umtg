@@ -20,7 +20,7 @@
         <div class="container">
             <div class="row">
                 <div class="col">
-                    <img width="250" src={ this.opts.card.image_uris.normal }></img>
+                    <img width="250" src={ this.opts.card.image_uris ? this.opts.card.image_uris.normal : null }></img>
                 </div>
             </div>
             <div class="row mt10">

@@ -6,6 +6,7 @@ var mydb = null;
 let testCard = {
     name: 'Ichor Wellspring',
     set: 'ultra',
+    id: '1337',
 };
 
 describe('Test Database', function() {
@@ -34,6 +35,21 @@ describe('Test Database', function() {
         });
     });
 
+    it('detect if card is in db by id', (done) => {
+        db.cardAdd(testCard, 0);
+        let p = db.cardExistsById('1337');
+        testUtils.assertPromiseResult(p, done, (res) => {
+            res.should.be.true;
+        });
+    });
+
+    it('detect if card is not in db by id', (done) => {
+        let p = db.cardExistsById('1337');
+        testUtils.assertPromiseResult(p, done, (res) => {
+            res.should.be.false;
+        });
+    });
+
     it('get card by name', (done) => {
         let cardname = 'Ichor Wellspring';
         db.cardAdd({name: cardname}, 0);
@@ -42,6 +58,7 @@ describe('Test Database', function() {
             res.name.should.be.equal(cardname);
         });
     });
+
 
     it('add and get all the sets in db', (done) => {
         var myset = {

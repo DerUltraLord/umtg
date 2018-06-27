@@ -1,7 +1,7 @@
 <set class="list-group-item">
     <div class="row">
         <div class="col-2">
-            <img class="" src={this.opts.set.icon_svg_uri}></img>
+            <img class="" src={ this.opts.set.icon_svg_uri }></img>
         </div>
         <div class="col-10">
             <span class="badge badge-default">{ this.opts.set.name }</span>

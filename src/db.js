@@ -18,9 +18,26 @@ let dbString = function(s) {
 };
 
 exports.cardAdd = function(card, amount) {
+    // NOTE: slow
+    //exports.cardExistsById(card.id)
+    //.then((exists) => {
+    //    if (!exists) {
+    //        var stmt = db.prepare("INSERT INTO Card VALUES(?, ?, ?, ?)");
+    //        stmt.run(card.id, JSON.stringify(card), amount, 0);
+    //        stmt.finalize();
+    //    } else {
+    //        console.log(card.name + " already in db");
+    //    }
+    //})
+    //.catch(console.error);
     var stmt = db.prepare("INSERT INTO Card VALUES(?, ?, ?, ?)");
-    // TODO: foil
-    stmt.run(card.id, JSON.stringify(card), amount, 0);
+    stmt.run(card.id, JSON.stringify(card), amount, 0, (err, data) => {
+        if (String(err).includes("SQLite: UNIQUE constraint failed") === -1) {
+                throw err;
+        } else {
+            console.log(card.name + " already in db");
+        }
+    });
     stmt.finalize();
 };
 
@@ -34,6 +51,12 @@ exports.cardExistsByName = function(cardname) {
     let stmt = "SELECT EXISTS(SELECT * FROM Card where json_extract(Card.jsonString, '$.name') = '" + dbString(cardname) + "') as ex";
     return exports._promiseStatementWithDataTransform(stmt, res => res[0].ex > 0);
 };
+
+exports.cardExistsById = function(cardid) {
+    let stmt = "SELECT EXISTS(SELECT * FROM Card where json_extract(Card.jsonString, '$.id') = '" + dbString(cardid) + "') as ex";
+    return exports._promiseStatementWithDataTransform(stmt, res => res[0].ex > 0);
+};
+
 
 exports.cardAdjustAmount = function(card, amount, callback) {
 
