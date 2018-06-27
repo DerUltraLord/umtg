@@ -27,11 +27,10 @@ this.onSearch = e => {
 };
 });
 
-riot.tag2('card', '<div show="{!this.opts.grid}" class="media"> <div class="m20"> <img id="image{this.opts.card.id}" width="250" height="200"></img> <div> <div> <div class="btn-group btn-group-sm"> <button id="removeButton" onclick="{removeCardFromCollection}" class="btn btn-default delete" role="group"></button> <button id="lblAmount" class="btn btn-default" role="group">?</label> <button id="addButton" onclick="{addCardToCollection}" class="btn btn-default add" role="group"><span class="glyphicon glyphicon-search"></span></button> </div> <div class="btn-group btn-group-sm float-lg-right" role="group"> <button type="button" id="btnAddToDeck" onclick="{addCardToDeck}" class="btn btn-default plus"></button> <div class="btn-group btn-group-sm" role="group"> <button type="button" class="textOverflowHidden btn btn-default dropdown-toggle btnDeck" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">choose deck</button> <div class="dropdown-menu" aria-labelledby="btnDeck"> <a class="dropdown-item" each="{d in this.availableDecks}" onclick="{() => deckSelected(d)}">{d}</a> </div> </div> </div> </div> </div> </div> <div class="media-body"> <div class="row"> <h2 id="cardName{this.opts.card.id}" class="col-lg-8">{this.opts.card.name}</h2> <div id="cardMana{this.opts.card.id}" class="col-lg-4"></div> </div> <h3 id="cardType{this.opts.card.id}" class="cardType">{this.opts.card.type_line}</h3> <p class="cardText">{this.opts.card.oracle_text}</p> </div> </div> <div show="{this.opts.grid}"> <img width="250" riot-src="{this.opts.card.image_uris.normal}"></img> </div>', 'card h2,[data-is="card"] h2{ overflow: hidden; font-size: 100%; font-weight: bold; } card h3,[data-is="card"] h3{ font-size: 90%; } card .m20,[data-is="card"] .m20{ margin-right: 20px; } card .textOverflowHidden,[data-is="card"] .textOverflowHidden{ overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } card .plus:before,[data-is="card"] .plus:before{ content: "\\002B"; } card .add:before,[data-is="card"] .add:before{ content: "\\25B6"; } card .delete:before,[data-is="card"] .delete:before{ content: "\\25C0"; } card .cardMana,[data-is="card"] .cardMana{ grid-area: cardMana; text-align: right; margin-right: 10px; margin-top: 3px; } card .btnDeck,[data-is="card"] .btnDeck{ width: 120px; }', 'class="{this.grid ? \'\' : \'list-group-item\'}"', function(opts) {
+riot.tag2('card', '<div show="{!this.opts.grid}" class="media"> <div class="m20"> <img id="image{this.opts.card.id}" width="250" height="200"></img> <div> <picture-buttons card="{this.opts.card}"></picture-buttons> </div> </div> <div class="media-body"> <div class="row"> <h2 id="cardName{this.opts.card.id}" class="col-lg-8">{this.opts.card.name}</h2> <div id="cardMana{this.opts.card.id}" class="col-lg-4"></div> </div> <h3 id="cardType{this.opts.card.id}" class="cardType">{this.opts.card.type_line}</h3> <p class="cardText">{this.opts.card.oracle_text}</p> </div> </div> <div show="{this.opts.grid}"> <div class="container"> <div class="row"> <div class="col"> <img width="250" riot-src="{this.opts.card.image_uris.normal}"></img> </div> </div> <div class="row mt10"> <div class="col"> <picture-buttons card="{this.opts.card}"></picture-buttons> </div> </div> </div> </div>', 'card h2,[data-is="card"] h2{ overflow: hidden; font-size: 100%; font-weight: bold; } card h3,[data-is="card"] h3{ font-size: 90%; } card .m20,[data-is="card"] .m20{ margin-right: 20px; } card .mt10,[data-is="card"] .mt10{ margin-top: 10px; } card .textOverflowHidden,[data-is="card"] .textOverflowHidden{ overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } card .plus:before,[data-is="card"] .plus:before{ content: "\\002B"; } card .add:before,[data-is="card"] .add:before{ content: "\\25B6"; } card .delete:before,[data-is="card"] .delete:before{ content: "\\25C0"; } card .btnDeck,[data-is="card"] .btnDeck{ width: 120px; }', 'class="{this.grid ? \'\' : \'list-group-item\'}"', function(opts) {
 var _this = this;
 
 /* global deck, document, db, alert, $ */
-this.availableDecks = null;
 
 this.getTagsForMana = card => {
 
@@ -86,26 +85,13 @@ this.on("mount", function () {
     }
 
     //this.root.querySelector("#addButton").insertAdjacentHTML("beforeend", octicons.calendar.toSVG());
-
-    deck.getDecks().then(this.onDecks);
-    this.update();
 });
 
 this.on("update", function () {
     if (this.opts.card.image_uris) {
         this.root.querySelector("img").setAttribute("src", this.opts.card.image_uris.art_crop);
     }
-    db.getAmountOfCard(this.opts.card.id, this.updateAmount);
 });
-
-this.onDecks = decks => {
-    _this.availableDecks = decks;
-};
-
-this.updateAmount = amount => {
-    var lblAmount = _this.root.querySelector("#lblAmount");
-    lblAmount.innerHTML = amount;
-};
 
 this.addCardToCollection = () => {
     db.cardAdjustAmount(_this.opts.card, 1, _this.update);
@@ -117,10 +103,6 @@ this.removeCardFromCollection = () => {
 
 this.addCardToDeck = () => {
     alert(_this.opts.card);
-};
-
-this.deckSelected = d => {
-    $(".btnDeck").html(d.name);
 };
 });
 
@@ -285,6 +267,25 @@ riot.tag2('navigation', '<nav class="navbar navbar-expand-lg navbar-dark bg-dark
             elements[0].classList.add("active");
         });
 
+});
+
+riot.tag2('picture-buttons', '<div class="btn-group btn-group-sm"> <button id="removeButton" onclick="{removeCardFromCollection}" class="btn btn-default delete" role="group"></button> <button id="lblAmount" class="btn btn-default" role="group">?</label> <button id="addButton" onclick="{addCardToCollection}" class="btn btn-default add" role="group"><span class="glyphicon glyphicon-search"></span></button> </div> <div class="btn-group btn-group-sm float-lg-right" role="group"> <button type="button" id="btnAddToDeck" onclick="{addCardToDeck}" class="btn btn-default plus"></button> <div class="btn-group btn-group-sm" role="group"> <button type="button" class="textOverflowHidden btn btn-default dropdown-toggle btnDeck" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">choose deck</button> <div class="dropdown-menu" aria-labelledby="btnDeck"> <a class="dropdown-item" each="{d in this.decks}" onclick="{() => deckSelected(d)}">{d}</a> </div> </div> </div>', '', '', function(opts) {
+        this.decks = null;
+        this.on('mount', () => {
+            db.getAmountOfCard(this.opts.card.id, this.updateAmount);
+            deck.getDecks()
+            .then((res) => this.decks = res)
+            .catch(console.error);
+        });
+
+        this.updateAmount = amount => {
+            var lblAmount = this.root.querySelector("#lblAmount");
+            lblAmount.innerHTML = amount;
+        };
+
+        this.deckSelected = d => {
+            $(".btnDeck").html(d);
+        };
 });
 
 riot.tag2('search-page', '<card-search class="leftContent" callback="{onSearchEntered}"></card-search> <div> <card-list></card-list> <loader></loader> </div>', 'search-page { height: 100vh; display: grid; grid-gap: 10px; grid-template-columns: 300px 3fr; }', '', function(opts) {

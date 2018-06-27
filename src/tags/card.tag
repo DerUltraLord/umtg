@@ -3,22 +3,7 @@
         <div class="m20">
             <img id="image{this.opts.card.id}" width="250" height="200"></img>
             <div>
-                <div>
-                    <div class="btn-group btn-group-sm">
-                        <button id="removeButton" onClick="{removeCardFromCollection}" class="btn btn-default delete" role="group"></button>
-                        <button id="lblAmount" class="btn btn-default" role="group">?</label>
-                        <button id="addButton" onClick="{addCardToCollection}" class="btn btn-default add" role="group"><span class="glyphicon glyphicon-search"></span></button>
-                    </div>
-                    <div class="btn-group btn-group-sm float-lg-right" role="group">
-                        <button type="button" id="btnAddToDeck" onClick={ addCardToDeck } class="btn btn-default plus"></button>
-                        <div class="btn-group btn-group-sm" role="group">
-                            <button type="button" class="textOverflowHidden btn btn-default dropdown-toggle btnDeck" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">choose deck</button>
-                            <div class="dropdown-menu" aria-labelledby="btnDeck">
-                                <a class="dropdown-item" each={ d in this.availableDecks } onClick={ () => deckSelected(d) }>{ d }</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <picture-buttons card={ this.opts.card }></picture-buttons>
             </div>
         </div>
         <div class="media-body">
@@ -32,8 +17,20 @@
     </div>
 
     <div show={ this.opts.grid }>
-        <img width="250" src={ this.opts.card.image_uris.normal }></img>
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <img width="250" src={ this.opts.card.image_uris.normal }></img>
+                </div>
+            </div>
+            <div class="row mt10">
+                <div class="col">
+                    <picture-buttons card={ this.opts.card }></picture-buttons>
+                </div>
+            </div>
+        </div>
     </div>
+
 
 
     <style>
@@ -51,6 +48,10 @@
 
         .m20 {
             margin-right: 20px;
+        }
+
+        .mt10 {
+            margin-top: 10px;
         }
 
         .textOverflowHidden {
@@ -73,12 +74,6 @@
             content: "\25C0";        
         }
 
-        .cardMana {
-            grid-area: cardMana;
-            text-align: right;
-            margin-right: 10px;
-            margin-top: 3px;
-        }
 
         .btnDeck {
             width: 120px;
@@ -86,7 +81,6 @@
     </style>
     <script type="es6">
         /* global deck, document, db, alert, $ */
-        this.availableDecks = null;
 
         this.getTagsForMana = card => {
 
@@ -142,27 +136,16 @@
 
             //this.root.querySelector("#addButton").insertAdjacentHTML("beforeend", octicons.calendar.toSVG());
 
-            deck.getDecks()
-            .then(this.onDecks);
-            this.update();
         });
 
         this.on("update", function() {
             if (this.opts.card.image_uris) {
                 this.root.querySelector("img").setAttribute("src", this.opts.card.image_uris.art_crop);
             }
-            db.getAmountOfCard(this.opts.card.id, this.updateAmount);
 
         });
 
-        this.onDecks = decks => {
-            this.availableDecks = decks;
-        };
 
-        this.updateAmount = amount => {
-            var lblAmount = this.root.querySelector("#lblAmount");
-            lblAmount.innerHTML = amount;
-        };
 
         this.addCardToCollection = () => {
             db.cardAdjustAmount(this.opts.card, 1, this.update);
@@ -176,9 +159,6 @@
             alert(this.opts.card);
         };
 
-        this.deckSelected = d => {
-            $(".btnDeck").html(d.name);
-        };
     </script>
 
 </card>
