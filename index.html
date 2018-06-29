@@ -35,13 +35,20 @@
     <body>
         <navigation pages="{state.pages}"></navigation>
 
-        <div>
+        <div class="center">
             <search-page show="{state.currentPage=='search'}" ></search-page>
             <collection-page show="{state.currentPage=='collection'}"></collection-page>
             <decks-page show="{state.currentPage=='decks'}"></decks-page>
             <settings-page show="{state.currentPage=='settings'}"></settings-page>
             <about-page show="{state.currentPage=='about'}"></settings-page>
         </div>
+
+        <footer class="footer">
+            <div class="container">
+                <button type="submit" class="btn btn-primary">Search</Search>
+                <button type="submit" class="btn btn-primary">Search</Search>
+            </div>
+        </footer>
 
         <script src="src/tags/all.js"></script>
 

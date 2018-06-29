@@ -9,7 +9,7 @@
 
     <style>
         search-page {
-            height: 100vh;
+            height: 100%;
             display: grid;
             grid-gap: 10px;
             grid-template-columns: 300px 3fr;

@@ -13,11 +13,6 @@
             </nav>
     <style>
 
-        navigation {
-            background: linear-gradient(var(--color-header), black);
-            color: white;
-        }
-
         ul {
             list-style-type: none;
             margin: 0;
