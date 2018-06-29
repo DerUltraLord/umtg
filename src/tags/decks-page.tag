@@ -6,6 +6,7 @@
         </div>
         <div class="scrollable">
             <card-list></card-list>
+            <loader></loader>
         </div>
     </div>
 
@@ -40,12 +41,14 @@
         };
 
         this.showCardsOfDeck = d => {
+            this.tags['loader'].show();
             var cardList = this.tags["card-list"];
             deck.getCardsOfDeck(d)
             .then((deck) => {
                 // TODO: sideboard
                 cardList.opts.cards = deck.cards;
                 cardList.update();
+                this.tags['loader'].hide();
             });
             this.visibleDeck = d;
         };
@@ -53,5 +56,7 @@
         events.on("deck:onClick", function(element) {
             self.showCardsOfDeck(element.opts.deck);
         });
+
+        events.on('settingsUpdate', this.update);
     </script>
 </decks-page>

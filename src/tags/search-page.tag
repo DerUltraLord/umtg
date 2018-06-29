@@ -41,6 +41,8 @@
             this.tags['loader'].hide();
         };
 
+        events.on('settingsUpdate', this.update);
+
     
     </script>
 </search-page>

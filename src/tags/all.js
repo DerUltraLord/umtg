@@ -206,7 +206,7 @@ this.onClick = index => {
 };
 });
 
-riot.tag2('decks-page', '<span show="{this.decks == null || this.decks.length == 0}" class="badge badge-warning">No decks found.<br>Copy decklist text files into ~/.umtg/decks<br>and reload</span> <div class="scrollable"> <deck-list decks="{this.decks}" selecteddeck="{this.selectedDeck}" callback="{onDeckClicked}"></deck-list> </div> <div class="scrollable"> <card-list></card-list> </div> </div>', 'decks-page { display: grid; grid-gap: 10px; grid-template-columns: 300px 1fr; }', 'class="page"', function(opts) {
+riot.tag2('decks-page', '<span show="{this.decks == null || this.decks.length == 0}" class="badge badge-warning">No decks found.<br>Copy decklist text files into ~/.umtg/decks<br>and reload</span> <div class="scrollable"> <deck-list decks="{this.decks}" selecteddeck="{this.selectedDeck}" callback="{onDeckClicked}"></deck-list> </div> <div class="scrollable"> <card-list></card-list> <loader></loader> </div> </div>', 'decks-page { display: grid; grid-gap: 10px; grid-template-columns: 300px 1fr; }', 'class="page"', function(opts) {
 var _this = this;
 
 /* globals deck, events */
@@ -230,11 +230,13 @@ this.setDecks = decks => {
 };
 
 this.showCardsOfDeck = d => {
+    _this.tags['loader'].show();
     var cardList = _this.tags["card-list"];
     deck.getCardsOfDeck(d).then(deck => {
         // TODO: sideboard
         cardList.opts.cards = deck.cards;
         cardList.update();
+        _this.tags['loader'].hide();
     });
     _this.visibleDeck = d;
 };
@@ -242,6 +244,8 @@ this.showCardsOfDeck = d => {
 events.on("deck:onClick", function (element) {
     self.showCardsOfDeck(element.opts.deck);
 });
+
+events.on('settingsUpdate', this.update);
 });
 
 riot.tag2('deck', '<p>{this.opts.deck}</p>', '', '', function(opts) {
@@ -327,6 +331,8 @@ this.onDataNotAvailable = () => {
     _this.tags["card-list"].trigger("data_loaded", {});
     _this.tags['loader'].hide();
 };
+
+events.on('settingsUpdate', this.update);
 });
 
 riot.tag2('set-list', '<set code="{s.code}" if="{settings.isSetTypeVisible(s.set_type)}" onclick="{() => onSetClick(index, s)}" each="{s, index in this.opts.sets}" set="{s}"></set>', '', 'class="list-group scrollable"', function(opts) {
