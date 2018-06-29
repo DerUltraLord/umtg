@@ -1,4 +1,4 @@
-riot.tag2('about-page', '<p>About Page</p>', '', '', function(opts) {
+riot.tag2('about-page', '<p>About Page</p>', '', 'class="page"', function(opts) {
 });
 
 riot.tag2('card-list', '<card each="{c in this.opts.cards}" card="{c}" grid="{settings.isGridActive()}"></card>', 'card-list card:focus,[data-is="card-list"] card:focus{ background-color: var(--color-background-two); }', 'class="{settings.isGridActive() ? \'d-flex flex-row flex-wrap\' : \'list-group-item\'}"', function(opts) {
@@ -106,7 +106,7 @@ this.addCardToDeck = () => {
 };
 });
 
-riot.tag2('collection-page', '<div class="scrollable leftContent"> <set-list callback="{showCardsOfSet}" sets="{this.opts.sets}"></set-list> </div> <div class="scrollable"> <card-list><card-list> </div> <loader></loader>', 'collection-page { display: grid; grid-gap: 10px; grid-template-columns: 300px 1fr; }', '', function(opts) {
+riot.tag2('collection-page', '<div class="scrollable leftContent"> <set-list callback="{showCardsOfSet}" sets="{this.opts.sets}"></set-list> </div> <div class="scrollable"> <card-list><card-list> </div> <loader></loader>', 'collection-page { display: grid; grid-gap: 10px; grid-template-columns: 300px 1fr; }', 'class="page"', function(opts) {
 var _this = this;
 
 /* globals db, scry */
@@ -171,6 +171,25 @@ this.showCards = cards => {
     _this.tags["card-list"].opts.cards = cards;
     _this.tags["card-list"].update();
 };
+
+events.on('settingsUpdate', this.update);
+});
+
+riot.tag2('deck-add-buttons', '<div class="btn-group btn-group-lg float-lg-left" role="group"> <button type="button" id="btnAddToDeck" onclick="{addCardToDeck}" class="btn btn-default">+</button> <div class="btn-group btn-group-sm dropup" role="group"> <button type="button" class="textOverflowHidden btn btn-default dropdown-toggle btnDeck w300 text-left" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">choose deck</button> <div class="dropdown-menu" aria-labelledby="btnDeck"> <a class="dropdown-item" each="{d in this.decks}" onclick="{() => deckSelected(d)}">{d}</a> </div> </div> </div>', 'deck-add-buttons .w300,[data-is="deck-add-buttons"] .w300{ width: 300px; }', '', function(opts) {
+        this.decks = null;
+
+        this.on('mount', () => {
+            deck.getDecks()
+            .then((res) => {
+                this.decks = res;
+                this.update();
+            })
+            .catch(console.error);
+        });
+
+        this.deckSelected = d => {
+            $(".btnDeck").html(d);
+        };
 });
 
 riot.tag2('deck-list', '<deck id="{index}" class="list-group-item" each="{d, index in this.opts.decks}" deck="{d}" onclick="{() => onClick(index)}"></deck>', '', 'class="list-group"', function(opts) {
@@ -187,7 +206,7 @@ this.onClick = index => {
 };
 });
 
-riot.tag2('decks-page', '<span show="{this.decks == null || this.decks.length == 0}" class="badge badge-warning">No decks found.<br>Copy decklist text files into ~/.umtg/decks<br>and reload</span> <div class="scrollable"> <deck-list decks="{this.decks}" selecteddeck="{this.selectedDeck}" callback="{onDeckClicked}"></deck-list> </div> <div class="scrollable"> <card-list></card-list> </div> </div>', 'decks-page { display: grid; grid-gap: 10px; grid-template-columns: 300px 1fr; }', '', function(opts) {
+riot.tag2('decks-page', '<span show="{this.decks == null || this.decks.length == 0}" class="badge badge-warning">No decks found.<br>Copy decklist text files into ~/.umtg/decks<br>and reload</span> <div class="scrollable"> <deck-list decks="{this.decks}" selecteddeck="{this.selectedDeck}" callback="{onDeckClicked}"></deck-list> </div> <div class="scrollable"> <card-list></card-list> </div> </div>', 'decks-page { display: grid; grid-gap: 10px; grid-template-columns: 300px 1fr; }', 'class="page"', function(opts) {
 var _this = this;
 
 /* globals deck, events */
@@ -269,7 +288,7 @@ riot.tag2('navigation', '<nav class="navbar navbar-expand-lg navbar-dark bg-dark
 
 });
 
-riot.tag2('picture-buttons', '<div class="btn-group btn-group-sm"> <button id="removeButton" onclick="{removeCardFromCollection}" class="btn btn-default delete" role="group"></button> <button id="lblAmount" class="btn btn-default" role="group">?</label> <button id="addButton" onclick="{addCardToCollection}" class="btn btn-default add" role="group"><span class="glyphicon glyphicon-search"></span></button> </div> <div class="btn-group btn-group-sm float-lg-right" role="group"> <button type="button" id="btnAddToDeck" onclick="{addCardToDeck}" class="btn btn-default plus"></button> <div class="btn-group btn-group-sm" role="group"> <button type="button" class="textOverflowHidden btn btn-default dropdown-toggle btnDeck" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">choose deck</button> <div class="dropdown-menu" aria-labelledby="btnDeck"> <a class="dropdown-item" each="{d in this.decks}" onclick="{() => deckSelected(d)}">{d}</a> </div> </div> </div>', '', '', function(opts) {
+riot.tag2('picture-buttons', '<div class="btn-group btn-group-sm"> <button id="removeButton" onclick="{removeCardFromCollection}" class="btn btn-default delete" role="group"></button> <button id="lblAmount" class="btn btn-default" role="group">?</label> <button id="addButton" onclick="{addCardToCollection}" class="btn btn-default add" role="group"><span class="glyphicon glyphicon-search"></span></button> </div>', '', '', function(opts) {
         this.decks = null;
         this.on('mount', () => {
             db.getAmountOfCard(this.opts.card.id, this.updateAmount);
@@ -283,12 +302,9 @@ riot.tag2('picture-buttons', '<div class="btn-group btn-group-sm"> <button id="r
             lblAmount.innerHTML = amount;
         };
 
-        this.deckSelected = d => {
-            $(".btnDeck").html(d);
-        };
 });
 
-riot.tag2('search-page', '<card-search class="leftContent" callback="{onSearchEntered}"></card-search> <div class="scrollable"> <card-list></card-list> <loader></loader> </div>', 'search-page { height: 100%; display: grid; grid-gap: 10px; grid-template-columns: 300px 3fr; }', '', function(opts) {
+riot.tag2('search-page', '<card-search class="leftContent" callback="{onSearchEntered}"></card-search> <div class="scrollable"> <card-list></card-list> <loader></loader> </div>', 'search-page { display: grid; grid-gap: 10px; grid-template-columns: 300px 3fr; }', 'class="page"', function(opts) {
 var _this = this;
 
 /* global riot, scry */
@@ -339,7 +355,7 @@ this.onSetClick = (index, set) => {
 riot.tag2('set', '<div class="row"> <div class="col-2"> <img class="" riot-src="{this.opts.set.icon_svg_uri}"></img> </div> <div class="col-10"> <span class="badge badge-default">{this.opts.set.name}</span> <div class="progress"> <div class="progress-bar" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div> </div> </div>', 'set img,[data-is="set"] img{ width: 20px; height: 20px; margin-left: 5px; }', 'class="list-group-item"', function(opts) {
 });
 
-riot.tag2('settings-page', '<div class="container"> <div class="row"> <div class="col-sm"> <h1><span class="badge badge-secondary">Visibile Set Types</span></h1> <ul> <li each="{value, name in settings.getSetTypes()}"> <input onclick="{onSetTypeClicked()}" class="form-check-input" type="checkbox" riot-value="{name}" checked="{value}">{name}</input> </li> <ul> </div> <div class="col-sm"> <h1><span class="badge badge-secondary">Gui Settings</span></h1> <input onclick="{onShowCardImages()}" class="form-check-input" type="checkbox" checked="{settings.isGridActive()}">Show card images</input> </div> </div> </div>', '', '', function(opts) {
+riot.tag2('settings-page', '<div class="container"> <div class="row"> <div class="col-sm"> <h1><span class="badge badge-secondary">Visibile Set Types</span></h1> <ul> <li each="{value, name in settings.getSetTypes()}"> <input onclick="{onSetTypeClicked()}" class="form-check-input" type="checkbox" riot-value="{name}" checked="{value}">{name}</input> </li> <ul> </div> <div class="col-sm"> <h1><span class="badge badge-secondary">Gui Settings</span></h1> <input onclick="{onShowCardImages()}" class="form-check-input" type="checkbox" checked="{settings.isGridActive()}">Show card images</input> </div> </div> </div>', '', 'class="page"', function(opts) {
 
 this.onSetTypeClicked = () => {
     return e => {
@@ -350,6 +366,24 @@ this.onSetTypeClicked = () => {
 this.onShowCardImages = () => {
     return e => {
         settings.setGridActive(e.srcElement.checked);
+        events.trigger('settingsUpdate');
     };
 };
+
+events.on('settingsUpdate', this.update);
+});
+
+
+riot.tag2('umtg-footer', '<footer class="footer"> <div class="container-flex"> <div class="row" style="margin: 5px"> <div class="col col-4"> <deck-add-buttons></deck-add-button> </div> <div class="col col-5"> </div> <div class="col col-3 text-right"> <div class="btn-group btn-group-lg btn-group-toggle" data-toggle="buttons"> <label class="{settings.isGridActive() ? \'btn btn-primary focus active\' : \'btn btn-secondary\'}" onclick="{handleViewSettingClick}"> <input type="radio" name="view" id="true" autocomplete="off"> <span class="oi oi-grid-two-up" title="icon audito" aria-hidden="false"></span></button> </label> <label class="{!settings.isGridActive() ? \'btn btn-primary focus active\' : \'btn btn-secondary\'}" onclick="{handleViewSettingClick}"> <input type="radio" name="view" id="flase" autocomplete="off"> <span class="oi oi-list" title="icon audito" aria-hidden="false"></span> </label> </div> </div> </div> </div> </footer>', '', '', function(opts) {
+
+        this.handleViewSettingClick = (e) => {
+            $(this.root).find('.btn-primary').removeClass('btn-primary').addClass('btn-secondary');
+            let lbl = $(e.srcElement).closest('label')
+            lbl.removeClass('btn-secondary').addClass('btn-primary');
+            settings.setGridActive(lbl.find('input').attr('id') == 'true');
+            events.trigger('settingsUpdate');
+        }
+
+        events.on('settingsUpdate', this.update);
+
 });

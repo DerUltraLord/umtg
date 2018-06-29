@@ -1,4 +1,4 @@
-<search-page>
+<search-page class="page">
     <card-search class="leftContent" callback={onSearchEntered}></card-search>
 
     <div class="scrollable">
@@ -9,7 +9,6 @@
 
     <style>
         search-page {
-            height: 100%;
             display: grid;
             grid-gap: 10px;
             grid-template-columns: 300px 3fr;

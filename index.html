@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
     <head>
         <title>Ultra Magic The Gathering</title>
@@ -5,17 +6,10 @@
         <script>
             if (typeof module === 'object') { window.module = module; module = undefined; }
         </script>
-        <!--
-        <script src="src/js/jquery-3.3.1.min.js"></script>
-        <script src="src/js/popper.min.js"></script>
-        <script src="src/js/bootstrap.min.js"></script>
-
-        -->
 
         <script>
             window.$ = window.jQuery = require('jquery');
             window.Bootstrap = require('bootstrap');
-            var octicons = require("octicons");
             var riot = require('riot');
             var events = riot.observable();
             var db = require('./src/db.js');
@@ -29,13 +23,13 @@
 
         <link rel="stylesheet" href="src/style.css" ></link>
         <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
-        <!--<link rel="stylesheet" href="node_modules/octicons/build/build.css">-->
+        <link rel="stylesheet" href="node_modules/open-iconic/font/css/open-iconic-bootstrap.css">
     </head>
 
     <body>
         <navigation pages="{state.pages}"></navigation>
 
-        <div class="center">
+        <div style="background-color: yellow">
             <search-page show="{state.currentPage=='search'}" ></search-page>
             <collection-page show="{state.currentPage=='collection'}"></collection-page>
             <decks-page show="{state.currentPage=='decks'}"></decks-page>
@@ -43,13 +37,8 @@
             <about-page show="{state.currentPage=='about'}"></settings-page>
         </div>
 
-        <footer class="footer">
-            <div class="container">
-                <button type="submit" class="btn btn-primary">Search</Search>
-                <button type="submit" class="btn btn-primary">Search</Search>
-            </div>
-        </footer>
 
+        <umtg-footer></umtg-footer>
         <script src="src/tags/all.js"></script>
 
         <script>
@@ -69,7 +58,6 @@
             settings.init()
             .then(() => {
                 db.init('test.db');
-                //riot.mount('card-search')
 
                 function onPageSelected(page) {
                     var oldPage = state.pageInstances[state.currentPage];
@@ -84,6 +72,8 @@
                 state.pageInstances['decks'] = riot.mount('decks-page')[0];
                 state.pageInstances['settings'] = riot.mount('settings-page')[0];
                 state.pageInstances['about'] = riot.mount('about-page')[0];
+                riot.mount('deck-add-buttons');
+                riot.mount('umtg-footer');
                 riot.mount('navigation', { onPageSelected: onPageSelected });
             });
         </script>

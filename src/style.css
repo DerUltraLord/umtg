@@ -5,12 +5,13 @@
     --color-font-fg: black;
     --color-header: #283f51;
     --color-background-two: lightgrey;
-    --center-height: calc(100% - 120px);
 }
 
 
-.center {
-    height: calc(100% - 118);
+.page {
+    position: absolute;
+    bottom: 60px;
+    top: 56px;
 }
 
 .container {

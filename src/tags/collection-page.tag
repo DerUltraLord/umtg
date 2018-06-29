@@ -1,4 +1,4 @@
-<collection-page>
+<collection-page class="page">
     <div class="scrollable leftContent">
         <set-list callback={showCardsOfSet} sets={this.opts.sets}></set-list>
     </div>
@@ -91,6 +91,8 @@
             this.tags["card-list"].opts.cards = cards;
             this.tags["card-list"].update();
         };
+
+        events.on('settingsUpdate', this.update);
 
 
     </script>

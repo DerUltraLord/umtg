@@ -1,4 +1,4 @@
-<settings-page>
+<settings-page class="page">
     <div class="container">
         <div class="row">
             <div class="col-sm">
@@ -28,8 +28,11 @@
         this.onShowCardImages = () => {
             return (e) => {
                 settings.setGridActive(e.srcElement.checked);
+                events.trigger('settingsUpdate');
             };
         };
+
+        events.on('settingsUpdate', this.update);
 
 
     </script>
