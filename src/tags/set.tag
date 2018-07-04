@@ -19,8 +19,24 @@
 
 
 
+
     </style>
 
     <script>
+        this.on('mount', () => {
+            db.getPercentageOfSet(this.opts.set)
+            .then(this.updatePercentage)
+            .catch(console.error);
+
+        });
+
+        this.updatePercentage = (percentage) => {
+
+            if (percentage > 0) {
+                let width = percentage * 100;
+                $(this.root).find('.progress-bar').css("width", width + '%');
+            }
+        };
+
     </script>
 </set>

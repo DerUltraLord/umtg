@@ -9,6 +9,12 @@ let testCard = {
     id: '1337',
 };
 
+let testSet = {
+    name: 'Ultra Set',
+    code: 'ultra',
+    card_count: 10,
+};
+
 describe('Test Database', function() {
 
     beforeEach(function(done) {
@@ -124,6 +130,62 @@ describe('Test Database', function() {
         let p = db.cardAdjustAmount(testCard, 1);
         testUtils.assertPromiseResult(p, done, (res) => {
             res.should.be.equal(3);
+        });
+    });
+
+    it('amount of set cards should be -1 if set is not in db', (done) => {
+        db.db.serialize(() => {
+            let p = db.getCardAmountOfSet(testSet);
+            testUtils.assertPromiseResult(p, done, (amount) => {
+                amount.should.be.equal(-1);
+            });
+        });
+
+    });
+
+    it('can get card amount of set if set is in db', (done) => {
+        db.db.serialize(() => {
+            db.setAdd(testSet);
+            let p = db.getCardAmountOfSet(testSet);
+            testUtils.assertPromiseResult(p, done, (amount) => {
+                amount.should.be.equal(10);
+            });
+        });
+
+    });
+
+    it('can get amount of cards of set are in collection', (done) => {
+        db.db.serialize(() => {
+            db.cardAdd(testCard, 2);
+            db.setAdd(testSet);
+            let p = db.getOwnedCardAmountOfSet(testSet);
+            testUtils.assertPromiseResult(p, done, (amount) => {
+                amount.should.be.equal(1);
+            });
+        });
+
+    });
+
+    it('can percentage of set', (done) => {
+        db.db.serialize(() => {
+            db.cardAdd(testCard, 2);
+            db.setAdd(testSet);
+            let p = db.getPercentageOfSet(testSet);
+            testUtils.assertPromiseResult(p, done, (amount) => {
+                amount.should.be.equal(0.1);
+            });
+
+        });
+    });
+
+    it('percentage of set returns negative value if not in db', (done) => {
+        db.db.serialize(() => {
+            db.cardAdd(testCard, 2);
+            let p = db.getPercentageOfSet(testSet);
+            testUtils.assertPromiseResult(p, done, (amount) => {
+                amount.should.be.below(0);
+            });
+
         });
     });
 

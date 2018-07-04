@@ -381,6 +381,21 @@ this.onSetClick = (index, set) => {
 });
 
 riot.tag2('set', '<div class="row"> <div class="col-2"> <img class="" riot-src="{this.opts.set.icon_svg_uri}"></img> </div> <div class="col-10"> <span class="badge badge-default">{this.opts.set.name}</span> <div class="progress"> <div class="progress-bar" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div> </div> </div>', 'set img,[data-is="set"] img{ width: 20px; height: 20px; margin-left: 5px; }', 'class="list-group-item"', function(opts) {
+        this.on('mount', () => {
+            db.getPercentageOfSet(this.opts.set)
+            .then(this.updatePercentage)
+            .catch(console.error);
+
+        });
+
+        this.updatePercentage = (percentage) => {
+
+            if (percentage > 0) {
+                let width = percentage * 100;
+                $(this.root).find('.progress-bar').css("width", width + '%');
+            }
+        };
+
 });
 
 riot.tag2('settings-page', '<div class="container"> <div class="row"> <div class="col-sm"> <h1><span class="badge badge-secondary">Visibile Set Types</span></h1> <ul> <li each="{value, name in settings.getSetTypes()}"> <input onclick="{onSetTypeClicked()}" class="form-check-input" type="checkbox" riot-value="{name}" checked="{value}">{name}</input> </li> <ul> </div> <div class="col-sm"> <h1><span class="badge badge-secondary">Gui Settings</span></h1> <input onclick="{onShowCardImages()}" class="form-check-input" type="checkbox" checked="{settings.isGridActive()}">Show card images</input> </div> </div> </div>', '', 'class="page"', function(opts) {

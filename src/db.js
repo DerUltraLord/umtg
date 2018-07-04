@@ -41,10 +41,58 @@ exports.cardAdd = function(card, amount) {
     stmt.finalize();
 };
 
-exports.setAdd = function(set) {
+exports.setAdd = (set) => {
     var stmt = db.prepare("INSERT INTO [Set] VALUES(?, ?)");
     stmt.run(set.code, JSON.stringify(set));
     stmt.finalize();
+};
+
+exports.getCardAmountOfSet = (set) => {
+    let stmt = "SELECT json_extract([Set].jsonString, '$.card_count') as card_count FROM [Set] WHERE json_extract([Set].jsonString, '$.code') = '" + set.code + "'";
+    return exports._promiseStatementWithDataTransform(stmt, (res) => {
+        if (res.length == 1) {
+            return res[0]['card_count'];
+        } else {
+            return -1;
+        }
+    });
+};
+
+exports.getOwnedCardAmountOfSet = (set) => {
+    let stmt = "SELECT COUNT(*) as amount FROM [Card] WHERE json_extract([Card].jsonString, '$.set') = '" + set.code + "' and amount > 0";
+    return exports._promiseStatementWithDataTransform(stmt, (res) => {
+        if (res.length == 1) {
+            return res[0].amount;
+        } else {
+            return 0;
+        }
+    });
+};
+
+exports.getPercentageOfSet = (set) => {
+    return new Promise((success, failure) => {
+
+        console.log("start")
+        exports.getOwnedCardAmountOfSet(set)
+        .then((amount) => {
+            console.log("after getting owned amount")
+            if (amount > 0) {
+                exports.getCardAmountOfSet(set)
+                .then((cardCount) => {
+                    console.log("after getting amount")
+                    let res = -1;
+                    if (cardCount > 0) {
+                        res = amount / cardCount;
+                    }
+                    success(res);
+                }).
+                catch(failure);
+            } else {
+                success(0);
+            }
+        })
+        .catch(failure);
+    });
 };
 
 exports.cardExistsByName = function(cardname) {
@@ -140,7 +188,9 @@ exports._promiseStatement = stmt => {
                 resolve(dbResult);
             }
         }
+        console.log("before all");
         db.all(stmt, onFinished);
+        console.log("after all");
     });
     return res;
 };
