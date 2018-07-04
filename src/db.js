@@ -58,26 +58,32 @@ exports.cardExistsById = function(cardid) {
 };
 
 
-exports.cardAdjustAmount = function(card, amount, callback) {
+exports.cardAdjustAmount = function(card, amount) {
 
-    function stmtFinished(err, res) {
-        if (res.length == 0) {
-            if (amount > 0) {
-                exports.cardAdd(card, 1);
+    return new Promise((success, failure) => {
+
+        exports._promiseStatement("SELECT * FROM Card where id = '" + card.id + "'")
+        .then((res) => {
+            if (res.length > 0) {
+                var newAmount = res[0].amount + amount;
+                if (newAmount >= 0) {
+                    var stmt = db.prepare("UPDATE Card set amount = ? where id = ?");
+                    stmt.run(res[0].amount + amount, res[0].id);
+                    stmt.finalize();
+                    resultAmount = newAmount;
+                } else {
+                    resultAmount = 0;
+                }
+                success(resultAmount)
+
+            } else {
+                failure("card not in db");
             }
-        } else {
-            var newAmount = res[0].amount + amount;
-            if (newAmount >= 0) {
-                var stmt = db.prepare("UPDATE Card set amount = ? where id = ?");
-                stmt.run(res[0].amount + amount, res[0].id);
-                stmt.finalize();
-            }
-        }
+        })
+        .catch(failure);
 
-        callback();
-    }
+    });
 
-    db.all("SELECT * FROM Card where id = '" + card.id + "'", stmtFinished);
 };
 
 exports.getAmountOfCard = function(id, callback) {

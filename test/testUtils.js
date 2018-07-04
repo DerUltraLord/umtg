@@ -36,6 +36,7 @@ exports.mockBasicReturn = (module, func, result) =>
 exports.mockToDoNothing = (module, func) =>
     mock(module)(func)((arg) => null);
 
+
 let mockSuccessPromise = module => func => result =>
     mock(module)(func)(() => Promise.resolve(result));
 
@@ -47,8 +48,10 @@ let mock = module => func => mockedFunc => {
 initSandbox = () => {
     if (!sandbox) {
         sandbox = sinon.sandbox.create();
+        exports.sandbox = sandbox;
     }
 };
+
 
 exports.shutdown = () => {
     sandbox.restore();
@@ -62,3 +65,4 @@ exports.assertPromiseResult = (p, done, assertCallback) => {
     })
     .catch(console.error);
 };
+

@@ -7,12 +7,12 @@ const testUtils = require('./testUtils.js');
 const should = require('chai').should();
 
 describe('Test Deck management and parsing', function() {
-    var sandbox;
 
     before(() => {
         testUtils.mockFileRead("4 Ichor Wellspring\nSideboard:\n2 Ultra Lord")
         testUtils.mockReadDir(["deck1.txt", "deck2.txt"]);
         testUtils.mockGetJson([{name: 'Ultra Lord', set: 'ultra'}]);
+        testUtils.sandbox.stub(deck, 'getCardObjectsFromCardNames').callsFake((cards) => Promise.resolve(cards));
     });
 
     after(() => testUtils.shutdown());
@@ -67,7 +67,7 @@ describe('Test Deck management and parsing', function() {
 
     it('get all cards of a deck', (done) => {
 
-        let p = deck.getCardsOfDeck();
+        let p = deck.getCardsOfDeck('mydeck');
         testUtils.assertPromiseResult(p, done, (deck) => {
             deck.cards[0].amount.should.be.equal(4);
             deck.cards[0].name.should.be.equal('Ichor Wellspring');

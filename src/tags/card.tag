@@ -147,13 +147,6 @@
 
 
 
-        this.addCardToCollection = () => {
-            db.cardAdjustAmount(this.opts.card, 1, this.update);
-        };
-
-        this.removeCardFromCollection = () => {
-            db.cardAdjustAmount(this.opts.card, -1, this.update);
-        };
 
         this.addCardToDeck = () => {
             alert(this.opts.card);

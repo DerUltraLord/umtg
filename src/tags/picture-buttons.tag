@@ -17,9 +17,40 @@
             .catch(console.error);
         });
 
+
         this.updateAmount = amount => {
             var lblAmount = this.root.querySelector("#lblAmount");
             lblAmount.innerHTML = amount;
+        };
+
+        this.addCardToCollection = () => {
+
+            db.cardExistsById(this.opts.card.id)
+            .then((exists) => {
+                if (exists) {
+                    db.cardAdjustAmount(this.opts.card, 1)
+                    .then(this.updateAmount)
+                    .catch(console.error);
+                } else {
+                    db.cardAdd(this.opts.card, 1);
+                    this.updateAmount(1);
+                }
+            })
+            .catch(console.error);
+        };
+
+        this.removeCardFromCollection = () => {
+            db.cardExistsById(this.opts.card.id)
+            .then((exists) => {
+                if (exists) {
+                    db.cardAdjustAmount(this.opts.card, -1)
+                    .then(this.updateAmount)
+                    .catch(console.error);
+                } else {
+                    this.updateAmount(0);
+                }
+            })
+            .catch(console.error);
         };
 
     </script>

@@ -115,7 +115,6 @@ exports.traverseCards = (content) => {
                 }
             }
 
-
             return result;
         }, initialValue);
     return result;

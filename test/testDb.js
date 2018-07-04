@@ -115,4 +115,16 @@ describe('Test Database', function() {
         });
     });
 
+    it('cant adjust the card amount if card is not in db', () => {
+        testUtils.promiseShouldFail(db.cardAdjustAmount(testCard, 1));
+    });
+
+    it('can adjust the card amount if card is in db', (done) => {
+        db.cardAdd(testCard, 2);
+        let p = db.cardAdjustAmount(testCard, 1);
+        testUtils.assertPromiseResult(p, done, (res) => {
+            res.should.be.equal(3);
+        });
+    });
+
 });

@@ -93,14 +93,6 @@ this.on("update", function () {
     }
 });
 
-this.addCardToCollection = () => {
-    db.cardAdjustAmount(_this.opts.card, 1, _this.update);
-};
-
-this.removeCardFromCollection = () => {
-    db.cardAdjustAmount(_this.opts.card, -1, _this.update);
-};
-
 this.addCardToDeck = () => {
     alert(_this.opts.card);
 };
@@ -304,6 +296,36 @@ riot.tag2('picture-buttons', '<div class="btn-group btn-group-sm"> <button id="r
         this.updateAmount = amount => {
             var lblAmount = this.root.querySelector("#lblAmount");
             lblAmount.innerHTML = amount;
+        };
+
+        this.addCardToCollection = () => {
+
+            db.cardExistsById(this.opts.card.id)
+            .then((exists) => {
+                if (exists) {
+                    db.cardAdjustAmount(this.opts.card, 1)
+                    .then(this.updateAmount)
+                    .catch(console.error);
+                } else {
+                    db.cardAdd(this.opts.card, 1);
+                    this.updateAmount(1);
+                }
+            })
+            .catch(console.error);
+        };
+
+        this.removeCardFromCollection = () => {
+            db.cardExistsById(this.opts.card.id)
+            .then((exists) => {
+                if (exists) {
+                    db.cardAdjustAmount(this.opts.card, -1)
+                    .then(this.updateAmount)
+                    .catch(console.error);
+                } else {
+                    this.updateAmount(0);
+                }
+            })
+            .catch(console.error);
         };
 
 });
