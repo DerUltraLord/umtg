@@ -1,0 +1,11 @@
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap'
+import Vue from 'vue'
+import App from './App.vue'
+
+new Vue({
+        el: '#app',
+        template: '<App/>',
+        components: { App }
+
+})

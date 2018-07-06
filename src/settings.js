@@ -1,4 +1,5 @@
 const base = require('./base.js');
+const fs = require('fs')
 
 
 let settingsPath = process.env.HOME + "/.umtg";
@@ -33,27 +34,16 @@ defaultSettings = {
 
 exports.init = () => {
 
-    return new Promise((success, failure) => {
+    if (!fs.lstatSync(settingsPath).isDirectory()) {
+        base.mkdir(settingsPath);
+    }
 
-        if (!base.isdir(settingsPath)) {
-            base.mkdir(settingsPath)
-            .then()
-            .catch(failure);
-        }
+    if (!fs.lstatSync(settingsFile).isFile()) {
+        _writeSettingsFile(defaultSettings);
+    }
 
-        if (!base.isfile(settingsFile)) {
-            _writeSettingsFile(defaultSettings)
-            .then()
-            .catch(failure);
-        }
-
-        base.readFile(settingsFile)
-        .then((data) => {
-            settingsJson = JSON.parse(data);
-            success();
-        })
-        .catch(failure);
-    })
+    data = fs.readFileSync(settingsFile)
+    settingsJson = JSON.parse(data);
 
 }
 

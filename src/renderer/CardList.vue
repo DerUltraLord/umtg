@@ -1,0 +1,23 @@
+<template>
+    <div>
+        <Card v-for="c in cards" v-bind:data="c" v-bind:key="c.id" :card=c :isGridActive=isGridActive></Card>
+    </div>
+</template>
+
+<script>
+import Card from './Card.vue'
+import Settings from '../settings.js'
+export default {
+    props: ["cards"],
+    data() {
+        return {
+            isGridActive: Settings.isGridActive()
+        }
+    },
+    components: {
+        Card,
+    },
+    methods: {
+    }
+}
+</script>

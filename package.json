@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha --watch || true",
-    "start": "electron main.js",
+    "start": "electron-webpack dev",
     "watch": "riot -w src/tags src/tags/all.js",
     "postinstall": "electron-builder install-app-deps",
     "package-linux": "./node_modules/.bin/electron-packager . --overwrite --platform=linux --out=dist",
@@ -29,6 +29,7 @@
     "chai": "^4.1.2",
     "electron-builder": "^20.18.0",
     "electron-packager": "^12.1.0",
+    "electron-webpack": "^2.1.2",
     "eslint": "^4.19.1",
     "eslint-plugin-riot": "^0.1.7",
     "gulp": "^3.9.1",
@@ -36,6 +37,10 @@
     "gulp-svgmin": "^1.2.4",
     "gulp-svgstore": "^6.1.1",
     "mocha": "^5.2.0",
-    "sinon": "^4.5.0"
+    "sinon": "^4.5.0",
+    "vue": "^2.5.16",
+    "vue-loader": "^15.2.4",
+    "vue-template-compiler": "^2.5.16",
+    "webpack": "^4.15.1"
   }
 }
