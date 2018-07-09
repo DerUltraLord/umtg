@@ -11,10 +11,12 @@ import Navigation from './Navigation.vue'
 import SearchPage from './SearchPage.vue'
 import CollectionPage from './CollectionPage.vue'
 import Settings from '../settings.js'
+import Db from '../db.js'
 
 console.log("Load settings ...");
 Settings.init()
 console.log("Settings loaded");
+Db.init('test.db')
 
 
 export default {
