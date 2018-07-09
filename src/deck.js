@@ -36,7 +36,7 @@ exports.getCardObjectsFromCardNames = cards => {
         } else {
             dbCard = await scry.getCardByName(card.name);
             if (addedIds.indexOf(dbCard.id) == -1) {
-                db.cardAdd(card, 0);
+                db.cardAdd(dbCard, 0);
                 addedIds.push(dbCard.id);
             }
         }

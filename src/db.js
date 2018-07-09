@@ -151,7 +151,7 @@ exports.getAmountOfCard = function(id, callback) {
 
 };
 
-exports.getCardByName = (name) => {
+exports.getCardByName = name => {
     function transform(res) {
         if (res.length > 0) {
             return JSON.parse(res[0].jsonString);
@@ -188,9 +188,7 @@ exports._promiseStatement = stmt => {
                 resolve(dbResult);
             }
         }
-        console.log("before all");
         db.all(stmt, onFinished);
-        console.log("after all");
     });
     return res;
 };

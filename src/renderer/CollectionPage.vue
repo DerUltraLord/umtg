@@ -28,6 +28,7 @@ export default {
         }
     },
     created: function () {
+        this.loading = true;
         Db.getSets()
         .then((sets) => {
             if (sets.length == 0) {

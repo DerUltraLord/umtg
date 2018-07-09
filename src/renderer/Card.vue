@@ -20,7 +20,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col">
-                        <img v-bind:src="card.image_uris.normal" width="250"></img>
+                        <img v-bind:src="card.image_uris ? card.image_uris.normal : ''" width="250"></img>
                     </div>
                 </div>
                 <div class="row mt10">

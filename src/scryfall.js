@@ -4,8 +4,11 @@ const base = require('./base.js');
 exports.scryfallGetSets = () =>
     base.getJSON("https://api.scryfall.com/sets");
 
-exports.getCardByName = name =>
-    base.getJSONTransformed("https://api.scryfall.com/cards/search?q=%21\"" + name.replace(" ", "+") + "\"", res => res[0]);
+exports.getCardByName = name => {
+    return base.getJSONTransformed("https://api.scryfall.com/cards/search?q=" + name.replace(/ /g, "+"), (res) => {
+        return res.data[0];
+    });
+}
 
 exports.search = searchText => 
     base.getJSON("https://api.scryfall.com/cards/search?order=cmc&q=" + searchText);

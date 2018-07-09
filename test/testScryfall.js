@@ -5,7 +5,7 @@ const testUtils = require('./testUtils.js');
 describe('scryfall.js', function() {
 
     before(() => {
-        testUtils.mockGetJson([{name: 'Ichor Wellspring'}]);
+        testUtils.mockGetJson({data: [{name: 'Ichor Wellspring'}]});
     });
 
     after(() => testUtils.shutdown);

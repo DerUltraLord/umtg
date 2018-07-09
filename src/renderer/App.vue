@@ -3,6 +3,7 @@
         <Navigation :pages=pages :currentPage=currentPage @pageSelected="currentPage = $event.key"/>
         <SearchPage v-if="currentPage == 'search'"/>
         <CollectionPage v-if="currentPage == 'collection'"/>
+        <DecksPage v-if="currentPage == 'decks'"/>
     </div>
 </template>
 
@@ -10,6 +11,7 @@
 import Navigation from './Navigation.vue'
 import SearchPage from './SearchPage.vue'
 import CollectionPage from './CollectionPage.vue'
+import DecksPage from './DecksPage.vue'
 import Settings from '../settings.js'
 import Db from '../db.js'
 
@@ -26,7 +28,7 @@ export default {
             pages: [
                 { key:'search', name: "Seach" },
                 { key: 'collection', name: "Collection" },
-                { key: 'deck', name: "Deck" },
+                { key: 'decks', name: "Decks" },
                 { key: 'settings', name: "Settings" },
                 { key: 'about', name: "About" },
             ]
@@ -38,6 +40,7 @@ export default {
         Navigation,
         SearchPage,
         CollectionPage,
+        DecksPage,
     },
 }
 </script>

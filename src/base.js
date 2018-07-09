@@ -65,6 +65,8 @@ exports._simpleCallbackFunctionToPromise = func => args => {
 
 exports.getJSON = url => {
     return new Promise((success, failure) => {
+        console.log("HIER");
+        console.log(url);
         https.get(url, res => {
             res.setEncoding("utf8");
             let body = "";
