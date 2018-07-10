@@ -2,7 +2,7 @@
     <div>
         <div v-if="!isGridActive" class="media">
             <div class="m20">
-                <img v-bind:src="card.image_uris.art_crop" width="250" height="200"></img>
+                <img v-bind:src="card.image_uris ? card.image_uris.art_crop : ''" width="250" height="200"></img>
                 <div>
                 </div>
             </div>

@@ -4,6 +4,7 @@
         <SearchPage v-if="currentPage == 'search'"/>
         <CollectionPage v-if="currentPage == 'collection'"/>
         <DecksPage v-if="currentPage == 'decks'"/>
+        <SettingsPage v-if="currentPage == 'settings'"/>
     </div>
 </template>
 
@@ -12,6 +13,7 @@ import Navigation from './Navigation.vue'
 import SearchPage from './SearchPage.vue'
 import CollectionPage from './CollectionPage.vue'
 import DecksPage from './DecksPage.vue'
+import SettingsPage from './SettingsPage.vue'
 import Settings from '../settings.js'
 import Db from '../db.js'
 
@@ -41,6 +43,7 @@ export default {
         SearchPage,
         CollectionPage,
         DecksPage,
+        SettingsPage,
     },
 }
 </script>

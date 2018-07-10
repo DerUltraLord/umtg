@@ -15,6 +15,7 @@ import CardList from './CardList.vue'
 import SetList from './SetList.vue'
 import Loader from './Loader.vue'
 import Db from '../db.js'
+import Settings from '../settings.js'
 import Scryfall from '../scryfall.js'
 import Base from '../base.js'
 export default {
@@ -52,7 +53,7 @@ export default {
             .then(this.onGetSetsFromDb);
         },
         onGetSetsFromDb(sets) {
-            this.sets = sets;
+            this.sets = sets.filter(set => Settings.isSetTypeVisible(set.set_type));
             if (sets.length > 0) {
                 this.showSet(sets[0]);
             }
