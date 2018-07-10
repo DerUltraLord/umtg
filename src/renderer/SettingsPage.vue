@@ -11,7 +11,7 @@
             </div>
             <div class="col-sm">
                 <h1><span class="badge badge-secondary">Gui Settings</span></h1>
-                <input @click=onShowCardImages class="form-check-input" type="checkbox" checked=true>Show card images</input>
+                <input @click=onShowCardImages class="form-check-input" type="checkbox" v-bind:checked="isGridActive">Show card images</input>
             </div>
         </div>
     </div>
@@ -22,11 +22,13 @@ import Settings from '../settings.js'
 export default {
     data() {
         return {
+            isGridActive: false,
             setTypes: [],
         }
     },
     created: function() {
         this.setTypes = Settings.getSetTypes();
+        this.isGridActive = Settings.isGridActive();
     },
     methods: {
         onSetTypeClicked(e) {
