@@ -16,8 +16,8 @@ import CollectionPage from './CollectionPage.vue'
 import DecksPage from './DecksPage.vue'
 import SettingsPage from './SettingsPage.vue'
 import Footer from './Footer.vue'
-import Settings from '../settings.js'
-import Db from '../db.js'
+import Settings from '../main/settings.js'
+import Db from '../main/db.js'
 
 console.log("Load settings ...");
 Settings.init()

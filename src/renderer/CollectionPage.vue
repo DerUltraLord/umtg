@@ -14,10 +14,10 @@
 import CardList from './CardList.vue'
 import SetList from './SetList.vue'
 import Loader from './Loader.vue'
-import Db from '../db.js'
-import Settings from '../settings.js'
-import Scryfall from '../scryfall.js'
-import Base from '../base.js'
+import Db from '../main/db.js'
+import Settings from '../main/settings.js'
+import Scryfall from '../main/scryfall.js'
+import Base from '../main/base.js'
 export default {
 
     data() {

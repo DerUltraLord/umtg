@@ -11,7 +11,7 @@
 </template>
 <script>
 import $ from 'jquery'
-import Deck from '../deck.js'
+import Deck from '../main/deck.js'
 export default {
     data() {
         return {

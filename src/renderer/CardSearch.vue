@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import Scryfall from '../scryfall.js'
+import Scryfall from '../main/scryfall.js'
 export default {
 
     data() {

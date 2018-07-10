@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import Db from '../db.js'
+import Db from '../main/db.js'
 export default {
     props: ['card'],
     created: function() {

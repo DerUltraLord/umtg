@@ -26,7 +26,7 @@
 
 <script>
 import DeckAddButton from './DeckAddButton.vue'
-import Settings from '../settings.js'
+import Settings from '../main/settings.js'
 import $ from 'jquery'
 export default {
     data() {

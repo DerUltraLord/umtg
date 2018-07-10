@@ -15,7 +15,7 @@
 import CardSearch from './CardSearch.vue'
 import CardList from './CardList.vue'
 import Loader from './Loader.vue'
-import Scryfall from '../scryfall.js'
+import Scryfall from '../main/scryfall.js'
 export default {
 
     data() {

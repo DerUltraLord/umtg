@@ -20,7 +20,7 @@
 import DeckList from './DeckList.vue'
 import CardList from './CardList.vue'
 import Loader from './Loader.vue'
-import Deck from '../deck.js'
+import Deck from '../main/deck.js'
 export default {
     data() {
         return {

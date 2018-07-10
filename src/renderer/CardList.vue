@@ -6,7 +6,7 @@
 
 <script>
 import Card from './Card.vue'
-import Settings from '../settings.js'
+import Settings from '../main/settings.js'
 export default {
     props: ["cards"],
     data() {

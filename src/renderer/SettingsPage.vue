@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import Settings from '../settings.js'
+import Settings from '../main/settings.js'
 export default {
     data() {
         return {
