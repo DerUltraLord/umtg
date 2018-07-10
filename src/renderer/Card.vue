@@ -25,6 +25,7 @@
                 </div>
                 <div class="row mt10">
                     <div class="col">
+                        <CardButtons :card=card></CardButtons>
                     </div>
                 </div>
             </div>
@@ -33,7 +34,11 @@
 </template>
 
 <script>
+import CardButtons from './CardButtons.vue'
 export default {
     props: ['card', 'isGridActive'],
+    components: {
+        CardButtons,
+    }
 }
 </script>
