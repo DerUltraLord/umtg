@@ -3,9 +3,7 @@
         <div class="container-flex">
             <div class="row" style="margin: 5px">
                 <div class="col col-4">
-                    <!--
-                    <deck-add-buttons></deck-add-button>
-                    -->
+                    <DeckAddButton></DeckAddButton>
                 </div>
                 <div class="col col-5">
                 </div>
@@ -27,6 +25,7 @@
 </template>
 
 <script>
+import DeckAddButton from './DeckAddButton.vue'
 import Settings from '../settings.js'
 import $ from 'jquery'
 export default {
@@ -46,6 +45,9 @@ export default {
             Settings.setGridActive(lbl.find('input').attr('id') == 'true');
             this.isGridActive = Settings.isGridActive();
         }
+    },
+    components: {
+        DeckAddButton,
     }
 
 
