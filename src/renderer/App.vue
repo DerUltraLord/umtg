@@ -1,11 +1,11 @@
 <template>
     <div>
         <Navigation :pages=pages :currentPage=currentPage @pageSelected="currentPage = $event.key"/>
-        <SearchPage :settings=settings v-if="currentPage == 'search'"/>
-        <CollectionPage :settings=settings v-if="currentPage == 'collection'"/>
+        <SearchPage :model=model v-if="currentPage == 'search'"/>
+        <CollectionPage :model=model v-if="currentPage == 'collection'"/>
         <DecksPage v-if="currentPage == 'decks'"/>
-        <SettingsPage :settings=settings v-if="currentPage == 'settings'"/>
-        <Footer :settings=settings></Footer>
+        <SettingsPage :model=model v-if="currentPage == 'settings'"/>
+        <Footer :model=model></Footer>
     </div>
 </template>
 
@@ -16,11 +16,11 @@ import CollectionPage from './CollectionPage.vue'
 import DecksPage from './DecksPage.vue'
 import SettingsPage from './SettingsPage.vue'
 import Footer from './Footer.vue'
-import Settings from '../main/settings.js'
+import Model from '../main/model.js'
 import Db from '../main/db.js'
 
 console.log("Load settings ...");
-Settings.init()
+Model.init()
 console.log("Settings loaded");
 Db.init('test.db')
 
@@ -28,7 +28,7 @@ Db.init('test.db')
 export default {
     data() {
         return {
-            settings: Settings,
+            model: Model,
             currentPage: 'search',
             pages: [
                 { key:'search', name: "Seach" },
