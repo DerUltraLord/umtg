@@ -1,6 +1,6 @@
 <template>
-    <div v-bind:class="[isGridActive ? 'd-flex flex-row flex-wrap' : 'list-group-item']">
-        <Card v-for="c in cards" v-bind:data="c" v-bind:key="c.id" :card=c :isGridActive=isGridActive></Card>
+    <div >
+        <Card v-for="c in cards" v-bind:data="c" v-bind:key="c.id" :card=c :isGridActive=isGridActive v-bind:class="[isGridActive ? 'd-flex flex-row flex-wrap' : 'list-group-item']"></Card>
     </div>
 </template>
 
