@@ -1,5 +1,5 @@
 var assert = require('assert');
-var db = require('../src/db.js');
+var db = require('../src/main/db.js');
 const testUtils = require('./testUtils.js');
 var mydb = null;
 

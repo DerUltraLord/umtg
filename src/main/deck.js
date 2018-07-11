@@ -4,9 +4,6 @@ var decksPath = process.env.HOME + "/.umtg/decks";
 const fs = require('fs');
 const base = require('./base.js');
 
-if (!fs.existsSync(decksPath)) {
-    fs.mkdirSync(decksPath);
-}
 
 exports.getDecks = function() {
     return base.ls(decksPath);

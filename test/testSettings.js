@@ -1,19 +1,23 @@
 const should = require('chai').should();
-const settings = require('../src/settings.js');
+const settings = require('../src/main/settings.js');
 const testUtils = require('./testUtils.js');
-const base = require('../src/base.js');
+const base = require('../src/main/base.js');
 
 
 describe('Test Settings of umtg app', () => {
 
-    before(() => {
-        testUtils.mockFileRead('{"setTypes": {"ultra": false}, "grid": false}')
+    beforeEach(() => {
+        testUtils.mockFileRead('{"setTypes": {"ultra": false}, "isGridActive": false}')
         testUtils.mockBasicReturn(base, 'isdir', true);
         testUtils.mockBasicReturn(base, 'isfile', true);
-        testUtils.mockToDoNothing(base, 'writeFile');
+        testUtils.mockToDoNothing(settings, 'init');
+        settings.data = {
+            "setTypes": {"ultra": false},
+            "isGridActive": false
+        }
     });
 
-    after(() => testUtils.shutdown());
+    afterEach(() => testUtils.shutdown());
 
 
     it('should read settings from a file', () => {
@@ -22,28 +26,27 @@ describe('Test Settings of umtg app', () => {
 
     it('should manage show grid settings', () => {
         settings.init();
-        settings.isGridActive().should.be.false;
+        settings.data.isGridActive.should.be.false;
         settings.setGridActive(true);
-        settings.isGridActive().should.be.true;
+        settings.data.isGridActive.should.be.true;
     });
 
     it('check if specific set type should be displayed', () => {
         settings.init();
-        settings.isSetTypeVisible('ultra').should.be.false;
+        settings.data.setTypes['ultra'].should.be.false;
     });
 
     it('change display status of specific set type', () => {
         settings.init();
-        settings.isSetTypeVisible('ultra').should.be.false;
+        settings.data.setTypes['ultra'].should.be.false;
         settings.setSetTypeVisible('ultra', true);
-        settings.isSetTypeVisible('ultra').should.be.true;
+        settings.data.setTypes['ultra'].should.be.true;
     });
 
     it('get a object with all set types', () => {
         settings.init();
-        res = settings.getSetTypes();
+        res = settings.data.setTypes;
         res["ultra"].should.be.false;
     });
-
 
 });

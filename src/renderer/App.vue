@@ -1,11 +1,11 @@
 <template>
     <div>
         <Navigation :pages=pages :currentPage=currentPage @pageSelected="currentPage = $event.key"/>
-        <SearchPage v-if="currentPage == 'search'"/>
-        <CollectionPage v-if="currentPage == 'collection'"/>
+        <SearchPage :settings=settings v-if="currentPage == 'search'"/>
+        <CollectionPage :settings=settings v-if="currentPage == 'collection'"/>
         <DecksPage v-if="currentPage == 'decks'"/>
-        <SettingsPage v-if="currentPage == 'settings'"/>
-        <Footer/>
+        <SettingsPage :settings=settings v-if="currentPage == 'settings'"/>
+        <Footer :settings=settings></Footer>
     </div>
 </template>
 
@@ -28,6 +28,7 @@ Db.init('test.db')
 export default {
     data() {
         return {
+            settings: Settings,
             currentPage: 'search',
             pages: [
                 { key:'search', name: "Seach" },

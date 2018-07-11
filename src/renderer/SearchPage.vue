@@ -3,7 +3,7 @@
 
         <CardSearch @searchCard=searchCard></CardSearch>
         <div class="scrollable">
-            <CardList :cards=cards></CardList>
+            <CardList :cards=cards :settings=settings></CardList>
             <Loader :loading=loading></Loader>
         </div>
     </div>
@@ -17,7 +17,7 @@ import CardList from './CardList.vue'
 import Loader from './Loader.vue'
 import Scryfall from '../main/scryfall.js'
 export default {
-
+    props: ['settings'],
     data() {
         return {
             cards: [],

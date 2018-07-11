@@ -1,5 +1,5 @@
 var assert = require('assert');
-var scry = require('../src/scryfall.js');
+var scry = require('../src/main/scryfall.js');
 const testUtils = require('./testUtils.js');
 
 describe('scryfall.js', function() {

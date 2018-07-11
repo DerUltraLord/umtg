@@ -36,6 +36,10 @@ exports.writeFile = (filename, contents) => {
 
 };
 
+exports.writeFileSync = (filename, contents) =>  {
+    fs.writeFileSync(filename, contents);
+}
+
 exports.ls = directory =>
     exports._simpleCallbackFunctionToPromise(fs.readdir)([directory]);
 

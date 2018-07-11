@@ -1,4 +1,4 @@
-const base = require('../src/base.js');
+const base = require('../src/main/base.js');
 const should = require('chai').should()
 const testUtils = require('./testUtils.js');
 

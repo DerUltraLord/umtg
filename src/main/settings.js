@@ -3,11 +3,10 @@ const fs = require('fs')
 
 
 let settingsPath = process.env.HOME + "/.umtg";
+let decksPath = settingsPath + "/decks";
 let settingsFile = settingsPath + "/settings.json";
 
-let settingsJson = null
-
-defaultSettings = {
+exports.data = {
     "setTypes": {
         core: true,
         expansion: true,
@@ -29,35 +28,41 @@ defaultSettings = {
         token: false,
         memorabilia: false
     },
-    "grid": false
+    "isGridActive": false,
 };
 
 exports.init = () => {
 
-    if (!fs.lstatSync(settingsPath).isDirectory()) {
+    if (!fs.existsSync(settingsPath)) {
+        console.log("Create directory");
         base.mkdir(settingsPath);
     }
 
-    if (!fs.lstatSync(settingsFile).isFile()) {
-        _writeSettingsFile(defaultSettings);
+    if (!fs.existsSync(decksPath)) {
+        fs.mkdirSync(decksPath);
+    }
+
+    if (!fs.existsSync(settingsFile)) {
+        _writeSettingsFile(exports.data);
     }
 
     data = fs.readFileSync(settingsFile)
     settingsJson = JSON.parse(data);
-
+    exports.data = settingsJson;
 }
 
-exports.isGridActive = () => settingsJson['grid'];
-exports.setGridActive = (status) => {
-    settingsJson['grid'] = status;
-    _writeSettingsFile(settingsJson);
+exports.setGridActive= (status) => {
+    exports.data.isGridActive = status;
+    _writeSettingsFile(exports.data);
 }
-exports.isSetTypeVisible = set => settingsJson['setTypes'][set];
+
+
 exports.setSetTypeVisible = (set, status) => {
-    settingsJson['setTypes'][set] = status;
-    _writeSettingsFile(settingsJson);
+    exports.data.setTypes[set] = status;
+    _writeSettingsFile(exports.data);
 }
-exports.getSetTypes = () => settingsJson['setTypes'];
+
 
 let _writeSettingsFile = (settings) => 
-    base.writeFile(settingsFile, JSON.stringify(settings, null, 4))
+    base.writeFileSync(settingsFile, JSON.stringify(settings, null, 4))
+

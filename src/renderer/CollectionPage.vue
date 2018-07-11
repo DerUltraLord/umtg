@@ -4,7 +4,7 @@
             <SetList @setClicked="showSet" :sets=sets :selectedSet=selectedSet></SetList>
         </div>
         <div class="scrollable">
-            <CardList :cards=cards></CardList>
+            <CardList :cards=cards :settings=settings></CardList>
             <Loader :loading=loading></Loader>
         </div>
     </div>
@@ -15,11 +15,11 @@ import CardList from './CardList.vue'
 import SetList from './SetList.vue'
 import Loader from './Loader.vue'
 import Db from '../main/db.js'
-import Settings from '../main/settings.js'
 import Scryfall from '../main/scryfall.js'
 import Base from '../main/base.js'
 export default {
 
+    props: ['settings'],
     data() {
         return {
             selectedSet: null,
@@ -53,7 +53,7 @@ export default {
             .then(this.onGetSetsFromDb);
         },
         onGetSetsFromDb(sets) {
-            this.sets = sets.filter(set => Settings.isSetTypeVisible(set.set_type));
+            this.sets = sets.filter(set => this.settings.data.setTypes[set.set_type]);
             if (sets.length > 0) {
                 this.showSet(sets[0]);
             }
