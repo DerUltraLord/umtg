@@ -1,12 +1,20 @@
 const Settings = require('./settings.js')
+const Scryfall = require('./scryfall.js')
 
 exports.init = () => {
     Settings.init();
-    exports.settings = Settings.data;
+    exports.state.settings = Settings.data;
 }
 
-exports.setGridActive = Settings.setGridActive
-exports.setSetTypeVisible = Settings.setSetTypeVisible
+// Settings
+exports.setGridActive = Settings.setGridActive;
+exports.setSetTypeVisible = Settings.setSetTypeVisible;
+
+// Scryfall
+exports.searchScryfallByFilter = Scryfall.searchByFilter;
+exports.getScryfallSearchFilter = Scryfall.getSearchFilter;
 
 
-exports.settings = null;
+exports.state = {
+    settings: null,
+}

@@ -9,11 +9,11 @@
                 </div>
                 <div class="col col-3 text-right">
                     <div class="btn-group btn-group-lg btn-group-toggle" data-toggle="buttons">
-                        <label v-bind:class="[model.settings.isGridActive ? 'btn btn-primary focus active' : 'btn btn-secondary']" @click="handleViewSettingClick">
+                        <label v-bind:class="[state.settings.isGridActive ? 'btn btn-primary focus active' : 'btn btn-secondary']" @click="handleViewSettingClick">
                             <input type="radio" name="view" id="true" autocomplete="off">
                             <span class="oi oi-grid-two-up" title="icon audito" aria-hidden="false"></span></button>
                         </label>
-                        <label v-bind:class="[ !model.settings.isGridActive ? 'btn btn-primary focus active' : 'btn btn-secondary']" @click="handleViewSettingClick">
+                        <label v-bind:class="[ !state.settings.isGridActive ? 'btn btn-primary focus active' : 'btn btn-secondary']" @click="handleViewSettingClick">
                             <input type="radio" name="view" id="flase" autocomplete="off">
                             <span class="oi oi-list" title="icon audito" aria-hidden="false"></span>
                         </label>
@@ -26,9 +26,10 @@
 
 <script>
 import DeckAddButton from './DeckAddButton.vue'
+import Model from '../main/model.js'
 import $ from 'jquery'
 export default {
-    props: ['model'],
+    props: ['state'],
     created: function() {
     },
     methods: {
@@ -36,7 +37,7 @@ export default {
             $(this.root).find('.btn-primary').removeClass('btn-primary').addClass('btn-secondary');
             let lbl = $(e.srcElement).closest('label')
             lbl.removeClass('btn-secondary').addClass('btn-primary');
-            this.model.setGridActive(lbl.find('input').attr('id') == 'true');
+            Model.setGridActive(lbl.find('input').attr('id') == 'true');
         }
     },
     components: {

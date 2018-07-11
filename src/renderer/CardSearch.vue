@@ -16,9 +16,8 @@
 </template>
 
 <script>
-import Scryfall from '../main/scryfall.js'
+import Model from '../main/model.js'
 export default {
-
     data() {
         return {
             name: '',
@@ -29,7 +28,8 @@ export default {
     },
     methods: {
         handleSubmit() {
-            let filter = Scryfall.getSearchFilter(this.$data.name, this.$data.searchType, this.$data.text, this.$data.edition);
+            console.log(Model.getScryfallSearchFilter);
+            let filter = Model.getScryfallSearchFilter(this.$data.name, this.$data.searchType, this.$data.text, this.$data.edition);
             this.$emit('searchCard', filter);
         }
     }

@@ -3,7 +3,7 @@
 
         <CardSearch @searchCard=searchCard></CardSearch>
         <div class="scrollable">
-            <CardList :cards=cards :model=model></CardList>
+            <CardList :cards=cards :state=state></CardList>
             <Loader :loading=loading></Loader>
         </div>
     </div>
@@ -15,9 +15,9 @@
 import CardSearch from './CardSearch.vue'
 import CardList from './CardList.vue'
 import Loader from './Loader.vue'
-import Scryfall from '../main/scryfall.js'
+import Model from '../main/model.js'
 export default {
-    props: ['model'],
+    props: ['state'],
     data() {
         return {
             cards: [],
@@ -27,7 +27,7 @@ export default {
     methods: {
         searchCard(filter) {
             this.$data.loading = true;
-            Scryfall.searchByFilter(filter)
+            Model.searchScryfallByFilter(filter)
             .then(this.onDataAvailable)
             .catch(this.onDataNotAvailable);
         },

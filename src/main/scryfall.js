@@ -28,7 +28,7 @@ exports.buildSearchString = function(filter) {
 };
 
 exports.searchByFilter = function(filter) {
-    let searchString = this.buildSearchString(filter);
+    let searchString = exports.buildSearchString(filter);
     return exports.search(searchString);
 };
 

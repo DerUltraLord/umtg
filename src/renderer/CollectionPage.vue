@@ -4,7 +4,7 @@
             <SetList @setClicked="showSet" :sets=sets :selectedSet=selectedSet></SetList>
         </div>
         <div class="scrollable">
-            <CardList :cards=cards :model=model></CardList>
+            <CardList :cards=cards :state=state></CardList>
             <Loader :loading=loading></Loader>
         </div>
     </div>
@@ -19,7 +19,7 @@ import Scryfall from '../main/scryfall.js'
 import Base from '../main/base.js'
 export default {
 
-    props: ['model'],
+    props: ['state'],
     data() {
         return {
             selectedSet: null,
@@ -53,7 +53,7 @@ export default {
             .then(this.onGetSetsFromDb);
         },
         onGetSetsFromDb(sets) {
-            this.sets = sets.filter(set => this.model.settings.setTypes[set.set_type]);
+            this.sets = sets.filter(set => this.state.settings.setTypes[set.set_type]);
             if (sets.length > 0) {
                 this.showSet(sets[0]);
             }
