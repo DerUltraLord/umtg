@@ -34,7 +34,7 @@ exports.data = {
 exports.init = () => {
 
     if (!fs.existsSync(settingsPath)) {
-        base.mkdir(settingsPath);
+        fs.mkdirSync(settingsPath);
     }
 
     if (!fs.existsSync(decksPath)) {
