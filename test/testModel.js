@@ -1,12 +1,18 @@
 const Model = require('../src/main/model.js');
+const Settings = require('../src/main/settings.js');
+const TestUtils = require('./testUtils.js');
+
 const Db = require('../src/main/db.js');
 const should = require('chai').should()
 
 describe('model.js', function() {
     beforeEach(function(done) {
+        TestUtils.mockToDoNothing(Settings, 'init');
         Model.init(':memory:');
         done();
     });
+
+    afterEach(() => TestUtils.shutdown());
 
     it('can get sets', (done) => {
         Model.getSets()

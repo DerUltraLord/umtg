@@ -11,6 +11,7 @@ describe('Test Settings of umtg app', () => {
         testUtils.mockBasicReturn(base, 'isdir', true);
         testUtils.mockBasicReturn(base, 'isfile', true);
         testUtils.mockToDoNothing(settings, 'init');
+        testUtils.mockToDoNothing(base, 'writeFileSync');
         settings.data = {
             "setTypes": {"ultra": false},
             "isGridActive": false
