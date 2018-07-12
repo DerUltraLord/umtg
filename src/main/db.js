@@ -34,8 +34,9 @@ exports.cardAdd = function(card, amount) {
     stmt.run(card.id, JSON.stringify(card), amount, 0, (err, data) => {
         if (String(err).includes("SQLite: UNIQUE constraint failed") === -1) {
                 throw err;
+        } else if(err != null){
+            //console.log(card.name + " already in db");
         } else {
-            console.log(card.name + " already in db");
         }
     });
     stmt.finalize();
@@ -72,14 +73,11 @@ exports.getOwnedCardAmountOfSet = (set) => {
 exports.getPercentageOfSet = (set) => {
     return new Promise((success, failure) => {
 
-        console.log("start")
         exports.getOwnedCardAmountOfSet(set)
         .then((amount) => {
-            console.log("after getting owned amount")
             if (amount > 0) {
                 exports.getCardAmountOfSet(set)
                 .then((cardCount) => {
-                    console.log("after getting amount")
                     let res = -1;
                     if (cardCount > 0) {
                         res = amount / cardCount;
@@ -175,8 +173,7 @@ exports.getSets = (types) => {
 
 exports.getCardsOfSet = (set) => {
     let stmt = "SELECT * from [Card] WHERE json_extract([Card].jsonString, '$.set') = '" + set.code + "'";
-    return exports._promiseStatementWithDataTransform(stmt, cards => cards.map(card => JSON.parse(card.jsonString)));
-
+    return exports._promiseStatementWithDataTransform(stmt, cards => cards.map(card => JSON.parse(card.jsonString)))
 };
 
 exports._promiseStatement = stmt => {

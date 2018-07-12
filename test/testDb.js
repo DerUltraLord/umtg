@@ -1,5 +1,6 @@
 var assert = require('assert');
-var db = require('../src/main/db.js');
+var Db = require('../src/main/db.js');
+const should = require('chai').should();
 const testUtils = require('./testUtils.js');
 var mydb = null;
 
@@ -18,15 +19,15 @@ let testSet = {
 describe('Test Database', function() {
 
     beforeEach(function(done) {
-        db.init(':memory:');
+        Db.init(':memory:');
         done();
     });
 
 
-    it('can add cards and check if they are stored in db', (done) => {
+    it('can add cards and check if they are stored in Db', (done) => {
         let cardname = 'Ichor Wellspring';
-        db.cardAdd({name: cardname}, 0);
-        db.cardExistsByName(cardname)
+        Db.cardAdd({name: cardname}, 0);
+        Db.cardExistsByName(cardname)
         .then((res) => {
             res.should.be.true;
             done()
@@ -34,7 +35,7 @@ describe('Test Database', function() {
     });
 
     it('detect if card is not in db', (done) => {
-        db.cardExistsByName('Name not found')
+        Db.cardExistsByName('Name not found')
         .then((res) => { 
             res.should.be.false;
             done()
@@ -42,15 +43,15 @@ describe('Test Database', function() {
     });
 
     it('detect if card is in db by id', (done) => {
-        db.cardAdd(testCard, 0);
-        let p = db.cardExistsById('1337');
+        Db.cardAdd(testCard, 0);
+        let p = Db.cardExistsById('1337');
         testUtils.assertPromiseResult(p, done, (res) => {
             res.should.be.true;
         });
     });
 
     it('detect if card is not in db by id', (done) => {
-        let p = db.cardExistsById('1337');
+        let p = Db.cardExistsById('1337');
         testUtils.assertPromiseResult(p, done, (res) => {
             res.should.be.false;
         });
@@ -58,8 +59,8 @@ describe('Test Database', function() {
 
     it('get card by name', (done) => {
         let cardname = 'Ichor Wellspring';
-        db.cardAdd({name: cardname}, 0);
-        let p = db.getCardByName(cardname);
+        Db.cardAdd({name: cardname}, 0);
+        let p = Db.getCardByName(cardname);
         testUtils.assertPromiseResult(p, done, (res) => {
             res.name.should.be.equal(cardname);
         });
@@ -80,13 +81,13 @@ describe('Test Database', function() {
 
         var finished = false;
 
-        db.db.serialize(() => {
+        Db.db.serialize(() => {
 
-            db.setAdd(myset);
-            db.setAdd(myset2);
+            Db.setAdd(myset);
+            Db.setAdd(myset2);
 
-            let alltypes = db.getSets();
-            let ultratypes = db.getSets(["ultratype"]);
+            let alltypes = Db.getSets();
+            let ultratypes = Db.getSets(["ultratype"]);
 
             Promise.all([alltypes, ultratypes])
             .then(values => {
@@ -112,9 +113,9 @@ describe('Test Database', function() {
     });
 
     it('can get all the cards of a specific set', (done) => {
-        db.db.serialize(() => {
-            db.cardAdd(testCard, 0);
-            let p = db.getCardsOfSet({code: 'ultra'});
+        Db.db.serialize(() => {
+            Db.cardAdd(testCard, 0);
+            let p = Db.getCardsOfSet({code: 'ultra'});
             testUtils.assertPromiseResult(p, done, (res) => {
                 res[0].name = 'Ichor Wellspring';
             });
@@ -122,20 +123,20 @@ describe('Test Database', function() {
     });
 
     it('cant adjust the card amount if card is not in db', () => {
-        testUtils.promiseShouldFail(db.cardAdjustAmount(testCard, 1));
+        testUtils.promiseShouldFail(Db.cardAdjustAmount(testCard, 1));
     });
 
     it('can adjust the card amount if card is in db', (done) => {
-        db.cardAdd(testCard, 2);
-        let p = db.cardAdjustAmount(testCard, 1);
+        Db.cardAdd(testCard, 2);
+        let p = Db.cardAdjustAmount(testCard, 1);
         testUtils.assertPromiseResult(p, done, (res) => {
             res.should.be.equal(3);
         });
     });
 
     it('amount of set cards should be -1 if set is not in db', (done) => {
-        db.db.serialize(() => {
-            let p = db.getCardAmountOfSet(testSet);
+        Db.db.serialize(() => {
+            let p = Db.getCardAmountOfSet(testSet);
             testUtils.assertPromiseResult(p, done, (amount) => {
                 amount.should.be.equal(-1);
             });
@@ -144,9 +145,9 @@ describe('Test Database', function() {
     });
 
     it('can get card amount of set if set is in db', (done) => {
-        db.db.serialize(() => {
-            db.setAdd(testSet);
-            let p = db.getCardAmountOfSet(testSet);
+        Db.db.serialize(() => {
+            Db.setAdd(testSet);
+            let p = Db.getCardAmountOfSet(testSet);
             testUtils.assertPromiseResult(p, done, (amount) => {
                 amount.should.be.equal(10);
             });
@@ -155,10 +156,10 @@ describe('Test Database', function() {
     });
 
     it('can get amount of cards of set are in collection', (done) => {
-        db.db.serialize(() => {
-            db.cardAdd(testCard, 2);
-            db.setAdd(testSet);
-            let p = db.getOwnedCardAmountOfSet(testSet);
+        Db.db.serialize(() => {
+            Db.cardAdd(testCard, 2);
+            Db.setAdd(testSet);
+            let p = Db.getOwnedCardAmountOfSet(testSet);
             testUtils.assertPromiseResult(p, done, (amount) => {
                 amount.should.be.equal(1);
             });
@@ -167,10 +168,10 @@ describe('Test Database', function() {
     });
 
     it('can percentage of set', (done) => {
-        db.db.serialize(() => {
-            db.cardAdd(testCard, 2);
-            db.setAdd(testSet);
-            let p = db.getPercentageOfSet(testSet);
+        Db.db.serialize(() => {
+            Db.cardAdd(testCard, 2);
+            Db.setAdd(testSet);
+            let p = Db.getPercentageOfSet(testSet);
             testUtils.assertPromiseResult(p, done, (amount) => {
                 amount.should.be.equal(0.1);
             });
@@ -179,9 +180,9 @@ describe('Test Database', function() {
     });
 
     it('percentage of set returns negative value if not in db', (done) => {
-        db.db.serialize(() => {
-            db.cardAdd(testCard, 2);
-            let p = db.getPercentageOfSet(testSet);
+        Db.db.serialize(() => {
+            Db.cardAdd(testCard, 2);
+            let p = Db.getPercentageOfSet(testSet);
             testUtils.assertPromiseResult(p, done, (amount) => {
                 amount.should.be.below(0);
             });

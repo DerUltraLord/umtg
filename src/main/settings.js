@@ -34,7 +34,6 @@ exports.data = {
 exports.init = () => {
 
     if (!fs.existsSync(settingsPath)) {
-        console.log("Create directory");
         base.mkdir(settingsPath);
     }
 

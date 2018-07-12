@@ -66,11 +66,25 @@ exports._simpleCallbackFunctionToPromise = func => args => {
     });
 }
 
+exports.getJSONCb = (url, success, error) => {
+    https.get(url, res => {
+        res.setEncoding("utf8");
+        let body = "";
+        res.on("data", data => {
+            body += data;
+        });
+        res.on("end", () => {
+            body = JSON.parse(body);
+            success(body);
+        });
+        res.on("error", (error) => {
+            failure(error);
+        });
+    });
+};
 
 exports.getJSON = url => {
     return new Promise((success, failure) => {
-        console.log("HIER");
-        console.log(url);
         https.get(url, res => {
             res.setEncoding("utf8");
             let body = "";

@@ -20,9 +20,8 @@ import Model from '../main/model.js'
 import Db from '../main/db.js'
 
 console.log("Load settings ...");
-Model.init()
+Model.init('test.db')
 console.log("Settings loaded");
-Db.init('test.db')
 
 
 export default {
