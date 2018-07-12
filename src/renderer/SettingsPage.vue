@@ -22,7 +22,7 @@ export default {
     props: ['state'],
     methods: {
         onSetTypeClicked(e) {
-            this.state.settings.setSetTypeVisible(e.srcElement.value, e.srcElement.checked);
+            this.state.settings.setTypes[e.srcElement.value] = e.srcElement.checked;
         },
         onShowCardImages(e) {
             this.state.settings.setGridActive(e.srcElement.checked);
