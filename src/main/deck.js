@@ -118,6 +118,12 @@ exports.traverseCards = (content) => {
 
 };
 
+exports.createDeck = (deckname) => {
+    fs.openSync(decksPath + "/" + deckname + '.txt', 'w', (err, file) => {
+        if (err) throw err;
+    });
+}
+
 
 
 

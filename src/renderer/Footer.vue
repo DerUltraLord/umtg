@@ -3,7 +3,7 @@
         <div class="container-flex">
             <div class="row" style="margin: 5px">
                 <div class="col col-4">
-                    <DeckAddButton></DeckAddButton>
+                    <DeckAddButton :decks=state.decks></DeckAddButton>
                 </div>
                 <div class="col col-5">
                 </div>

@@ -4,11 +4,7 @@ const Db = require('./db.js');
 const Deck = require('./deck.js');
 const Base = require('./base.js');
 const $ = require('jquery');
-exports.init = (database) => {
-    Settings.init();
-    Db.init(database);
-    exports.state.settings = Settings.data;
-}
+
 
 // Settings
 exports.setGridActive = Settings.setGridActive;
@@ -180,8 +176,9 @@ exports.getPercentageOfSet = Db.getPercentageOfSet
 
 exports.updateDecks = () => {
     return Deck.getDecks()
-    .then((decks) => exports.state.decks = decks)
-    .catch(console.error);
+    .then((decks) =>  {
+        exports.state.decks = decks
+    })
 }
 
 exports.updateDeckCards = (deck) => {
@@ -191,8 +188,19 @@ exports.updateDeckCards = (deck) => {
     .catch(console.error);
 }
 
+exports.createDeck = (name) => {
+    Deck.createDeck(name);
+    exports.updateDecks();
+}
+
 
 // State
+exports.init = (database) => {
+    Settings.init();
+    Db.init(database);
+    exports.state.settings = Settings.data;
+    return exports.updateDecks();
+}
 
 exports.state = {
     settings: null,

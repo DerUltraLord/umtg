@@ -4,10 +4,18 @@ import 'bootstrap'
 import Vue from 'vue'
 import App from './App.vue'
 
+import Model from '../main/model.js'
+console.log("Load model ...");
+let initialization = Model.init('test.db')
+console.log("Model loaded");
 
-new Vue({
-        el: '#app',
-        template: '<App/>',
-        components: { App }
 
+initialization.then(() => {
+    new Vue({
+            el: '#app',
+            template: '<App/>',
+            components: { App }
+
+    })
 })
+.catch(console.error);

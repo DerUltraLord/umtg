@@ -10,18 +10,16 @@
 </template>
 
 <script>
+import Model from '../main/model.js'
+
 import Navigation from './Navigation.vue'
 import SearchPage from './SearchPage.vue'
 import CollectionPage from './CollectionPage.vue'
 import DecksPage from './DecksPage.vue'
 import SettingsPage from './SettingsPage.vue'
 import Footer from './Footer.vue'
-import Model from '../main/model.js'
 import Db from '../main/db.js'
 
-console.log("Load settings ...");
-Model.init('test.db')
-console.log("Settings loaded");
 
 
 

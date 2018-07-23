@@ -1,7 +1,7 @@
 <template>
     <div class="btn-group btn-group-sm">
         <button id="removeButton" @click="removeCardFromCollection" class="btn btn-default delete" role="group"></button>
-        <label ref="lblAmount" class="btn btn-default" role="group">{{ card.ownedAmount }}</label>
+        <label class="btn btn-default" role="group">{{ card.ownedAmount }}</label>
         <button id="addButton" @click="addCardToCollection" class="btn btn-default add" role="group"></button>
     </div>
 </template>

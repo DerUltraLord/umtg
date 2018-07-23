@@ -1,10 +1,13 @@
 const { app, BrowserWindow } = require('electron')
 const path = require('path')
 const url = require('url')
+import Model from '../main/model.js'
 
 let win
 
 function createWindow() {
+
+    console.log("Settings loaded");
 
     win = new BrowserWindow({ width: 800, height: 600 })
 

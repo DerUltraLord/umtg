@@ -29,23 +29,21 @@ export default {
         }
     },
     created: function () {
-        this.loading = true;
-        Model.updateDecks()
-        .then(() => {
-            if (this.state.decks.length > 0) {
-                this.showCardsOfDeck(this.state.decks[0]);
-            }
-        })
-        .catch(console.error);
+        if (this.state.decks.length > 0) {
+            this.showCardsOfDeck(this.state.decks[0]);
+        }
 
     },
     methods: {
         showCardsOfDeck(deck) {
-            this.loading = true;
-            this.state.selectedDeck = deck;
-            Model.updateDeckCards(this.state.selectedDeck)
-            .then(() => this.loading = false)
-            .catch(console.error);
+            if (this.state.selectedDeck != deck) {
+                this.loading = true;
+                this.state.selectedDeck = deck;
+                Model.updateDeckCards(this.state.selectedDeck)
+                .then(() => this.loading = false)
+                .catch(console.error);
+
+            }
         },
     },
     components: {

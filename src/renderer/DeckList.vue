@@ -1,15 +1,35 @@
 <template>
     <div>
         <Deck @click.native="$emit('deckSelected', deck)" v-for="deck in decks" v-bind:data="deck" v-bind:key="deck" v-bind:class="['list-group-item', selectedDeck != null && selectedDeck == deck ? 'list-group-item-info' : '']" :deck=deck></Deck>
+        <div class="list-group-item">
+            <input ref="deckName"></input>
+            <button @click="createDeck" type="button" class="btn btn-sm btn-success">
+                <span class="oi oi-plus" title="icon plus" aria-hidden="false"></span>
+            </button>
+        </div>
     </div>
 </template>
 
 <script>
 import Deck from './Deck.vue'
+import Model from '../main/model.js'
 export default {
     props: ['decks', 'selectedDeck'],
     components: {
         Deck,
+    },
+    methods: {
+        createDeck() {
+            let deckName = this.$refs.deckName.value;
+            if (deckName) {
+                Model.createDeck(deckName);
+            }
+
+        }
     }
+
 }
 </script>
+
+<style scoped>
+</style>
