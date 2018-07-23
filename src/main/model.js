@@ -3,7 +3,6 @@ const Scryfall = require('./scryfall.js');
 const Db = require('./db.js');
 const Base = require('./base.js');
 const $ = require('jquery');
-
 exports.init = (database) => {
     Settings.init();
     Db.init(database);
@@ -15,7 +14,26 @@ exports.setGridActive = Settings.setGridActive;
 exports.setSetTypeVisible = Settings.setSetTypeVisible;
 
 // Scryfall
-exports.searchScryfallByFilter = Scryfall.searchByFilter;
+
+let updateCards = (cards) => {
+    return cards.reduce((obj, card) => {
+        obj[card.id] = card;
+        obj[card.id].ownedAmount = 0;
+        Db.getAmountOfCardById(card.id, (amount) => {
+            obj[card.id].ownedAmount = amount;
+        });
+        return obj;
+    }, {});
+
+}
+
+exports.searchScryfallByFilter = (filter) => {
+    return Scryfall.searchByFilter(filter)
+    .then((response) => exports.state.searchCards = updateCards(response.data));
+    // TODO: has more??
+    // TODO: empty response
+}
+
 exports.getScryfallSearchFilter = Scryfall.getSearchFilter;
 
 // Collection
@@ -26,7 +44,7 @@ let saveSetsToDb = (res) => {
     return Db.getSets()
 }
 
-exports.getSets = () => {
+let getSets = () => {
     return new Promise((success, failure) => {
 
         Db.getSets()
@@ -44,6 +62,26 @@ exports.getSets = () => {
     });
 };
 
+
+exports.updateSets = () => {
+    return getSets()
+    .then((sets) => {
+        let filteredSets = sets.filter(set => exports.state.settings.setTypes[set.set_type]);
+        exports.state.sets = filteredSets.reduce((obj, set) => {
+            set.ownedAmount = null;
+            obj[set.code] = set;
+            obj[set.code].ownedCards = 0;
+            Db.getOwnedCardAmountBySetCode(set.code).
+            then((amount) => obj[set.code].ownedCards = amount)
+            .catch(console.error);
+            return obj;
+        }, {});
+    })
+    .catch(console.error);
+
+
+}
+
 let storeSetCardsFromScryfallInDb = (uri, success) => {
     Base.getJSONCb(uri, (res) => {
         res.data.forEach((card) => {
@@ -55,7 +93,6 @@ let storeSetCardsFromScryfallInDb = (uri, success) => {
         } else {
             success();
         }
-
     });
 }
 
@@ -83,7 +120,66 @@ exports.getCardsOfSet = (set) => {
     });
 }
 
+exports.updateCardsBySet = (set) => {
+    return exports.getCardsOfSet(set)
+    .then((cards) => {
+        exports.state.setCards = cards.reduce((obj, card) => {
+            obj[card.id] = card;
+            obj[card.id].ownedAmount = 0;
+            Db.getAmountOfCardById(card.id, (amount) => {
+                obj[card.id].ownedAmount = amount;
+            });
+
+            return obj;
+        }, {});
+    })
+    .catch(console.error);
+    
+
+}
+
+let updateCardAmountOfCard = (card, amount) => {
+    card = exports.state.setCards[card.id];
+    card.ownedAmount = amount;
+    Db.getOwnedCardAmountBySetCode(card.set)
+    .then((amount) => exports.state.sets[card.set].ownedCards = amount)
+    .catch(console.error);
+}
+
+exports.removeCardFromCollection = (card) => {
+    return Db.cardExistsById(card.id)
+    .then((exists) => {
+        if (exists) {
+            Db.cardAdjustAmount(card, -1)
+            .then((amount) => updateCardAmountOfCard(card, amount))
+            .catch(console.error);
+        }
+    })
+    .catch(console.error);
+}
+
+exports.addCardToCollection = (card) => {
+    return Db.cardExistsById(card.id)
+    .then((exists) => {
+        if (exists) {
+            Db.cardAdjustAmount(card, 1)
+            .then((amount) => updateCardAmountOfCard(card, amount))
+            .catch(console.error);
+        } else {
+            Db.cardAdd(card, 1);
+            updateCardAmountOfCard(card, 1);
+        }
+    })
+    .catch(console.error);
+}
+
+exports.getPercentageOfSet = Db.getPercentageOfSet
+
+
 
 exports.state = {
     settings: null,
+    sets: {},
+    searchCards: {},
+    setCards: {},
 }

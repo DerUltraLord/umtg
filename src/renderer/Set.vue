@@ -14,7 +14,7 @@
             </div>
             <div class="col-10">
                 <div class="progress">
-                    <div class="progress-bar" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div> 
+                    <div ref="progressBar" class="progress-bar" role="progressbar" v-bind:aria-valuenow=set.ownedCards v-bind:style="{width: (set.ownedCards / set.card_count) * 100 + '%'}"  aria-valuemin="0" aria-valuemax="100"></div> 
                 </div>
             </div>
         </div>
@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import Model from '../main/model.js'
 export default {
     props: ['set'],
 }

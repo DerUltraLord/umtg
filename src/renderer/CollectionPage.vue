@@ -1,10 +1,10 @@
 <template>
     <div class="collectionPage">
         <div class="scrollable">
-            <SetList @setClicked="showSet" :sets=sets :selectedSet=selectedSet></SetList>
+            <SetList @setClicked="showSet" :sets=state.sets :selectedSet=selectedSet></SetList>
         </div>
         <div class="scrollable">
-            <CardList :cards=cards :state=state></CardList>
+            <CardList :cards=state.setCards :settings=state.settings></CardList>
             <Loader :loading=loading></Loader>
         </div>
     </div>
@@ -15,9 +15,6 @@ import CardList from './CardList.vue'
 import SetList from './SetList.vue'
 import Loader from './Loader.vue'
 import Model from '../main/model.js'
-import Db from '../main/db.js'
-import Scryfall from '../main/scryfall.js'
-import Base from '../main/base.js'
 export default {
 
     props: ['state'],
@@ -25,37 +22,32 @@ export default {
         return {
             selectedSet: null,
             loading: false,
-            cards: [],
-            sets: [],
         }
     },
     created: function () {
         this.loading = true;
-        Model.getSets()
-        .then(this.onGetSets);
+        Model.updateSets()
+        .then(this.onUpdateSets)
+        .catch(console.error);
         
     },
     methods: {
-        onGetSets(sets) {
-            this.sets = sets.filter(set => this.state.settings.setTypes[set.set_type]);
-            console.log(this.sets);
-            if (sets.length > 0) {
-                console.log("SHOW SET");
-                this.showSet(sets[0]);
+        onUpdateSets() {
+            let setKeys = Object.keys(this.state.sets);
+            if (setKeys.length > 0) {
+                this.showSet(this.state.sets[setKeys[0]]);
+            } else {
+                this.loading = false;
             }
         },
         showSet(set) {
             this.loading = true;
             this.selectedSet = set;
-            Model.getCardsOfSet(set)
+            Model.updateCardsBySet(set)
             .then(this.onCards);
         },
         onCards(cards) {
-            console.log("finished");
-            console.log(cards);
             this.loading = false;
-            this.cards = cards;
-
         },
 
     },

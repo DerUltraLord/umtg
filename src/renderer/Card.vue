@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-if="!state.settings.isGridActive" class="media">
+        <div v-if="!settings.isGridActive" class="media">
             <div class="m20">
                 <img v-bind:src="card.image_uris ? card.image_uris.art_crop : ''" width="250" height="200"></img>
                 <div>
@@ -36,7 +36,7 @@
 <script>
 import CardButtons from './CardButtons.vue'
 export default {
-    props: ['card', 'state'],
+    props: ['card', 'settings'],
     components: {
         CardButtons,
     }

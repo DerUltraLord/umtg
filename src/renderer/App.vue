@@ -24,6 +24,7 @@ Model.init('test.db')
 console.log("Settings loaded");
 
 
+
 export default {
     data() {
         return {

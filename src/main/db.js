@@ -59,8 +59,8 @@ exports.getCardAmountOfSet = (set) => {
     });
 };
 
-exports.getOwnedCardAmountOfSet = (set) => {
-    let stmt = "SELECT COUNT(*) as amount FROM [Card] WHERE json_extract([Card].jsonString, '$.set') = '" + set.code + "' and amount > 0";
+exports.getOwnedCardAmountBySetCode = (code) => {
+    let stmt = "SELECT COUNT(*) as amount FROM [Card] WHERE json_extract([Card].jsonString, '$.set') = '" + code + "' and amount > 0";
     return exports._promiseStatementWithDataTransform(stmt, (res) => {
         if (res.length == 1) {
             return res[0].amount;
@@ -73,7 +73,7 @@ exports.getOwnedCardAmountOfSet = (set) => {
 exports.getPercentageOfSet = (set) => {
     return new Promise((success, failure) => {
 
-        exports.getOwnedCardAmountOfSet(set)
+        exports.getOwnedCardAmountBySetCode(set.code)
         .then((amount) => {
             if (amount > 0) {
                 exports.getCardAmountOfSet(set)
@@ -132,7 +132,7 @@ exports.cardAdjustAmount = function(card, amount) {
 
 };
 
-exports.getAmountOfCard = function(id, callback) {
+exports.getAmountOfCardById = function(id, callback) {
     
     // TODO: foil
     //
@@ -141,6 +141,7 @@ exports.getAmountOfCard = function(id, callback) {
         if (res.length > 0) {
             result = res[0].amount;
         }
+        console.log(result);
         callback(result);
 
     }   

@@ -159,7 +159,7 @@ describe('Test Database', function() {
         Db.db.serialize(() => {
             Db.cardAdd(testCard, 2);
             Db.setAdd(testSet);
-            let p = Db.getOwnedCardAmountOfSet(testSet);
+            let p = Db.getOwnedCardAmountBySetCode(testSet.code);
             testUtils.assertPromiseResult(p, done, (amount) => {
                 amount.should.be.equal(1);
             });

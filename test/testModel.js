@@ -15,7 +15,7 @@ describe('model.js', function() {
     afterEach(() => TestUtils.shutdown());
 
     it('can get sets', (done) => {
-        Model.getSets()
+        Model.updateSets()
         .then((sets) => {
             done();
         });
