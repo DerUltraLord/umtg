@@ -3,7 +3,7 @@
         <Navigation :pages=pages :currentPage=currentPage @pageSelected="currentPage = $event.key"/>
         <SearchPage :state=state v-if="currentPage == 'search'"/>
         <CollectionPage :state=state v-if="currentPage == 'collection'"/>
-        <DecksPage v-if="currentPage == 'decks'"/>
+        <DecksPage :state=state v-if="currentPage == 'decks'"/>
         <SettingsPage :state=state v-if="currentPage == 'settings'"/>
         <Footer :state=state></Footer>
     </div>

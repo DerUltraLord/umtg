@@ -1,15 +1,15 @@
 <template>
     <div>
-        <div v-if="decks == null || decks.length == 0">
+        <div v-if="state.decks == null || state.decks.length == 0">
             <span class="badge badge-warning">No decks found.<br>Copy decklist text files into ~/.umtg/decks<br>and reload</span>
         </div>
     
         <div class="decksPage" v-else>
             <div class="scrollable">
-                <DeckList @deckSelected=showCardsOfDeck :decks=decks :selectedDeck=selectedDeck></DeckList>
+                <DeckList @deckSelected=showCardsOfDeck :decks=state.decks :selectedDeck=state.selectedDeck></DeckList>
             </div>
             <div class="scrollable">
-                <CardList :cards=cards></CardList>
+                <CardList :cards=state.deckCards :settings=state.settings></CardList>
                 <Loader :loading=loading></Loader>
             </div>
         </div>
@@ -20,39 +20,33 @@
 import DeckList from './DeckList.vue'
 import CardList from './CardList.vue'
 import Loader from './Loader.vue'
-import Deck from '../main/deck.js'
+import Model from '../main/model.js'
 export default {
+    props: ['state'],
     data() {
         return {
             loading: false,
-            selectedDeck: null,
-            decks: [],
-            cards: [],
         }
     },
     created: function () {
         this.loading = true;
-        Deck.getDecks()
-        .then((decks) => {
-            this.decks = decks
-            if (this.decks.length > 0) {
-                this.showCardsOfDeck(this.decks[0]);
+        Model.updateDecks()
+        .then(() => {
+            if (this.state.decks.length > 0) {
+                this.showCardsOfDeck(this.state.decks[0]);
             }
-            this.loading = false;
-        });
+        })
+        .catch(console.error);
+
     },
     methods: {
         showCardsOfDeck(deck) {
             this.loading = true;
-            this.selectedDeck = deck;
-            Deck.getCardsOfDeck(this.selectedDeck)
-            .then(this.onDeckFromDb);
+            this.state.selectedDeck = deck;
+            Model.updateDeckCards(this.state.selectedDeck)
+            .then(() => this.loading = false)
+            .catch(console.error);
         },
-        onDeckFromDb(deck) {
-            this.cards = deck.cards;
-            this.loading = false;
-        }
-
     },
     components: {
         DeckList,

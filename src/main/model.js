@@ -1,6 +1,7 @@
 const Settings = require('./settings.js');
 const Scryfall = require('./scryfall.js');
 const Db = require('./db.js');
+const Deck = require('./deck.js');
 const Base = require('./base.js');
 const $ = require('jquery');
 exports.init = (database) => {
@@ -14,7 +15,6 @@ exports.setGridActive = Settings.setGridActive;
 exports.setSetTypeVisible = Settings.setSetTypeVisible;
 
 // Scryfall
-
 let updateCards = (cards) => {
     return cards.reduce((obj, card) => {
         obj[card.id] = card;
@@ -176,10 +176,30 @@ exports.addCardToCollection = (card) => {
 exports.getPercentageOfSet = Db.getPercentageOfSet
 
 
+// Decks
+
+exports.updateDecks = () => {
+    return Deck.getDecks()
+    .then((decks) => exports.state.decks = decks)
+    .catch(console.error);
+}
+
+exports.updateDeckCards = (deck) => {
+    // TODO: sideboard
+    return Deck.getCardsOfDeck(deck)
+    .then((deck) => exports.state.deckCards = updateCards(deck.cards))
+    .catch(console.error);
+}
+
+
+// State
 
 exports.state = {
     settings: null,
     sets: {},
     searchCards: {},
     setCards: {},
+    deckCards: {},
+    decks: [],
+    selectedDeck: null,
 }
