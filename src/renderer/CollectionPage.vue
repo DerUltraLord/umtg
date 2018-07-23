@@ -1,7 +1,7 @@
 <template>
     <div class="collectionPage">
         <div class="scrollable">
-            <SetList @setClicked="showSet" :sets=state.sets :selectedSet=selectedSet></SetList>
+            <SetList @setClicked="showSet" :sets=state.sets :selectedSet=state.selectedSet></SetList>
         </div>
         <div class="scrollable">
             <CardList :cards=state.setCards :settings=state.settings></CardList>
@@ -20,15 +20,16 @@ export default {
     props: ['state'],
     data() {
         return {
-            selectedSet: null,
             loading: false,
         }
     },
     created: function () {
-        this.loading = true;
-        Model.updateSets()
-        .then(this.onUpdateSets)
-        .catch(console.error);
+        if (Object.keys(this.state.sets).length == 0) {
+            this.loading = true;
+            Model.updateSets()
+            .then(this.onUpdateSets)
+            .catch(console.error);
+        }
         
     },
     methods: {
@@ -42,7 +43,7 @@ export default {
         },
         showSet(set) {
             this.loading = true;
-            this.selectedSet = set;
+            this.state.selectedSet = set;
             Model.updateCardsBySet(set)
             .then(this.onCards);
         },

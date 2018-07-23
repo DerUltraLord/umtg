@@ -195,11 +195,15 @@ exports.createDeck = (name) => {
 
 
 // State
-exports.init = (database) => {
+exports.init = async (database) => {
     Settings.init();
     Db.init(database);
     exports.state.settings = Settings.data;
-    return exports.updateDecks();
+    await exports.updateDecks();
+    console.log(exports.decks);
+    if (exports.state.decks.length > 0) {
+        exports.state.selectedDeck = exports.state.decks[0];
+    }
 }
 
 exports.state = {
@@ -210,4 +214,5 @@ exports.state = {
     deckCards: {},
     decks: [],
     selectedDeck: null,
+    selectedSet: null,
 }

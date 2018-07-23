@@ -6,7 +6,7 @@
     
         <div class="decksPage" v-else>
             <div class="scrollable">
-                <DeckList @deckSelected=showCardsOfDeck :decks=state.decks :selectedDeck=state.selectedDeck></DeckList>
+                <DeckList @deckSelected=deckSelected :decks=state.decks :selectedDeck=state.selectedDeck></DeckList>
             </div>
             <div class="scrollable">
                 <CardList :cards=state.deckCards :settings=state.settings></CardList>
@@ -29,22 +29,25 @@ export default {
         }
     },
     created: function () {
-        if (this.state.decks.length > 0) {
-            this.showCardsOfDeck(this.state.decks[0]);
+        if (Object.keys(this.state.deckCards).length == 0) {
+            this.showCardsOfDeck(this.state.selectedDeck)
         }
 
     },
     methods: {
         showCardsOfDeck(deck) {
-            if (this.state.selectedDeck != deck) {
-                this.loading = true;
-                this.state.selectedDeck = deck;
-                Model.updateDeckCards(this.state.selectedDeck)
-                .then(() => this.loading = false)
-                .catch(console.error);
+            this.loading = true;
+            this.state.selectedDeck = deck;
+            Model.updateDeckCards(this.state.selectedDeck)
+            .then(() => this.loading = false)
+            .catch(console.error);
 
-            }
         },
+        deckSelected(deck) {
+            if (this.state.selectedDeck != deck) {
+                this.showCardsOfDeck(deck);
+            }
+        }
     },
     components: {
         DeckList,
