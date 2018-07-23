@@ -28,7 +28,7 @@ export default {
         searchCard(filter) {
             this.loading = true;
             Model.searchScryfallByFilter(filter)
-            .then(console.log(this.state.searchCards))
+            .then(() => console.log(this.state.searchCards))
             .catch(this.loading = false);
         },
     },

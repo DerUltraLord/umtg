@@ -20,7 +20,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col">
-                        <img v-bind:src="card.image_uris ? card.image_uris.normal : ''" width="250"></img>
+                        <img v-bind:src="getImageUri()" width="250"></img>
                     </div>
                 </div>
                 <div class="row mt10">
@@ -37,8 +37,19 @@
 import CardButtons from './CardButtons.vue'
 export default {
     props: ['card', 'settings'],
+    methods: {
+        getImageUri() {
+            let uri = '';
+            if (this.card.image_uris) {
+                uri = this.card.image_uris.normal;
+            } else if(this.card.card_faces) {
+                uri = this.card.card_faces[0].image_uris.normal;
+            }
+            return uri;
+        }
+    },
     components: {
         CardButtons,
-    }
+    },
 }
 </script>
