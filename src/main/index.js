@@ -1,7 +1,7 @@
 import {app, BrowserWindow } from 'electron'
 
 app.on('ready', () => {
-    let window = new BrowserWindow();
+    let window = new BrowserWindow({title: "UMTG"});
 
     let production = process.env.NODE_ENV == 'production';
 
