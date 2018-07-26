@@ -1,5 +1,5 @@
 <template>
-    <div class="d-flex flex-wrap">
+    <div v-bind:class="[settings.isGridActive ? 'd-flex flex-wrap' : '']">
         <Card v-for="c in cards" v-bind:data="c" v-bind:key="c.id" :card=c :settings=settings v-bind:class="[settings.isGridActive ? 'd-flex flex-row flex-wrap' : 'list-group-item']"></Card>
     </div>
 </template>

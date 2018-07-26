@@ -1,18 +1,25 @@
 <template>
     <div>
-        <div v-if="!settings.isGridActive" class="media">
-            <div class="m20">
-                <img v-bind:src="card.image_uris ? card.image_uris.art_crop : ''" width="250" height="200"></img>
-                <div>
+        <div v-if="!settings.isGridActive" class="container">
+            <div class="row">
+                <div class="col col-12">
+                    <div class="media">
+                        <div >
+                            <img v-bind:src="card.image_uris ? card.image_uris.art_crop : ''" width="250" height="200"></img>
+                            <div>
+                            </div>
+                        </div>
+                        <div class="media-body">
+                            <div class="row">
+                                <h2 class="col-lg-8">{{ card.name }}</h2>
+                                <div ref="manaSymbols" class="col-lg-4">
+                                </div>
+                            </div>
+                            <h3 class="cardType">{{ card.type_line }}</h3>
+                            <p class="cardText">{{ card.oracle_text }}</p>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="media-body">
-                <div class="row">
-                    <h2 class="col-lg-8">{{ card.name }}</h2>
-                    <div class="col-lg-4"></div>
-                </div>
-                <h3 class="cardType">{{ card.type_line }}</h3>
-                <p class="cardText">{{ card.oracle_text }}</p>
             </div>
         </div>
 
@@ -46,7 +53,24 @@ export default {
                 uri = this.card.card_faces[0].image_uris.normal;
             }
             return uri;
+        },
+        getTagsForMana(card) {
+            let re = /\{\w\}/g;
+            let res = "";
+            let m;
+            m = re.exec(card.mana_cost);
+            while (m != null) {
+                let manaString = m[0].substring(1, m[0].length - 1);
+                manaString = '<img src="icons/' + manaString + '.svg" class="float-lg-right" width=24>'
+                res = manaString + res;
+                m = re.exec(card.mana_cost);
+            }
+            return res;
         }
+
+    },
+    mounted: function() {
+        this.$refs.manaSymbols.insertAdjacentHTML("beforeend", this.getTagsForMana(this.card));
     },
     components: {
         CardButtons,
