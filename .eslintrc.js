@@ -1,4 +1,4 @@
-{
+module.exports = {
     "env": {
         "es6": true,
         "node": true
@@ -20,7 +20,9 @@
         "semi": [
             "error",
             "always"
-        ]
+        ],
     },
-    "plugins": ["riot"]
+    "parserOptions": {
+        "ecmaVersion": 2017
+    }
 }

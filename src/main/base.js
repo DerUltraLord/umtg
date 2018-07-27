@@ -1,5 +1,5 @@
-const fs = require('fs');
-const https = require('https');
+const fs = require("fs");
+const https = require("https");
 
 exports.prop = obj => name =>
     obj ? obj[name] : null;
@@ -8,7 +8,7 @@ exports.matchRegex = regex => param =>
     regex.exec(param);
 
 exports.matchRegexGroup = regex => param =>
-    exports.prop(exports.matchRegex(regex)(param))('groups');
+    exports.prop(exports.matchRegex(regex)(param))("groups");
 
 exports.readFile = filename => {
     return new Promise((success, failure) => {
@@ -31,14 +31,14 @@ exports.writeFile = (filename, contents) => {
                 success();
             }
 
-        })
+        });
     });
 
 };
 
 exports.writeFileSync = (filename, contents) =>  {
     fs.writeFileSync(filename, contents);
-}
+};
 
 exports.ls = directory =>
     exports._simpleCallbackFunctionToPromise(fs.readdir)([directory]);
@@ -64,9 +64,9 @@ exports._simpleCallbackFunctionToPromise = func => args => {
         args.push(cb);
         func.apply(null, args);
     });
-}
+};
 
-exports.getJSONCb = (url, success, error) => {
+exports.getJSONCb = (url, success) => {
     https.get(url, res => {
         res.setEncoding("utf8");
         let body = "";
@@ -77,8 +77,7 @@ exports.getJSONCb = (url, success, error) => {
             body = JSON.parse(body);
             success(body);
         });
-        res.on("error", (error) => {
-            failure(error);
+        res.on("error", () => {
         });
     });
 };
@@ -105,7 +104,7 @@ exports.getJSON = url => {
 exports.getJSONTransformed = (url, transformFunc) => {
     return new Promise((success, failure) => {
         exports.getJSON(url)
-        .then((res) => success(transformFunc(res)))
-        .catch(failure);
+            .then((res) => success(transformFunc(res)))
+            .catch(failure);
     });
-}
+};

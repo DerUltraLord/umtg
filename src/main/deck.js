@@ -1,8 +1,8 @@
 var db = require("./db.js");
 var scry = require("./scryfall.js");
 var decksPath = process.env.HOME + "/.umtg/decks";
-const fs = require('fs');
-const base = require('./base.js');
+const fs = require("fs");
+const base = require("./base.js");
 
 
 exports.getDecks = function() {
@@ -13,13 +13,13 @@ exports.getCardsOfDeck = async deckname => {
     let contents = await base.readFile(decksPath + "/" + deckname);
     let deckResult = exports.traverseCards(contents);
 
-    cards = await exports.getCardObjectsFromCardNames(deckResult.cards);
-    sideboard = await exports.getCardObjectsFromCardNames(deckResult.sideboard);
+    let cards = await exports.getCardObjectsFromCardNames(deckResult.cards);
+    let sideboard = await exports.getCardObjectsFromCardNames(deckResult.sideboard);
 
     return {
         cards: cards,
         sideboard: sideboard,
-    }
+    };
 };
 
 exports.getCardObjectsFromCardNames = cards => {
@@ -37,7 +37,7 @@ exports.getCardObjectsFromCardNames = cards => {
                 addedIds.push(dbCard.id);
             }
         }
-        dbCard['amount'] = Number(card.amount);
+        dbCard["amount"] = Number(card.amount);
         data.push(dbCard);
         return Promise.resolve(data);
     }, Promise.resolve([]));
@@ -48,10 +48,10 @@ exports.addCardToDeck = function(deck, card) {
     let decknames = exports.getDecks();
     if (decknames.includes(deck)) {
         return exports.getCardsOfDeck(deck)
-        .then((deck) => {
-            deck.cards.push(card);
-            return deck;
-        });
+            .then((deck) => {
+                deck.cards.push(card);
+                return deck;
+            });
         
     } else {
         throw new Error("Deck " + deck + " not found");
@@ -67,18 +67,15 @@ exports._lineMatchCard = line => {
         res = {
             amount: Number(regexResult[1]),
             name: regexResult[2],
-        }
+        };
     }
     return res;
 };
 
 exports._lineMatchSideboard = line => 
-    base.matchRegex(/Sideboard:\s*/)(line)
+    base.matchRegex(/Sideboard:\s*/)(line);
 
 
-exports._lineNotMatching = (line) => {
-    //throw new Error("not matching line: " + line);
-};
 
 exports.traverseCards = (content) => {
 
@@ -105,7 +102,7 @@ exports.traverseCards = (content) => {
                 if (cardResult) {
                     cardlist.push(cardResult);
                 } else {
-                    exports._lineNotMatching(line);
+                    // TODO: line not matching
                 }
             }
 
@@ -116,10 +113,10 @@ exports.traverseCards = (content) => {
 };
 
 exports.createDeck = (deckname) => {
-    fs.openSync(decksPath + "/" + deckname + '.txt', 'w', (err, file) => {
+    fs.openSync(decksPath + "/" + deckname + ".txt", "w", (err) => {
         if (err) throw err;
     });
-}
+};
 
 
 

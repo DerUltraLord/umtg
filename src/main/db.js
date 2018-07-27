@@ -31,13 +31,12 @@ exports.cardAdd = function(card, amount) {
     //})
     //.catch(console.error);
     var stmt = db.prepare("INSERT INTO Card VALUES(?, ?, ?, ?)");
-    stmt.run(card.id, JSON.stringify(card), amount, 0, (err, data) => {
+    stmt.run(card.id, JSON.stringify(card), amount, 0, (err) => {
         if (String(err).includes("SQLite: UNIQUE constraint failed") === -1) {
-                throw err;
+            throw err;
         } else if(err != null){
             //console.log(card.name + " already in db");
-        } else {
-        }
+        } 
     });
     stmt.finalize();
 };
@@ -52,7 +51,7 @@ exports.getCardAmountOfSet = (set) => {
     let stmt = "SELECT json_extract([Set].jsonString, '$.card_count') as card_count FROM [Set] WHERE json_extract([Set].jsonString, '$.code') = '" + set.code + "'";
     return exports._promiseStatementWithDataTransform(stmt, (res) => {
         if (res.length == 1) {
-            return res[0]['card_count'];
+            return res[0]["card_count"];
         } else {
             return -1;
         }
@@ -74,22 +73,22 @@ exports.getPercentageOfSet = (set) => {
     return new Promise((success, failure) => {
 
         exports.getOwnedCardAmountBySetCode(set.code)
-        .then((amount) => {
-            if (amount > 0) {
-                exports.getCardAmountOfSet(set)
-                .then((cardCount) => {
-                    let res = -1;
-                    if (cardCount > 0) {
-                        res = amount / cardCount;
-                    }
-                    success(res);
-                }).
-                catch(failure);
-            } else {
-                success(0);
-            }
-        })
-        .catch(failure);
+            .then((amount) => {
+                if (amount > 0) {
+                    exports.getCardAmountOfSet(set)
+                        .then((cardCount) => {
+                            let res = -1;
+                            if (cardCount > 0) {
+                                res = amount / cardCount;
+                            }
+                            success(res);
+                        }).
+                        catch(failure);
+                } else {
+                    success(0);
+                }
+            })
+            .catch(failure);
     });
 };
 
@@ -109,24 +108,25 @@ exports.cardAdjustAmount = function(card, amount) {
     return new Promise((success, failure) => {
 
         exports._promiseStatement("SELECT * FROM Card where id = '" + card.id + "'")
-        .then((res) => {
-            if (res.length > 0) {
-                var newAmount = res[0].amount + amount;
-                if (newAmount >= 0) {
-                    var stmt = db.prepare("UPDATE Card set amount = ? where id = ?");
-                    stmt.run(res[0].amount + amount, res[0].id);
-                    stmt.finalize();
-                    resultAmount = newAmount;
-                } else {
-                    resultAmount = 0;
-                }
-                success(resultAmount)
+            .then((res) => {
+                if (res.length > 0) {
+                    var newAmount = res[0].amount + amount;
+                    let resultAmount = 0;
+                    if (newAmount >= 0) {
+                        var stmt = db.prepare("UPDATE Card set amount = ? where id = ?");
+                        stmt.run(res[0].amount + amount, res[0].id);
+                        stmt.finalize();
+                        resultAmount = newAmount;
+                    } else {
+                        resultAmount = 0;
+                    }
+                    success(resultAmount);
 
-            } else {
-                failure("card not in db");
-            }
-        })
-        .catch(failure);
+                } else {
+                    failure("card not in db");
+                }
+            })
+            .catch(failure);
 
     });
 
@@ -173,7 +173,7 @@ exports.getSets = (types) => {
 
 exports.getCardsOfSet = (set) => {
     let stmt = "SELECT * from [Card] WHERE json_extract([Card].jsonString, '$.set') = '" + set.code + "'";
-    return exports._promiseStatementWithDataTransform(stmt, cards => cards.map(card => JSON.parse(card.jsonString)))
+    return exports._promiseStatementWithDataTransform(stmt, cards => cards.map(card => JSON.parse(card.jsonString)));
 };
 
 exports._promiseStatement = stmt => {
@@ -193,8 +193,8 @@ exports._promiseStatement = stmt => {
 exports._promiseStatementWithDataTransform = (stmt, transformFunc) => {
     return new Promise((success, failure) => {
         exports._promiseStatement(stmt)
-        .then((res) => success(transformFunc(res)))
-        .catch(failure);
+            .then((res) => success(transformFunc(res)))
+            .catch(failure);
     });
 };
 

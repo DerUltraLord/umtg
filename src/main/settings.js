@@ -1,5 +1,5 @@
-const base = require('./base.js');
-const fs = require('fs')
+const base = require("./base.js");
+const fs = require("fs");
 
 
 let settingsPath = process.env.HOME + "/.umtg";
@@ -45,23 +45,23 @@ exports.init = () => {
         _writeSettingsFile(exports.data);
     }
 
-    data = fs.readFileSync(settingsFile)
-    settingsJson = JSON.parse(data);
+    let data = fs.readFileSync(settingsFile);
+    let settingsJson = JSON.parse(data);
     exports.data = settingsJson;
-}
+};
 
 exports.setGridActive= (status) => {
     exports.data.isGridActive = status;
     _writeSettingsFile(exports.data);
-}
+};
 
 
 exports.setSetTypeVisible = (set, status) => {
     exports.data.setTypes[set] = status;
     _writeSettingsFile(exports.data);
-}
+};
 
 
 let _writeSettingsFile = (settings) => 
-    base.writeFileSync(settingsFile, JSON.stringify(settings, null, 4))
+    base.writeFileSync(settingsFile, JSON.stringify(settings, null, 4));
 
