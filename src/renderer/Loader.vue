@@ -9,7 +9,7 @@
 <script>
 export default {
     props: ['loading'],
-}
+};
 </script>
 
 <style scoped>

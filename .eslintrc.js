@@ -3,8 +3,12 @@ module.exports = {
         "es6": true,
         "node": true
     },
-    "extends": "eslint:recommended",
+    "extends": [
+        "eslint:recommended",
+        'plugin:vue/essential',
+    ],
     "rules": {
+        "no-console": "off",
         "indent": [
             "error",
             4
@@ -15,7 +19,7 @@ module.exports = {
         ],
         "quotes": [
             "error",
-            "double"
+            "single"
         ],
         "semi": [
             "error",

@@ -5,7 +5,7 @@
                 <div class="col col-12"> 
                     <div class="media">
                         <div class="m20">
-                            <img v-bind:src="card.image_uris ? card.image_uris.art_crop : ''" width="250" height="200"></img>
+                            <img v-bind:src="card.image_uris ? card.image_uris.art_crop : ''" width="250" height="200">
                             <div>
                             </div>
                         </div>
@@ -24,7 +24,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col">
-                        <img v-bind:src="getImageUri()" width="250"></img>
+                        <img v-bind:src="getImageUri()" width="250">
                     </div>
                 </div>
                 <div class="row mt10">
@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import CardButtons from './CardButtons.vue'
+import CardButtons from './CardButtons.vue';
 
 export default {
     props: ['card', 'settings'],
@@ -54,12 +54,12 @@ export default {
         },
         getTagsForMana(card) {
             let re = /\{\w\}/g;
-            let res = "";
+            let res = '';
             let m;
             m = re.exec(card.mana_cost);
             while (m != null) {
                 let manaString = m[0].substring(1, m[0].length - 1);
-                manaString = '<img src="icons/' + manaString + '.svg" class="float-lg-right" width=24>'
+                manaString = '<img src="icons/' + manaString + '.svg" class="float-lg-right" width=24>';
                 res = manaString + res;
                 m = re.exec(card.mana_cost);
             }
@@ -68,10 +68,10 @@ export default {
 
     },
     mounted: function() {
-        this.$refs.manaSymbols.insertAdjacentHTML("beforeend", this.getTagsForMana(this.card));
+        this.$refs.manaSymbols.insertAdjacentHTML('beforeend', this.getTagsForMana(this.card));
     },
     components: {
         CardButtons,
     },
-}
+};
 </script>

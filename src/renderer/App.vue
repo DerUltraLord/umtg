@@ -10,24 +10,20 @@
 </template>
 
 <script>
-import Model from '../main/model.js'
+import Model from '../main/model.js';
 
-import Navigation from './Navigation.vue'
-import SearchPage from './SearchPage.vue'
-import CollectionPage from './CollectionPage.vue'
-import DecksPage from './DecksPage.vue'
-import SettingsPage from './SettingsPage.vue'
-import Footer from './Footer.vue'
-import Db from '../main/db.js'
-
-
-
+import Navigation from './Navigation.vue';
+import SearchPage from './SearchPage.vue';
+import CollectionPage from './CollectionPage.vue';
+import DecksPage from './DecksPage.vue';
+import SettingsPage from './SettingsPage.vue';
+import Footer from './Footer.vue';
 
 export default {
     data() {
         return {
             state: Model.state,
-        }
+        };
     },
     methods: {
     },
@@ -39,7 +35,7 @@ export default {
         SettingsPage,
         Footer,
     },
-}
+};
 </script>
 
 <style>

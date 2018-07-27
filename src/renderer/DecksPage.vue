@@ -19,20 +19,20 @@
 </template>
 
 <script>
-import DeckList from './DeckList.vue'
-import CardList from './CardList.vue'
-import Loader from './Loader.vue'
-import Model from '../main/model.js'
+import DeckList from './DeckList.vue';
+import CardList from './CardList.vue';
+import Loader from './Loader.vue';
+import Model from '../main/model.js';
 export default {
     props: ['state'],
     data() {
         return {
             loading: false,
-        }
+        };
     },
     created: function () {
         if (Object.keys(this.state.pages.decks.cards).length == 0) {
-            this.showCardsOfDeck(this.state.selectedDeck)
+            this.showCardsOfDeck(this.state.selectedDeck);
         }
 
     },
@@ -41,8 +41,8 @@ export default {
             this.loading = true;
             this.state.selectedDeck = deck;
             Model.updateDeckCards(this.state.selectedDeck)
-            .then(() => this.loading = false)
-            .catch(console.error);
+                .then(() => this.loading = false)
+                .catch(console.error);
 
         },
         deckSelected(deck) {
@@ -58,9 +58,8 @@ export default {
         DeckList,
         CardList,
         Loader,
-
     }
-}
+};
 </script>
 
 <style scoped>

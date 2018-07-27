@@ -1,4 +1,4 @@
-var sqlite3 = require("sqlite3").verbose();
+var sqlite3 = require('sqlite3').verbose();
 
 var db = null;
 
@@ -6,15 +6,15 @@ var db = null;
 exports.init = function(name) {
     db = new sqlite3.Database(name);
     db.serialize(function() {
-        db.run("CREATE TABLE IF NOT EXISTS Card (id TEXT PRIMARY KEY, jsonString TEXT, amount INTEGER, foilAmount INTEGER)");
-        db.run("CREATE TABLE IF NOT EXISTS [Set] (id TEXT PRIMARY KEY, jsonString TEXT)");
+        db.run('CREATE TABLE IF NOT EXISTS Card (id TEXT PRIMARY KEY, jsonString TEXT, amount INTEGER, foilAmount INTEGER)');
+        db.run('CREATE TABLE IF NOT EXISTS [Set] (id TEXT PRIMARY KEY, jsonString TEXT)');
     });
     exports.db = db;
 };
 
 
 let dbString = function(s) {
-    return s.replace("'", "''");
+    return s.replace('\'', '\'\'');
 };
 
 exports.cardAdd = function(card, amount) {
@@ -22,36 +22,36 @@ exports.cardAdd = function(card, amount) {
     //exports.cardExistsById(card.id)
     //.then((exists) => {
     //    if (!exists) {
-    //        var stmt = db.prepare("INSERT INTO Card VALUES(?, ?, ?, ?)");
+    //        var stmt = db.prepare('INSERT INTO Card VALUES(?, ?, ?, ?)');
     //        stmt.run(card.id, JSON.stringify(card), amount, 0);
     //        stmt.finalize();
     //    } else {
-    //        console.log(card.name + " already in db");
+    //        console.log(card.name + ' already in db');
     //    }
     //})
     //.catch(console.error);
-    var stmt = db.prepare("INSERT INTO Card VALUES(?, ?, ?, ?)");
+    var stmt = db.prepare('INSERT INTO Card VALUES(?, ?, ?, ?)');
     stmt.run(card.id, JSON.stringify(card), amount, 0, (err) => {
-        if (String(err).includes("SQLite: UNIQUE constraint failed") === -1) {
+        if (String(err).includes('SQLite: UNIQUE constraint failed') === -1) {
             throw err;
         } else if(err != null){
-            //console.log(card.name + " already in db");
+            //console.log(card.name + ' already in db');
         } 
     });
     stmt.finalize();
 };
 
 exports.setAdd = (set) => {
-    var stmt = db.prepare("INSERT INTO [Set] VALUES(?, ?)");
+    var stmt = db.prepare('INSERT INTO [Set] VALUES(?, ?)');
     stmt.run(set.code, JSON.stringify(set));
     stmt.finalize();
 };
 
 exports.getCardAmountOfSet = (set) => {
-    let stmt = "SELECT json_extract([Set].jsonString, '$.card_count') as card_count FROM [Set] WHERE json_extract([Set].jsonString, '$.code') = '" + set.code + "'";
+    let stmt = 'SELECT json_extract([Set].jsonString, \'$.card_count\') as card_count FROM [Set] WHERE json_extract([Set].jsonString, \'$.code\') = \'' + set.code + '\'';
     return exports._promiseStatementWithDataTransform(stmt, (res) => {
         if (res.length == 1) {
-            return res[0]["card_count"];
+            return res[0]['card_count'];
         } else {
             return -1;
         }
@@ -59,7 +59,7 @@ exports.getCardAmountOfSet = (set) => {
 };
 
 exports.getOwnedCardAmountBySetCode = (code) => {
-    let stmt = "SELECT COUNT(*) as amount FROM [Card] WHERE json_extract([Card].jsonString, '$.set') = '" + code + "' and amount > 0";
+    let stmt = 'SELECT COUNT(*) as amount FROM [Card] WHERE json_extract([Card].jsonString, \'$.set\') = \'' + code + '\' and amount > 0';
     return exports._promiseStatementWithDataTransform(stmt, (res) => {
         if (res.length == 1) {
             return res[0].amount;
@@ -93,12 +93,12 @@ exports.getPercentageOfSet = (set) => {
 };
 
 exports.cardExistsByName = function(cardname) {
-    let stmt = "SELECT EXISTS(SELECT * FROM Card where json_extract(Card.jsonString, '$.name') = '" + dbString(cardname) + "') as ex";
+    let stmt = 'SELECT EXISTS(SELECT * FROM Card where json_extract(Card.jsonString, \'$.name\') = \'' + dbString(cardname) + '\') as ex';
     return exports._promiseStatementWithDataTransform(stmt, res => res[0].ex > 0);
 };
 
 exports.cardExistsById = function(cardid) {
-    let stmt = "SELECT EXISTS(SELECT * FROM Card where json_extract(Card.jsonString, '$.id') = '" + dbString(cardid) + "') as ex";
+    let stmt = 'SELECT EXISTS(SELECT * FROM Card where json_extract(Card.jsonString, \'$.id\') = \'' + dbString(cardid) + '\') as ex';
     return exports._promiseStatementWithDataTransform(stmt, res => res[0].ex > 0);
 };
 
@@ -107,13 +107,13 @@ exports.cardAdjustAmount = function(card, amount) {
 
     return new Promise((success, failure) => {
 
-        exports._promiseStatement("SELECT * FROM Card where id = '" + card.id + "'")
+        exports._promiseStatement('SELECT * FROM Card where id = \'' + card.id + '\'')
             .then((res) => {
                 if (res.length > 0) {
                     var newAmount = res[0].amount + amount;
                     let resultAmount = 0;
                     if (newAmount >= 0) {
-                        var stmt = db.prepare("UPDATE Card set amount = ? where id = ?");
+                        var stmt = db.prepare('UPDATE Card set amount = ? where id = ?');
                         stmt.run(res[0].amount + amount, res[0].id);
                         stmt.finalize();
                         resultAmount = newAmount;
@@ -123,7 +123,7 @@ exports.cardAdjustAmount = function(card, amount) {
                     success(resultAmount);
 
                 } else {
-                    failure("card not in db");
+                    failure('card not in db');
                 }
             })
             .catch(failure);
@@ -145,7 +145,7 @@ exports.getAmountOfCardById = function(id, callback) {
 
     }   
 
-    db.all("SELECT * FROM Card where id = '" + id + "'", stmtFinished);
+    db.all('SELECT * FROM Card where id = \'' + id + '\'', stmtFinished);
 
 };
 
@@ -155,24 +155,24 @@ exports.getCardByName = name => {
             return JSON.parse(res[0].jsonString);
         }
     }
-    return exports._promiseStatementWithDataTransform("SELECT * FROM Card where json_extract(Card.jsonString, '$.name') = '" + dbString(name) + "'",
+    return exports._promiseStatementWithDataTransform('SELECT * FROM Card where json_extract(Card.jsonString, \'$.name\') = \'' + dbString(name) + '\'',
         transform);
 };
 
 exports.getSets = (types) => {
 
-    let stmt = "SELECT *, json_extract([Set].jsonString, '$.released_at') as released_at FROM [Set]";
+    let stmt = 'SELECT *, json_extract([Set].jsonString, \'$.released_at\') as released_at FROM [Set]';
     if (types != undefined) {
-        stmt += " WHERE json_extract([Set].jsonString, '$.set_type') in (" + types.map(type => `'${type}'`).join(",") + ")";
+        stmt += ' WHERE json_extract([Set].jsonString, \'$.set_type\') in (' + types.map(type => `'${type}'`).join(',') + ')';
     }
-    stmt += " ORDER BY released_at desc";
+    stmt += ' ORDER BY released_at desc';
 
     return exports._promiseStatementWithDataTransform(stmt, sets => sets.map(set => JSON.parse(set.jsonString)));
 };
 
 
 exports.getCardsOfSet = (set) => {
-    let stmt = "SELECT * from [Card] WHERE json_extract([Card].jsonString, '$.set') = '" + set.code + "'";
+    let stmt = 'SELECT * from [Card] WHERE json_extract([Card].jsonString, \'$.set\') = \'' + set.code + '\'';
     return exports._promiseStatementWithDataTransform(stmt, cards => cards.map(card => JSON.parse(card.jsonString)));
 };
 

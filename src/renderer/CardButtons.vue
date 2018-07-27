@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import Model from '../main/model.js'
+import Model from '../main/model.js';
 export default {
     props: ['card'],
     methods: {
@@ -19,7 +19,7 @@ export default {
         }
     }
 
-}
+};
 </script>
 
 <style scoped>

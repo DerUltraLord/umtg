@@ -2,7 +2,7 @@
     <div class="row">
         <div class="row">
             <div class="col-2">
-                <img class="" v-bind:src=set.icon_svg_uri></img>
+                <img class="" v-bind:src=set.icon_svg_uri>
             </div>
             <div class="col-10">
                 <span class="badge badge-default">{{ set.name }}</span>
@@ -22,10 +22,9 @@
 </template>
 
 <script>
-import Model from '../main/model.js'
 export default {
     props: ['set'],
-}
+};
 </script>
 
 <style scoped>

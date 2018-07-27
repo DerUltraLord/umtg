@@ -1,13 +1,13 @@
-const base = require("./base.js");
-const fs = require("fs");
+const base = require('./base.js');
+const fs = require('fs');
 
 
-let settingsPath = process.env.HOME + "/.umtg";
-let decksPath = settingsPath + "/decks";
-let settingsFile = settingsPath + "/settings.json";
+let settingsPath = process.env.HOME + '/.umtg';
+let decksPath = settingsPath + '/decks';
+let settingsFile = settingsPath + '/settings.json';
 
 exports.data = {
-    "setTypes": {
+    'setTypes': {
         core: true,
         expansion: true,
         masters: true,
@@ -28,7 +28,7 @@ exports.data = {
         token: false,
         memorabilia: false
     },
-    "isGridActive": false,
+    'isGridActive': false,
 };
 
 exports.init = () => {

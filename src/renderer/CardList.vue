@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import Card from './Card.vue'
+import Card from './Card.vue';
 
 export default {
     props: ['cards', 'settings', 'selectedCard'],
@@ -14,7 +14,7 @@ export default {
     components: {
         Card,
     },
-}
+};
 </script>
 
 <style scoped>

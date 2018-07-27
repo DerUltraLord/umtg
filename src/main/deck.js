@@ -1,8 +1,8 @@
-var db = require("./db.js");
-var scry = require("./scryfall.js");
-var decksPath = process.env.HOME + "/.umtg/decks";
-const fs = require("fs");
-const base = require("./base.js");
+var db = require('./db.js');
+var scry = require('./scryfall.js');
+var decksPath = process.env.HOME + '/.umtg/decks';
+const fs = require('fs');
+const base = require('./base.js');
 
 
 exports.getDecks = function() {
@@ -10,7 +10,7 @@ exports.getDecks = function() {
 };
 
 exports.getCardsOfDeck = async deckname => {
-    let contents = await base.readFile(decksPath + "/" + deckname);
+    let contents = await base.readFile(decksPath + '/' + deckname);
     let deckResult = exports.traverseCards(contents);
 
     let cards = await exports.getCardObjectsFromCardNames(deckResult.cards);
@@ -37,7 +37,7 @@ exports.getCardObjectsFromCardNames = cards => {
                 addedIds.push(dbCard.id);
             }
         }
-        dbCard["amount"] = Number(card.amount);
+        dbCard['amount'] = Number(card.amount);
         data.push(dbCard);
         return Promise.resolve(data);
     }, Promise.resolve([]));
@@ -54,7 +54,7 @@ exports.addCardToDeck = function(deck, card) {
             });
         
     } else {
-        throw new Error("Deck " + deck + " not found");
+        throw new Error('Deck ' + deck + ' not found');
     }
 
 
@@ -85,13 +85,13 @@ exports.traverseCards = (content) => {
 
     result = content
         .trim()
-        .split("\n")
+        .split('\n')
         .reduce((result, line) => {
-            result["cards"] = result["cards"] || [];
-            result["sideboard"] = result["sideboard"] || [];
+            result['cards'] = result['cards'] || [];
+            result['sideboard'] = result['sideboard'] || [];
 
             let cardlist;
-            cardlist = isSideboardActive ? result["sideboard"] : result["cards"];
+            cardlist = isSideboardActive ? result['sideboard'] : result['cards'];
 
             let cardResult = exports._lineMatchCard(line);
             let sideboardResult = exports._lineMatchSideboard(line);
@@ -113,7 +113,7 @@ exports.traverseCards = (content) => {
 };
 
 exports.createDeck = (deckname) => {
-    fs.openSync(decksPath + "/" + deckname + ".txt", "w", (err) => {
+    fs.openSync(decksPath + '/' + deckname + '.txt', 'w', (err) => {
         if (err) throw err;
     });
 };

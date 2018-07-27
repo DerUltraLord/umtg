@@ -9,7 +9,7 @@
     "watch": "riot -w src/tags src/tags/all.js",
     "postinstall": "electron-builder install-app-deps",
     "package-linux": "./node_modules/.bin/electron-packager . --overwrite --platform=linux --out=dist",
-    "lint": "./node_modules/.bin/eslint --ignore-pattern index.js --ext .tag,.js src || true"
+    "lint": "./node_modules/.bin/eslint --ignore-pattern index.js --ext .vue,.js src || true"
   },
   "author": "fackler_m",
   "license": "GNU",
@@ -30,6 +30,7 @@
     "electron-webpack": "^2.1.2",
     "eslint": "^4.19.1",
     "eslint-plugin-riot": "^0.1.7",
+    "eslint-plugin-vue": "^4.7.1",
     "gulp": "^3.9.1",
     "gulp-inject": "^4.3.2",
     "gulp-svgmin": "^1.2.4",

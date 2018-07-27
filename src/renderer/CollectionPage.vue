@@ -11,24 +11,24 @@
 </template>
 
 <script>
-import CardList from './CardList.vue'
-import SetList from './SetList.vue'
-import Loader from './Loader.vue'
-import Model from '../main/model.js'
+import CardList from './CardList.vue';
+import SetList from './SetList.vue';
+import Loader from './Loader.vue';
+import Model from '../main/model.js';
 export default {
 
     props: ['state'],
     data() {
         return {
             loading: false,
-        }
+        };
     },
     created: function () {
         if (Object.keys(this.state.sets).length == 0) {
             this.loading = true;
             Model.updateSets()
-            .then(this.onUpdateSets)
-            .catch(console.error);
+                .then(this.onUpdateSets)
+                .catch(console.error);
         }
         
     },
@@ -45,12 +45,12 @@ export default {
             this.loading = true;
             this.state.selectedSet = set;
             Model.updateCardsBySet(set)
-            .then(this.onCards);
+                .then(this.onCards);
         },
         cardClicked(card) {
             this.state.pages.collection.selectedCard = card;
         },
-        onCards(cards) {
+        onCards() {
             this.loading = false;
         },
 
@@ -60,11 +60,7 @@ export default {
         SetList,
         Loader,
     }
-
-
-
-
-}
+};
 </script>
 
 <style scoped>

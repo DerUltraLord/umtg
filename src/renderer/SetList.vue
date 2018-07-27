@@ -6,11 +6,11 @@
 </template>
 
 <script>
-import Set from './Set.vue'
+import Set from './Set.vue';
 export default {
     props: ['sets', 'selectedSet'],
     components: {
         Set,
     },
-}
+};
 </script>

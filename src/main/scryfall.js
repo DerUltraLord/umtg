@@ -1,25 +1,25 @@
-const base = require("./base.js");
+const base = require('./base.js');
 
 
 exports.scryfallGetSets = () =>
-    base.getJSON("https://api.scryfall.com/sets");
+    base.getJSON('https://api.scryfall.com/sets');
 
 exports.getCardByName = name => {
-    return base.getJSONTransformed("https://api.scryfall.com/cards/search?q=" + name.replace(/ /g, "+"), (res) => {
+    return base.getJSONTransformed('https://api.scryfall.com/cards/search?q=' + name.replace(/ /g, '+'), (res) => {
         return res.data[0];
     });
 };
 
 exports.search = searchText => 
-    base.getJSON("https://api.scryfall.com/cards/search?order=cmc&q=" + searchText);
+    base.getJSON('https://api.scryfall.com/cards/search?order=cmc&q=' + searchText);
 
 exports.buildSearchString = function(filter) {
-    let res = filter["name"];
+    let res = filter['name'];
     for (var property in filter) {
-        if (property != "name") {
-            let splitted = filter[property].split(" ");
+        if (property != 'name') {
+            let splitted = filter[property].split(' ');
             for (var index in splitted) {
-                res += " " + property + splitted[index];
+                res += ' ' + property + splitted[index];
             }
 
         }
@@ -52,19 +52,19 @@ exports.getSearchFilter = function(name, type, text, edition) {
     name = regResult[0];
     edition = regResult[1];
 
-    res["name"] = name;
+    res['name'] = name;
 
 
     if (type) {
-        res["t:"] = type;
+        res['t:'] = type;
     }
 
     if (text) {
-        res["o:"] = text;
+        res['o:'] = text;
     }
 
     if (edition) {
-        res["e:"] = edition;
+        res['e:'] = edition;
     }
     return res;
 };
@@ -73,8 +73,8 @@ let applyRegex = function(re, a, b) {
     let m;
     m = re.exec(a);
     while (m != null) {
-        a = a.replace(m[0], "");
-        b += " " + m[1];
+        a = a.replace(m[0], '');
+        b += ' ' + m[1];
         m = re.exec(a);
     }
     return [a, b];

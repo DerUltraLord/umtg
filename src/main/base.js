@@ -1,5 +1,5 @@
-const fs = require("fs");
-const https = require("https");
+const fs = require('fs');
+const https = require('https');
 
 exports.prop = obj => name =>
     obj ? obj[name] : null;
@@ -8,11 +8,11 @@ exports.matchRegex = regex => param =>
     regex.exec(param);
 
 exports.matchRegexGroup = regex => param =>
-    exports.prop(exports.matchRegex(regex)(param))("groups");
+    exports.prop(exports.matchRegex(regex)(param))('groups');
 
 exports.readFile = filename => {
     return new Promise((success, failure) => {
-        fs.readFile(filename, "ascii", function(err, data) {
+        fs.readFile(filename, 'ascii', function(err, data) {
             if (err) {
                 failure(err);
             } else {
@@ -68,16 +68,16 @@ exports._simpleCallbackFunctionToPromise = func => args => {
 
 exports.getJSONCb = (url, success) => {
     https.get(url, res => {
-        res.setEncoding("utf8");
-        let body = "";
-        res.on("data", data => {
+        res.setEncoding('utf8');
+        let body = '';
+        res.on('data', data => {
             body += data;
         });
-        res.on("end", () => {
+        res.on('end', () => {
             body = JSON.parse(body);
             success(body);
         });
-        res.on("error", () => {
+        res.on('error', () => {
         });
     });
 };
@@ -85,16 +85,16 @@ exports.getJSONCb = (url, success) => {
 exports.getJSON = url => {
     return new Promise((success, failure) => {
         https.get(url, res => {
-            res.setEncoding("utf8");
-            let body = "";
-            res.on("data", data => {
+            res.setEncoding('utf8');
+            let body = '';
+            res.on('data', data => {
                 body += data;
             });
-            res.on("end", () => {
+            res.on('end', () => {
                 body = JSON.parse(body);
                 success(body);
             });
-            res.on("error", (error) => {
+            res.on('error', (error) => {
                 failure(error);
             });
         });

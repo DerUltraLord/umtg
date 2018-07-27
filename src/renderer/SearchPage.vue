@@ -12,17 +12,17 @@
 </template>
 
 <script>
-import CardSearch from './CardSearch.vue'
-import CardList from './CardList.vue'
-import Loader from './Loader.vue'
-import Model from '../main/model.js'
+import CardSearch from './CardSearch.vue';
+import CardList from './CardList.vue';
+import Loader from './Loader.vue';
+import Model from '../main/model.js';
 
 export default {
     props: ['state'],
     data() {
         return {
             loading: false,
-        }
+        };
     },
     mounted: function() {
     },
@@ -30,8 +30,8 @@ export default {
         searchCard(filter) {
             this.loading = true;
             Model.searchScryfallByFilter(filter)
-            .then(() => this.loading = false)
-            .catch(console.error);
+                .then(() => this.loading = false)
+                .catch(console.error);
         },
         cardClicked(card) {
             this.state.pages.search.selectedCard = card;
@@ -42,7 +42,7 @@ export default {
         CardList,
         Loader,
     }
-}
+};
 </script>
 
 <style scoped>

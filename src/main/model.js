@@ -1,8 +1,8 @@
-const Settings = require("./settings.js");
-const Scryfall = require("./scryfall.js");
-const Db = require("./db.js");
-const Deck = require("./deck.js");
-const Base = require("./base.js");
+const Settings = require('./settings.js');
+const Scryfall = require('./scryfall.js');
+const Db = require('./db.js');
+const Deck = require('./deck.js');
+const Base = require('./base.js');
 
 
 // Settings
@@ -201,28 +201,28 @@ exports.init = async (database) => {
 
 
 exports.state = {
-    currentPage: "search",
+    currentPage: 'search',
     pages: {
         search: {
-            name: "Seach",
+            name: 'Seach',
             cards: {},
             selectedCard: null,
         },
         collection: {
-            name: "Collection",
+            name: 'Collection',
             cards: {},
             selectedCard: null,
         },
         decks: {
-            name: "Decks",
+            name: 'Decks',
             cards: {},
             selectedCard: null,
         },
         settings: {
-            name: "Settings",
+            name: 'Settings',
         },
         about: {
-            name: "About"
+            name: 'About'
         },
     },
     settings: null,
