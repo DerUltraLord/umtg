@@ -9,6 +9,16 @@ console.log("Load model ...");
 let initialization = Model.init('test.db')
 console.log("Model loaded");
 
+let Events = new Vue()
+
+Object.defineProperties(Vue.prototype, {
+    Events: {
+        get: function() {
+            return Events
+        }
+    }
+})
+
 
 initialization.then(() => {
     new Vue({

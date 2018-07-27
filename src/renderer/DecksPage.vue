@@ -1,10 +1,12 @@
 <template>
     <div>
+        <!--
         <div v-if="state.decks == null || state.decks.length == 0">
             <span class="badge badge-warning">No decks found.<br>Copy decklist text files into ~/.umtg/decks<br>and reload</span>
         </div>
+        -->
     
-        <div class="decksPage" v-else>
+        <div class="decksPage">
             <div class="scrollable">
                 <DeckList @deckSelected=deckSelected :decks=state.decks :selectedDeck=state.selectedDeck></DeckList>
             </div>

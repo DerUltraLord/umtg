@@ -3,7 +3,7 @@
 
         <CardSearch @searchCard=searchCard></CardSearch>
         <div class="scrollable">
-            <CardList :cards=state.searchCards :settings=state.settings></CardList>
+            <CardList :cards=state.searchCards :settings=state.settings :selectedCardId=state.selectedCardId></CardList>
             <Loader :loading=loading></Loader>
         </div>
     </div>
@@ -23,6 +23,8 @@ export default {
         return {
             loading: false,
         }
+    },
+    mounted: function() {
     },
     methods: {
         searchCard(filter) {

@@ -4,7 +4,7 @@
             <SetList @setClicked="showSet" :sets=state.sets :selectedSet=state.selectedSet></SetList>
         </div>
         <div class="scrollable">
-            <CardList :cards=state.setCards :settings=state.settings></CardList>
+            <CardList @cardClicked="cardClicked" :cards=state.setCards :settings=state.settings :selectedCardId=state.selectedCardId></CardList>
             <Loader :loading=loading></Loader>
         </div>
     </div>
@@ -46,6 +46,10 @@ export default {
             this.state.selectedSet = set;
             Model.updateCardsBySet(set)
             .then(this.onCards);
+        },
+        cardClicked(card) {
+            console.log("dude");
+            this.state.selectedCardId = card.id;
         },
         onCards(cards) {
             this.loading = false;

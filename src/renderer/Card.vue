@@ -1,10 +1,10 @@
 <template>
-    <div>
-        <div v-if="!settings.isGridActive" class="container">
-            <div class="row">
-                <div class="col col-12">
+    <div ref="root" v-bind:class="[settings.isGridActive ? 'd-flex flex-row flex-wrap' : 'list-group-item']">
+        <div v-if="!settings.isGridActive" class="container"> 
+            <div class="row"> 
+                <div class="col col-12"> 
                     <div class="media">
-                        <div >
+                        <div class="m20">
                             <img v-bind:src="card.image_uris ? card.image_uris.art_crop : ''" width="250" height="200"></img>
                             <div>
                             </div>
@@ -12,11 +12,8 @@
                         <div class="media-body">
                             <div class="row">
                                 <h2 class="col-lg-8">{{ card.name }}</h2>
-                                <div ref="manaSymbols" class="col-lg-4">
-                                </div>
+                                <div ref="manaSymbols" class="col-lg-4"></div>
                             </div>
-                            <h3 class="cardType">{{ card.type_line }}</h3>
-                            <p class="cardText">{{ card.oracle_text }}</p>
                         </div>
                     </div>
                 </div>
@@ -42,6 +39,7 @@
 
 <script>
 import CardButtons from './CardButtons.vue'
+
 export default {
     props: ['card', 'settings'],
     methods: {

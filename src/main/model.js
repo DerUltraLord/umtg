@@ -200,7 +200,6 @@ exports.init = async (database) => {
     Db.init(database);
     exports.state.settings = Settings.data;
     await exports.updateDecks();
-    console.log(exports.decks);
     if (exports.state.decks.length > 0) {
         exports.state.selectedDeck = exports.state.decks[0];
     }
@@ -215,4 +214,6 @@ exports.state = {
     decks: [],
     selectedDeck: null,
     selectedSet: null,
+    selectedCardId: null,
+    events: null,
 }

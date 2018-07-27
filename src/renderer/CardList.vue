@@ -1,21 +1,22 @@
 <template>
     <div v-bind:class="[settings.isGridActive ? 'd-flex flex-wrap' : '']">
-        <Card v-for="c in cards" v-bind:data="c" v-bind:key="c.id" :card=c :settings=settings v-bind:class="[settings.isGridActive ? 'd-flex flex-row flex-wrap' : 'list-group-item']"></Card>
+        <Card @click.native="$emit('cardClicked', c)" v-for="c in cards" v-bind:data="c" v-bind:key="c.id" :card=c :settings=settings v-bind:class="[selectedCardId == c.id ? 'bg-primary' : '']"></Card>
     </div>
 </template>
 
 <script>
 import Card from './Card.vue'
+
 export default {
-    props: ['cards', 'settings'],
-    data() {
-        return {
-        }
+    props: ['cards', 'settings', 'selectedCardId'],
+    methods: {
     },
     components: {
         Card,
     },
-    methods: {
-    }
 }
 </script>
+
+<style scoped>
+
+</style>
