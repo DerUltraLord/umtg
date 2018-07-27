@@ -10,21 +10,17 @@ describe('Test Deck management and parsing', function() {
 
     before(() => {
         testUtils.mockFileRead("4 Ichor Wellspring\nSideboard:\n2 Ultra Lord")
-        testUtils.mockReadDir(["deck1.txt", "deck2.txt"]);
         testUtils.mockGetJson([{name: 'Ultra Lord', set: 'ultra'}]);
         testUtils.sandbox.stub(deck, 'getCardObjectsFromCardNames').callsFake((cards) => Promise.resolve(cards));
+        testUtils.sandbox.stub(fs, 'readdirSync').callsFake((decksPath) => ["deck1.txt", "deck2.txt"]);
     });
 
     after(() => testUtils.shutdown());
 
-    it('get a list of all deck filenames', (done) => {
-        deck.getDecks()
-        .then((decks) => {
-            assert.equal(decks[0], 'deck1.txt');
-            assert.equal(decks[1], 'deck2.txt');
-            done();
-        })
-        .catch(console.error);
+    it('get a list of all deck filenames', () => {
+        let decks = deck.getDecks()
+        assert.equal(decks[0], 'deck1.txt');
+        assert.equal(decks[1], 'deck2.txt');
     });
 
     it('parsing Sideboard line for matches and missmatches', function() {

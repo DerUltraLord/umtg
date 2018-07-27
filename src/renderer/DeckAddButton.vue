@@ -10,14 +10,18 @@
     </div>
 </template>
 <script>
-import $ from 'jquery'
-import Deck from '../main/deck.js'
+import Model from '../main/model.js'
 export default {
     props: ['state'],
     mounted: function() {
     },
     methods: {
         addCardToDeck() {
+            let selectedCard = this.state.pages[this.state.currentPage].selectedCard;
+            if (selectedCard) {
+                alert(selectedCard.name);
+                Model.addCardToDeck(this.state.selectedDeck, selectedCard);
+            }
         },
         deckSelected(deck) {
             this.state.selectedDeck = deck;

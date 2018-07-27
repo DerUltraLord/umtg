@@ -6,7 +6,7 @@ const base = require('./base.js');
 
 
 exports.getDecks = function() {
-    return base.ls(decksPath);
+    return fs.readdirSync(decksPath);
 };
 
 exports.getCardsOfDeck = async deckname => {
@@ -45,20 +45,17 @@ exports.getCardObjectsFromCardNames = cards => {
 
 exports.addCardToDeck = function(deck, card) {
 
-    exports.getDecks(decks => {
-        let decknames = decks.map(deck => deck.name);
-        if (decknames.includes(deck)) {
-            let cards = [];
-            onCard = (card) => {
-                cards.push(card);
-            };
-            exports.getCardsOfDeck(deck, onCard);
-            
-        } else {
-            throw new Error("Deck " + deck + " not found");
-        }
-
-    });
+    let decknames = exports.getDecks();
+    if (decknames.includes(deck)) {
+        return exports.getCardsOfDeck(deck)
+        .then((deck) => {
+            deck.cards.push(card);
+            return deck;
+        });
+        
+    } else {
+        throw new Error("Deck " + deck + " not found");
+    }
 
 
 };

@@ -6,7 +6,7 @@
         </button>
         <div class="navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a v-for="page in pages" @click="$emit('pageSelected', page)" v-bind:id=page.key v-bind:class="{ active: currentPage == page.key }" class="nav-item nav-link" href="#">{{page.name}}</a>
+                <a v-for="(page, pageName) in pages" @click="$emit('pageSelected', pageName)" v-bind:id=pageName v-bind:data=page v-bind:class="{ active: currentPage == page.key }" class="nav-item nav-link" href="#">{{page.name}}</a>
             </div>
         </div>
     </nav>

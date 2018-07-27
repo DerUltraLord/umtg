@@ -141,7 +141,6 @@ exports.getAmountOfCardById = function(id, callback) {
         if (res.length > 0) {
             result = res[0].amount;
         }
-        console.log(result);
         callback(result);
 
     }   

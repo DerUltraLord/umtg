@@ -11,7 +11,7 @@
                 <DeckList @deckSelected=deckSelected :decks=state.decks :selectedDeck=state.selectedDeck></DeckList>
             </div>
             <div class="scrollable">
-                <CardList :cards=state.deckCards :settings=state.settings></CardList>
+                <CardList @cardClicked="cardClicked" :cards=state.pages.decks.cards :settings=state.settings :selectedCard=state.pages.decks.selectedCard></CardList>
                 <Loader :loading=loading></Loader>
             </div>
         </div>
@@ -31,7 +31,7 @@ export default {
         }
     },
     created: function () {
-        if (Object.keys(this.state.deckCards).length == 0) {
+        if (Object.keys(this.state.pages.decks.cards).length == 0) {
             this.showCardsOfDeck(this.state.selectedDeck)
         }
 
@@ -49,7 +49,10 @@ export default {
             if (this.state.selectedDeck != deck) {
                 this.showCardsOfDeck(deck);
             }
-        }
+        },
+        cardClicked(card) {
+            this.state.pages.decks.selectedCard = card;
+        },
     },
     components: {
         DeckList,

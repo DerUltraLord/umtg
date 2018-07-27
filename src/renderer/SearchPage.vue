@@ -3,7 +3,7 @@
 
         <CardSearch @searchCard=searchCard></CardSearch>
         <div class="scrollable">
-            <CardList :cards=state.searchCards :settings=state.settings :selectedCardId=state.selectedCardId></CardList>
+            <CardList @cardClicked="cardClicked" :cards=state.pages.search.cards :settings=state.settings :selectedCard=state.pages.search.selectedCard></CardList>
             <Loader :loading=loading></Loader>
         </div>
     </div>
@@ -32,6 +32,9 @@ export default {
             Model.searchScryfallByFilter(filter)
             .then(() => this.loading = false)
             .catch(console.error);
+        },
+        cardClicked(card) {
+            this.state.pages.search.selectedCard = card;
         },
     },
     components: {

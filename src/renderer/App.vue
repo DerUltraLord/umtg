@@ -1,10 +1,10 @@
 <template>
     <div>
-        <Navigation :pages=pages :currentPage=currentPage @pageSelected="currentPage = $event.key"/>
-        <SearchPage :state=state v-if="currentPage == 'search'"/>
-        <CollectionPage :state=state v-if="currentPage == 'collection'"/>
-        <DecksPage :state=state v-if="currentPage == 'decks'"/>
-        <SettingsPage :state=state v-if="currentPage == 'settings'"/>
+        <Navigation :pages=state.pages :currentPage=state.currentPage @pageSelected="state.currentPage = $event"/>
+        <SearchPage :state=state v-if="state.currentPage == 'search'"/>
+        <CollectionPage :state=state v-if="state.currentPage == 'collection'"/>
+        <DecksPage :state=state v-if="state.currentPage == 'decks'"/>
+        <SettingsPage :state=state v-if="state.currentPage == 'settings'"/>
         <Footer :state=state></Footer>
     </div>
 </template>
@@ -27,14 +27,6 @@ export default {
     data() {
         return {
             state: Model.state,
-            currentPage: 'search',
-            pages: [
-                { key:'search', name: "Seach" },
-                { key: 'collection', name: "Collection" },
-                { key: 'decks', name: "Decks" },
-                { key: 'settings', name: "Settings" },
-                { key: 'about', name: "About" },
-            ]
         }
     },
     methods: {

@@ -4,7 +4,7 @@
             <SetList @setClicked="showSet" :sets=state.sets :selectedSet=state.selectedSet></SetList>
         </div>
         <div class="scrollable">
-            <CardList @cardClicked="cardClicked" :cards=state.setCards :settings=state.settings :selectedCardId=state.selectedCardId></CardList>
+            <CardList @cardClicked="cardClicked" :cards=state.pages.collection.cards :settings=state.settings :selectedCard=state.pages.collection.selectedCard></CardList>
             <Loader :loading=loading></Loader>
         </div>
     </div>
@@ -48,8 +48,7 @@ export default {
             .then(this.onCards);
         },
         cardClicked(card) {
-            console.log("dude");
-            this.state.selectedCardId = card.id;
+            this.state.pages.collection.selectedCard = card;
         },
         onCards(cards) {
             this.loading = false;

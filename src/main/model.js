@@ -25,7 +25,7 @@ let updateCards = (cards) => {
 
 exports.searchScryfallByFilter = (filter) => {
     return Scryfall.searchByFilter(filter)
-    .then((response) => exports.state.searchCards = updateCards(response.data));
+    .then((response) => exports.state.pages.search.cards = updateCards(response.data));
     // TODO: has more??
     // TODO: empty response
 }
@@ -119,7 +119,7 @@ exports.getCardsOfSet = (set) => {
 exports.updateCardsBySet = (set) => {
     return exports.getCardsOfSet(set)
     .then((cards) => {
-        exports.state.setCards = cards.reduce((obj, card) => {
+        exports.state.pages.collection.cards = cards.reduce((obj, card) => {
             obj[card.id] = card;
             obj[card.id].ownedAmount = 0;
             Db.getAmountOfCardById(card.id, (amount) => {
@@ -135,7 +135,7 @@ exports.updateCardsBySet = (set) => {
 }
 
 let updateCardAmountOfCard = (card, amount) => {
-    card = exports.state.setCards[card.id];
+    card = exports.state.pages.collection.cards[card.id];
     card.ownedAmount = amount;
     Db.getOwnedCardAmountBySetCode(card.set)
     .then((amount) => exports.state.sets[card.set].ownedCards = amount)
@@ -175,22 +175,30 @@ exports.getPercentageOfSet = Db.getPercentageOfSet
 // Decks
 
 exports.updateDecks = () => {
-    return Deck.getDecks()
-    .then((decks) =>  {
-        exports.state.decks = decks
-    })
+    exports.state.decks = Deck.getDecks();
+    if (exports.state.decks.length > 0) {
+        Deck.getCardsOfDeck(exports.state.decks[0])
+        .then((deck) => {
+            exports.state.pages.decks.cards = deck.cards;
+        });
+    }
 }
 
 exports.updateDeckCards = (deck) => {
     // TODO: sideboard
     return Deck.getCardsOfDeck(deck)
-    .then((deck) => exports.state.deckCards = updateCards(deck.cards))
+    .then((deck) => exports.state.pages.decks.cards = updateCards(deck.cards))
     .catch(console.error);
 }
 
 exports.createDeck = (name) => {
     Deck.createDeck(name);
     exports.updateDecks();
+}
+
+exports.addCardToDeck = (deck, card) => {
+    Deck.addCardToDeck(deck, card)
+    .then((deck) => exports.state.pages.decks.cards = deck.cards);
 }
 
 
@@ -205,15 +213,36 @@ exports.init = async (database) => {
     }
 }
 
+
 exports.state = {
+    currentPage: 'search',
+    pages: {
+        search: {
+            name: "Seach",
+            cards: {},
+            selectedCard: null,
+        },
+        collection: {
+            name: "Collection",
+            cards: {},
+            selectedCard: null,
+        },
+        decks: {
+            name: "Decks",
+            cards: {},
+            selectedCard: null,
+        },
+        settings: {
+            name: "Settings",
+        },
+        about: {
+            name: "About"
+        },
+    },
     settings: null,
     sets: {},
-    searchCards: {},
-    setCards: {},
-    deckCards: {},
     decks: [],
     selectedDeck: null,
     selectedSet: null,
-    selectedCardId: null,
     events: null,
 }
