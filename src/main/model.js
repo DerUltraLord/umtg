@@ -184,7 +184,11 @@ exports.createDeck = (name) => {
 
 exports.addCardToDeck = (deck, card) => {
     Deck.addCardToDeck(deck, card)
-        .then((deck) => exports.state.pages.decks.cards = deck.cards);
+        .then((deck) => {
+            exports.state.pages.decks.cards = deck.cards
+            Deck.saveDeckToDisk(exports.state.selectedDeck, deck); 
+
+        });
 };
 
 

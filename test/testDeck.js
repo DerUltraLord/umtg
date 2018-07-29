@@ -80,12 +80,49 @@ describe('Test Deck management and parsing', function() {
 
     });
 
-    //it('addCardToDeck()', () => {
-    //    card = {
-    //        name: "Ichor Wellspring",
-    //    };
+    it('can save a deck to disk', () => {
+        let myStub = testUtils.sandbox.stub(fs, 'writeFileSync');
+        let writeFileMock = (file, data, mode) => {
+            file.should.be.equal(process.env.HOME + '/.umtg/decks/mydeck.txt');
+            let expectedData = `4 Ichor Wellspring
+`;
+            data.should.be.equal(expectedData);
+            
+        };
+        myStub.callsFake(writeFileMock);
+        let myDeck = {
+            cards: [
+                {
+                    name: 'Ichor Wellspring',
+                    amount: 4,
+                }
+            ]
+        };
+        deck.saveDeckToDisk('mydeck.txt', myDeck); 
 
-    //    deck.addCardToDeck("test1.txt", card);
-    //});
+    });
+
+    it('add new card to deck', (done) => {
+        card = {
+            name: "A new Card",
+        };
+        p = deck.addCardToDeck("deck1.txt", card);
+        testUtils.assertPromiseResult(p, done, (deck) => {
+            deck.cards[1].name.should.be.equal('A new Card');
+            deck.cards[1].amount.should.be.equal(1);
+        });
+    });
+
+    it('add card which is already in deck', (done) => {
+        card = {
+            name: "Ichor Wellspring",
+        };
+        p = deck.addCardToDeck("deck1.txt", card);
+        testUtils.assertPromiseResult(p, done, (deck) => {
+            deck.cards[0].name.should.be.equal('Ichor Wellspring');
+            deck.cards[0].amount.should.be.equal(5);
+        });
+    });
+
 
 });

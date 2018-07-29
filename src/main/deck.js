@@ -5,6 +5,17 @@ const fs = require('fs');
 const base = require('./base.js');
 
 
+exports.saveDeckToDisk = (deckname, deck) => {
+    let destination = decksPath + '/' + deckname
+    let data = ''
+
+    deck.cards.forEach((card) => {
+        data += `${card.amount} ${card.name}\n`
+    });
+
+    fs.writeFileSync(destination, data, 'ascii');
+}
+
 exports.getDecks = function() {
     return fs.readdirSync(decksPath);
 };
@@ -49,7 +60,19 @@ exports.addCardToDeck = function(deck, card) {
     if (decknames.includes(deck)) {
         return exports.getCardsOfDeck(deck)
             .then((deck) => {
-                deck.cards.push(card);
+
+                // check if already in deck
+                if (deck.cards.map((card) => card.name).includes(card.name)) {
+                    deck.cards.forEach((c) => {
+                        if (c.name == card.name) {
+                            c.amount = c.amount + 1;
+                        }
+                    })
+                } else {
+                    card.amount = 1;
+                    deck.cards.push(card);
+                }
+
                 return deck;
             });
         
@@ -57,8 +80,8 @@ exports.addCardToDeck = function(deck, card) {
         throw new Error('Deck ' + deck + ' not found');
     }
 
-
 };
+
 
 exports._lineMatchCard = line => {
     let regexResult = base.matchRegex(/(\d+)\s(.*)/)(line);
