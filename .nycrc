@@ -1,0 +1,16 @@
+{
+    "cache": true,
+    "extension": [
+        ".ts"
+    ],
+    "report-dir": "./coverage",
+    "reporter": [
+        "html",
+        "text",
+        "text-summary"
+    ],
+    "require": [
+        "ts-node/register"
+    ],
+    "all": false
+}

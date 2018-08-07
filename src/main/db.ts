@@ -1,10 +1,11 @@
-var sqlite3 = require('sqlite3').verbose();
+import { Card, MagicSet } from './umtgTypes'
+import * as sqlite3 from 'sqlite3';
 
-var db = null;
+export let db = null;
 
 
-exports.init = function(name) {
-    db = new sqlite3.Database(name);
+export function init(dbname: string) {
+    db = new sqlite3.Database(dbname);
     db.serialize(function() {
         db.run('CREATE TABLE IF NOT EXISTS Card (id TEXT PRIMARY KEY, jsonString TEXT, amount INTEGER, foilAmount INTEGER)');
         db.run('CREATE TABLE IF NOT EXISTS [Set] (id TEXT PRIMARY KEY, jsonString TEXT)');
@@ -13,41 +14,27 @@ exports.init = function(name) {
 };
 
 
-let dbString = function(s) {
+let dbString = function(s : string) {
     return s.replace('\'', '\'\'');
 };
 
-exports.cardAdd = function(card, amount) {
-    // NOTE: slow
-    //exports.cardExistsById(card.id)
-    //.then((exists) => {
-    //    if (!exists) {
-    //        var stmt = db.prepare('INSERT INTO Card VALUES(?, ?, ?, ?)');
-    //        stmt.run(card.id, JSON.stringify(card), amount, 0);
-    //        stmt.finalize();
-    //    } else {
-    //        console.log(card.name + ' already in db');
-    //    }
-    //})
-    //.catch(console.error);
+export function cardAdd (card : Card, amount : number) : void {
     var stmt = db.prepare('INSERT INTO Card VALUES(?, ?, ?, ?)');
     stmt.run(card.id, JSON.stringify(card), amount, 0, (err) => {
-        if (String(err).includes('SQLite: UNIQUE constraint failed') === -1) {
+        if (err && !String(err).includes('SQLite: UNIQUE constraint failed')) {
             throw err;
-        } else if(err != null){
-            //console.log(card.name + ' already in db');
-        } 
+        }
     });
     stmt.finalize();
 };
 
-exports.setAdd = (set) => {
+export function setAdd(set : MagicSet) : void {
     var stmt = db.prepare('INSERT INTO [Set] VALUES(?, ?)');
     stmt.run(set.code, JSON.stringify(set));
     stmt.finalize();
 };
 
-exports.getCardAmountOfSet = (set) => {
+export function getCardAmountOfSet(set : MagicSet) : void {
     let stmt = 'SELECT json_extract([Set].jsonString, \'$.card_count\') as card_count FROM [Set] WHERE json_extract([Set].jsonString, \'$.code\') = \'' + set.code + '\'';
     return exports._promiseStatementWithDataTransform(stmt, (res) => {
         if (res.length == 1) {
@@ -58,7 +45,7 @@ exports.getCardAmountOfSet = (set) => {
     });
 };
 
-exports.getOwnedCardAmountBySetCode = (code) => {
+export function getOwnedCardAmountBySetCode(code: string) : Promise<number> {
     let stmt = 'SELECT COUNT(*) as amount FROM [Card] WHERE json_extract([Card].jsonString, \'$.set\') = \'' + code + '\' and amount > 0';
     return exports._promiseStatementWithDataTransform(stmt, (res) => {
         if (res.length == 1) {
@@ -69,7 +56,7 @@ exports.getOwnedCardAmountBySetCode = (code) => {
     });
 };
 
-exports.getPercentageOfSet = (set) => {
+export function getPercentageOfSet(set : MagicSet) : Promise<number> {
     return new Promise((success, failure) => {
 
         exports.getOwnedCardAmountBySetCode(set.code)
@@ -92,18 +79,18 @@ exports.getPercentageOfSet = (set) => {
     });
 };
 
-exports.cardExistsByName = function(cardname) {
+export function cardExistsByName(cardname : string) : Promise<boolean> {
     let stmt = 'SELECT EXISTS(SELECT * FROM Card where json_extract(Card.jsonString, \'$.name\') = \'' + dbString(cardname) + '\') as ex';
     return exports._promiseStatementWithDataTransform(stmt, res => res[0].ex > 0);
 };
 
-exports.cardExistsById = function(cardid) {
+export function cardExistsById(cardid: string) : Promise<boolean> {
     let stmt = 'SELECT EXISTS(SELECT * FROM Card where json_extract(Card.jsonString, \'$.id\') = \'' + dbString(cardid) + '\') as ex';
     return exports._promiseStatementWithDataTransform(stmt, res => res[0].ex > 0);
 };
 
 
-exports.cardAdjustAmount = function(card, amount) {
+export function cardAdjustAmount(card : Card, amount : number) : Promise<number> {
 
     return new Promise((success, failure) => {
 
@@ -127,12 +114,10 @@ exports.cardAdjustAmount = function(card, amount) {
                 }
             })
             .catch(failure);
-
     });
-
 };
 
-exports.getAmountOfCardById = function(id, callback) {
+export function getAmountOfCardById(id: string, callback) : void {
     
     // TODO: foil
     //
@@ -149,7 +134,7 @@ exports.getAmountOfCardById = function(id, callback) {
 
 };
 
-exports.getCardByName = name => {
+export function getCardByName(name: string) : Promise<Card> {
     function transform(res) {
         if (res.length > 0) {
             return JSON.parse(res[0].jsonString);
@@ -159,7 +144,7 @@ exports.getCardByName = name => {
         transform);
 };
 
-exports.getSets = (types) => {
+export function getSets(types?: string[]) : Promise<MagicSet[]> {
 
     let stmt = 'SELECT *, json_extract([Set].jsonString, \'$.released_at\') as released_at FROM [Set]';
     if (types != undefined) {
@@ -171,12 +156,12 @@ exports.getSets = (types) => {
 };
 
 
-exports.getCardsOfSet = (set) => {
+export function getCardsOfSet(set: MagicSet) : Promise<Card[]> {
     let stmt = 'SELECT * from [Card] WHERE json_extract([Card].jsonString, \'$.set\') = \'' + set.code + '\'';
     return exports._promiseStatementWithDataTransform(stmt, cards => cards.map(card => JSON.parse(card.jsonString)));
 };
 
-exports._promiseStatement = stmt => {
+export function _promiseStatement(stmt: string) : Promise<any> {
     let res = new Promise((resolve, reject) => {
         function onFinished(err, dbResult) {
             if (err) {
@@ -190,7 +175,7 @@ exports._promiseStatement = stmt => {
     return res;
 };
 
-exports._promiseStatementWithDataTransform = (stmt, transformFunc) => {
+export function _promiseStatementWithDataTransform(stmt: string, transformFunc: any) : Promise<any> {
     return new Promise((success, failure) => {
         exports._promiseStatement(stmt)
             .then((res) => success(transformFunc(res)))

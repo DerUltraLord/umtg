@@ -1,9 +1,8 @@
-const Model = require('../src/main/model.js');
-const Settings = require('../src/main/settings.js');
-const TestUtils = require('./testUtils.js');
-
-const Db = require('../src/main/db.js');
-const should = require('chai').should()
+import * as Model from '../src/main/model';
+import * as Settings from '../src/main/settings';
+import * as TestUtils from './testUtils';
+import * as Db from '../src/main/db';
+import { expect }  from 'chai';
 
 describe('model.js', function() {
     beforeEach(function(done) {
@@ -22,14 +21,14 @@ describe('model.js', function() {
     });
 
     it('can get card of set', (done) => {
-        rix = {
+        let rix = {
             code: 'rix',
             card_count: 205,
             search_uri: 'https://api.scryfall.com/cards/search?order=set\u0026q=e%3Arix\u0026unique=prints',
         }
         Model.getCardsOfSet(rix)
         .then((cards) => {
-            cards.length.should.be.equal(205);
+            expect(cards.length).to.be.equal(205);
             done();
 
         })

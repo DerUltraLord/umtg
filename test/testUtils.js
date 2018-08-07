@@ -1,5 +1,5 @@
 const sinon = require('sinon');
-const base = require('../src/main/base.js');
+const base = require('../src/main/base.ts');
 const fs = require('fs');
 let sandbox = null
 

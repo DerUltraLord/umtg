@@ -1,12 +1,11 @@
-const base = require('./base.js');
-const fs = require('fs');
-
+import * as base from './base';
+import * as fs from 'fs';
 
 let settingsPath = process.env.HOME + '/.umtg';
 let decksPath = settingsPath + '/decks';
 let settingsFile = settingsPath + '/settings.json';
 
-exports.data = {
+var data = {
     'setTypes': {
         core: true,
         expansion: true,
@@ -31,7 +30,10 @@ exports.data = {
     'isGridActive': false,
 };
 
-exports.init = () => {
+export { data };
+
+
+export function init() {
 
     if (!fs.existsSync(settingsPath)) {
         fs.mkdirSync(settingsPath);
@@ -46,17 +48,17 @@ exports.init = () => {
     }
 
     let data = fs.readFileSync(settingsFile);
-    let settingsJson = JSON.parse(data);
+    let settingsJson = JSON.parse(JSON.stringify(data));
     exports.data = settingsJson;
 };
 
-exports.setGridActive= (status) => {
+export function setGridActive(status) {
     exports.data.isGridActive = status;
     _writeSettingsFile(exports.data);
 };
 
 
-exports.setSetTypeVisible = (set, status) => {
+export function setSetTypeVisible(set, status) {
     exports.data.setTypes[set] = status;
     _writeSettingsFile(exports.data);
 };

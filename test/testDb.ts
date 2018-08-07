@@ -1,16 +1,17 @@
-var assert = require('assert');
-var Db = require('../src/main/db.js');
-const should = require('chai').should();
-const testUtils = require('./testUtils.js');
-var mydb = null;
+import { expect } from 'chai';
+import * as assert from 'assert';
 
-let testCard = {
+import * as Db from '../src/main/db';
+import * as testUtils from './testUtils';
+import { Card, MagicSet } from '../src/main/umtgTypes';
+
+let testCard : Card = {
     name: 'Ichor Wellspring',
     set: 'ultra',
     id: '1337',
 };
 
-let testSet = {
+let testSet : MagicSet = {
     name: 'Ultra Set',
     code: 'ultra',
     card_count: 10,
@@ -18,62 +19,68 @@ let testSet = {
 
 describe('Test Database', function() {
 
-    beforeEach(function(done) {
+    beforeEach(() => {
         Db.init(':memory:');
-        done();
     });
 
 
     it('can add cards and check if they are stored in Db', (done) => {
-        let cardname = 'Ichor Wellspring';
-        Db.cardAdd({name: cardname}, 0);
-        Db.cardExistsByName(cardname)
-        .then((res) => {
-            res.should.be.true;
-            done()
+        Db.db.serialize(() => {
+            Db.cardAdd(testCard, 0);
+            Db.cardExistsByName(testCard.name)
+                .then((res) => {
+                    expect(res).to.be.true;
+                    done()
+                });
         });
     });
 
     it('detect if card is not in db', (done) => {
         Db.cardExistsByName('Name not found')
         .then((res) => { 
-            res.should.be.false;
+            expect(res).to.be.false;
             done()
         });
     });
 
     it('detect if card is in db by id', (done) => {
-        Db.cardAdd(testCard, 0);
-        let p = Db.cardExistsById('1337');
-        testUtils.assertPromiseResult(p, done, (res) => {
-            res.should.be.true;
+        Db.db.serialize(() => {
+            Db.cardAdd(testCard, 0);
+            let p = Db.cardExistsById('1337');
+            p.then((res) => {
+                expect(res).to.be.true;
+                done();
+            });
         });
     });
 
     it('detect if card is not in db by id', (done) => {
         let p = Db.cardExistsById('1337');
-        testUtils.assertPromiseResult(p, done, (res) => {
-            res.should.be.false;
+        p.then((res) => {
+            expect(res).to.be.false;
+            done();
         });
     });
 
     it('get card by name', (done) => {
-        let cardname = 'Ichor Wellspring';
-        Db.cardAdd({name: cardname}, 0);
-        let p = Db.getCardByName(cardname);
-        testUtils.assertPromiseResult(p, done, (res) => {
-            res.name.should.be.equal(cardname);
-        });
+        Db.db.serialize(() => {
+            Db.cardAdd(testCard, 0);
+            let p = Db.getCardByName(testCard.name);
+            p.then((res) => {
+                expect(res.name).to.be.equal(testCard.name);
+                done();
+            });
+        }); 
     });
 
 
     it('add and get all the sets in db', (done) => {
-        var myset = {
+        var myset : MagicSet = {
             code: "ultra",
             name: "ultra lord set",
             set_type: "ultratype",
         }
-        var myset2 = {
+        var myset2 : MagicSet = {
             code: "foo",
             name: "bar",
             set_type: "othertype",
@@ -130,7 +137,7 @@ describe('Test Database', function() {
         Db.cardAdd(testCard, 2);
         let p = Db.cardAdjustAmount(testCard, 1);
         testUtils.assertPromiseResult(p, done, (res) => {
-            res.should.be.equal(3);
+            expect(res).to.be.equal(3);
         });
     });
 
@@ -138,7 +145,7 @@ describe('Test Database', function() {
         Db.db.serialize(() => {
             let p = Db.getCardAmountOfSet(testSet);
             testUtils.assertPromiseResult(p, done, (amount) => {
-                amount.should.be.equal(-1);
+                expect(amount).to.be.equal(-1);
             });
         });
 
@@ -149,7 +156,7 @@ describe('Test Database', function() {
             Db.setAdd(testSet);
             let p = Db.getCardAmountOfSet(testSet);
             testUtils.assertPromiseResult(p, done, (amount) => {
-                amount.should.be.equal(10);
+                expect(amount).to.be.equal(10);
             });
         });
 
@@ -161,7 +168,7 @@ describe('Test Database', function() {
             Db.setAdd(testSet);
             let p = Db.getOwnedCardAmountBySetCode(testSet.code);
             testUtils.assertPromiseResult(p, done, (amount) => {
-                amount.should.be.equal(1);
+                expect(amount).to.be.equal(1);
             });
         });
 
@@ -173,7 +180,7 @@ describe('Test Database', function() {
             Db.setAdd(testSet);
             let p = Db.getPercentageOfSet(testSet);
             testUtils.assertPromiseResult(p, done, (amount) => {
-                amount.should.be.equal(0.1);
+                expect(amount).to.be.equal(0.1);
             });
 
         });
@@ -184,7 +191,7 @@ describe('Test Database', function() {
             Db.cardAdd(testCard, 2);
             let p = Db.getPercentageOfSet(testSet);
             testUtils.assertPromiseResult(p, done, (amount) => {
-                amount.should.be.below(0);
+                expect(amount).to.be.below(0);
             });
 
         });

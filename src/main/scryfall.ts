@@ -1,19 +1,21 @@
-const base = require('./base.js');
+import * as base from './base';
 
 
-exports.scryfallGetSets = () =>
-    base.getJSON('https://api.scryfall.com/sets');
+export function scryfallGetSets() {
+    return base.getJSON('https://api.scryfall.com/sets');
+}
 
-exports.getCardByName = name => {
+export function getCardByName(name) {
     return base.getJSONTransformed('https://api.scryfall.com/cards/search?q=' + name.replace(/ /g, '+'), (res) => {
         return res.data[0];
     });
 };
 
-exports.search = searchText => 
+export function search(searchText) { 
     base.getJSON('https://api.scryfall.com/cards/search?order=cmc&q=' + searchText);
+}
 
-exports.buildSearchString = function(filter) {
+export function buildSearchString(filter) {
     let res = filter['name'];
     for (var property in filter) {
         if (property != 'name') {
@@ -27,12 +29,12 @@ exports.buildSearchString = function(filter) {
     return res;
 };
 
-exports.searchByFilter = function(filter) {
+export function searchByFilter(filter) {
     let searchString = exports.buildSearchString(filter);
     return exports.search(searchString);
 };
 
-exports.getSearchFilter = function(name, type, text, edition) {
+export function getSearchFilter(name: string, type? : string, text? : string, edition? : string) {
     let res = {};
     // type
     let reType = /\s?t:(\w+)/g;

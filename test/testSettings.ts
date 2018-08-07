@@ -1,7 +1,7 @@
-const should = require('chai').should();
-const settings = require('../src/main/settings.js');
-const testUtils = require('./testUtils.js');
-const base = require('../src/main/base.js');
+import { expect } from 'chai';
+import * as settings from '../src/main/settings';
+import * as testUtils from './testUtils';
+import * as base from '../src/main/base';
 
 
 describe('Test Settings of umtg app', () => {
@@ -12,10 +12,6 @@ describe('Test Settings of umtg app', () => {
         testUtils.mockBasicReturn(base, 'isfile', true);
         testUtils.mockToDoNothing(settings, 'init');
         testUtils.mockToDoNothing(base, 'writeFileSync');
-        settings.data = {
-            "setTypes": {"ultra": false},
-            "isGridActive": false
-        }
     });
 
     afterEach(() => testUtils.shutdown());
@@ -27,27 +23,21 @@ describe('Test Settings of umtg app', () => {
 
     it('should manage show grid settings', () => {
         settings.init();
-        settings.data.isGridActive.should.be.false;
+        expect(settings.data.isGridActive).to.be.false;
         settings.setGridActive(true);
-        settings.data.isGridActive.should.be.true;
+        expect(settings.data.isGridActive).to.be.true;
     });
 
     it('check if specific set type should be displayed', () => {
         settings.init();
-        settings.data.setTypes['ultra'].should.be.false;
+        expect(settings.data.setTypes['core']).to.be.true;
     });
 
     it('change display status of specific set type', () => {
         settings.init();
-        settings.data.setTypes['ultra'].should.be.false;
-        settings.setSetTypeVisible('ultra', true);
-        settings.data.setTypes['ultra'].should.be.true;
-    });
-
-    it('get a object with all set types', () => {
-        settings.init();
-        res = settings.data.setTypes;
-        res["ultra"].should.be.false;
+        expect(settings.data.setTypes['core']).to.be.true;
+        settings.setSetTypeVisible('core', false);
+        expect(settings.data.setTypes['core']).to.be.false;
     });
 
 });

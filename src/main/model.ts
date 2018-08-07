@@ -1,13 +1,19 @@
-const Settings = require('./settings.js');
-const Scryfall = require('./scryfall.js');
-const Db = require('./db.js');
-const Deck = require('./deck.js');
-const Base = require('./base.js');
+import * as Settings from './settings';
+import * as Scryfall from './scryfall';
+import * as Db from './db';
+import * as Deck from './deck';
+import * as Base from './base';
+import { MagicSet } from './umtgTypes';
 
 
 // Settings
-exports.setGridActive = Settings.setGridActive;
-exports.setSetTypeVisible = Settings.setSetTypeVisible;
+export function setGridActive(status : boolean) {
+    Settings.setGridActive(status);
+}
+
+export function setSetTypeVisible(set : string, status : boolean) {
+    Settings.setSetTypeVisible(set, status);
+}
 
 // Scryfall
 let updateCards = (cards) => {
@@ -22,14 +28,16 @@ let updateCards = (cards) => {
 
 };
 
-exports.searchScryfallByFilter = (filter) => {
+export function searchScryfallByFilter(filter) {
     return Scryfall.searchByFilter(filter)
         .then((response) => exports.state.pages.search.cards = updateCards(response.data));
     // TODO: has more??
     // TODO: empty response
 };
 
-exports.getScryfallSearchFilter = Scryfall.getSearchFilter;
+export function getScryfallSearchFilter(name : string, type? : string) {
+    return Scryfall.getSearchFilter(name, type);
+}
 
 // Collection
 let saveSetsToDb = (res) => {
@@ -39,7 +47,7 @@ let saveSetsToDb = (res) => {
     return Db.getSets();
 };
 
-let getSets = () => {
+function getSets() : Promise<MagicSet[]> {
     return new Promise((success, failure) => {
 
         Db.getSets()
@@ -58,10 +66,10 @@ let getSets = () => {
 };
 
 
-exports.updateSets = () => {
+export function updateSets() {
     return getSets()
         .then((sets) => {
-            let filteredSets = sets.filter(set => exports.state.settings.setTypes[set.set_type]);
+            let filteredSets = sets.filter((set) => exports.state.settings.setTypes[set.set_type]);
             exports.state.sets = filteredSets.reduce((obj, set) => {
                 set.ownedAmount = null;
                 obj[set.code] = set;
@@ -89,7 +97,7 @@ let storeSetCardsFromScryfallInDb = (uri, success) => {
 
 
 
-exports.getCardsOfSet = (set) => {
+export function getCardsOfSet(set) : Promise<any> {
     return new Promise((success, failure) => {
 
         Db.getCardsOfSet(set)
@@ -111,7 +119,7 @@ exports.getCardsOfSet = (set) => {
     });
 };
 
-exports.updateCardsBySet = (set) => {
+export function updateCardsBySet(set) {
     return exports.getCardsOfSet(set)
         .then((cards) => {
             exports.state.pages.collection.cards = cards.reduce((obj, card) => {
@@ -133,7 +141,7 @@ let updateCardAmountOfCard = (card, amount) => {
         .then((amount) => exports.state.sets[card.set].ownedCards = amount);
 };
 
-exports.removeCardFromCollection = (card) => {
+export function removeCardFromCollection(card) {
     return Db.cardExistsById(card.id)
         .then((exists) => {
             if (exists) {
@@ -143,7 +151,7 @@ exports.removeCardFromCollection = (card) => {
         });
 };
 
-exports.addCardToCollection = (card) => {
+export function addCardToCollection(card) {
     return Db.cardExistsById(card.id)
         .then((exists) => {
             if (exists) {
@@ -156,12 +164,14 @@ exports.addCardToCollection = (card) => {
         });
 };
 
-exports.getPercentageOfSet = Db.getPercentageOfSet;
+export function getPercentageOfSet(set : MagicSet) : Promise<number> {
+    return Db.getPercentageOfSet(set);
+}
 
 
 // Decks
 
-exports.updateDecks = () => {
+export function updateDecks() {
     exports.state.decks = Deck.getDecks();
     if (exports.state.decks.length > 0) {
         Deck.getCardsOfDeck(exports.state.decks[0])
@@ -171,25 +181,25 @@ exports.updateDecks = () => {
     }
 };
 
-exports.updateDeckCards = (deck) => {
+export function updateDeckCards(deck) {
     // TODO: sideboard
     return Deck.getCardsOfDeck(deck)
         .then((deck) => exports.state.pages.decks.cards = updateCards(deck.cards));
 };
 
-exports.createDeck = (name) => {
-    Deck.createDeck(name);
-    exports.updateDecks();
+export function createDeck(name) {
+    //Deck.createDeck(name);
+    //exports.updateDecks();
 };
 
-exports.addCardToDeck = (deck, card) => {
-    Deck.addCardToDeck(deck, card)
-        .then((deck) => exports.state.pages.decks.cards = deck.cards);
+export function addCardToDeck(deck, card) {
+    //Deck.addCardToDeck(deck, card)
+        //.then((deck) => exports.state.pages.decks.cards = deck.cards);
 };
 
 
 // State
-exports.init = async (database) => {
+export async function init(database) {
     Settings.init();
     Db.init(database);
     exports.state.settings = Settings.data;
@@ -200,7 +210,7 @@ exports.init = async (database) => {
 };
 
 
-exports.state = {
+export let state = {
     currentPage: 'search',
     pages: {
         search: {

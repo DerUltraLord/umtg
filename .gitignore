@@ -3,3 +3,5 @@ umtg-win32*
 package-lock.json
 *.db
 dist/
+.nyc_output
+coverage
