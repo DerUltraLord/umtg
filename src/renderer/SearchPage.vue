@@ -15,7 +15,7 @@
 import CardSearch from './CardSearch.vue';
 import CardList from './CardList.vue';
 import Loader from './Loader.vue';
-import Model from '../main/model.js';
+import * as Model from '../main/model.ts';
 
 export default {
     props: ['state'],

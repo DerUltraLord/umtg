@@ -4,7 +4,7 @@ import 'bootstrap'
 import Vue from 'vue'
 import App from './App.vue'
 
-import Model from '../main/model.js'
+import * as Model from '../main/model.ts'
 console.log("Load model ...");
 let initialization = Model.init('test.db')
 console.log("Model loaded");

@@ -26,7 +26,7 @@
 
 <script>
 import DeckAddButton from './DeckAddButton.vue';
-import Model from '../main/model.js';
+import * as Model from '../main/model.ts';
 import $ from 'jquery';
 export default {
     props: ['state'],

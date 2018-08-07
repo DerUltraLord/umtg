@@ -12,7 +12,7 @@
 
 <script>
 import Deck from './Deck.vue';
-import Model from '../main/model.js';
+import * as Model from '../main/model.ts';
 export default {
     props: ['decks', 'selectedDeck'],
     components: {

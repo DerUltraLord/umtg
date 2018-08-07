@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import Model from '../main/model.js';
+import * as Model from '../main/model.ts';
 export default {
     data() {
         return {

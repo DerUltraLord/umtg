@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import Model from '../main/model.js';
+import * as Model from '../main/model.ts';
 
 import Navigation from './Navigation.vue';
 import SearchPage from './SearchPage.vue';

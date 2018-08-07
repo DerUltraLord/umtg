@@ -8,11 +8,11 @@ import { MagicSet } from './umtgTypes';
 
 // Settings
 export function setGridActive(status : boolean) {
-    Settings.setGridActive(status);
+    return Settings.setGridActive(status);
 }
 
 export function setSetTypeVisible(set : string, status : boolean) {
-    Settings.setSetTypeVisible(set, status);
+    return Settings.setSetTypeVisible(set, status);
 }
 
 // Scryfall
