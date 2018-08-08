@@ -1,37 +1,37 @@
 import { expect } from 'chai';
-import { sandbox } from 'sinon';
+import { createSandbox, SinonSandbox } from 'sinon';
 import * as fs from 'fs';
 
-import * as testUtils from './testUtils'
+import * as testUtils from './testUtils';
 import { getDecks, getCardsOfDeck, lineMatchCard, lineMatchSideboard, addCardToDeck } from '../src/main/deck';
-import { Deck, DeckContents, Card, CardDecklist } from '../src/main/umtgTypes';
+import { Deck, Card, DecklistCard, DeckWithCards } from '../src/main/umtgTypes';
 import * as base from '../src/main/base';
-import * as db from '../src/main/db'
+import * as db from '../src/main/db';
 
-let mySandbox = null;
+let mySandbox: SinonSandbox;
 
 describe('Deck Management Module', () => {
 
     before(() => {
-        mySandbox = sandbox.create();
-        mySandbox.stub(fs, 'readdirSync').callsFake(() => ["deck1.txt", "deck2.txt"])
+        mySandbox = createSandbox();
+        mySandbox.stub(fs, 'readdirSync').callsFake(() => ['deck1.txt', 'deck2.txt']);
         mySandbox.stub(base, 'readFile').callsFake(() => Promise.resolve('4 Ichor Wellspring'));
-        mySandbox.stub(db, 'getCardByName').callsFake((cardname : string) => {
-            let result : Card = {
+        mySandbox.stub(db, 'getCardByName').callsFake((cardname: string) => {
+            let result: Card = {
                 id: cardname,
-                name: cardname,
-            }
+                name: cardname
+            };
             return result;
-        })
-        mySandbox.stub(db, 'cardExistsByName').callsFake((cardname : string) => true);
-    });;
+        });
+        mySandbox.stub(db, 'cardExistsByName').callsFake((cardname: string) => true);
+    });
 
     after(() => {
         mySandbox.restore() ;
     });
 
     it('should provide a list with all decks', () => {
-        let res : Deck[] = getDecks();
+        let res: Deck[] = getDecks();
         expect(res[0].name).to.equal('deck1');
         expect(res[0].filename).to.equal('deck1.txt');
         expect(res[1].name).to.equal('deck2');
@@ -39,22 +39,25 @@ describe('Deck Management Module', () => {
     });
 
     it('should provide all cards of a specific deck', (done) => {
-        let myDeck : Deck = {
+        let myDeck: Deck = {
             name: 'foo',
-            filename: 'filename.txt',
+            filename: 'filename.txt'
         };
-        let p : Promise<DeckContents> = getCardsOfDeck(myDeck);
-        testUtils.assertPromiseResult(p, done, (result : DeckContents) => {
+        let p: Promise<DeckWithCards> = getCardsOfDeck(myDeck);
+        testUtils.assertPromiseResult(p, done, (result: DeckWithCards) => {
             expect(result.cards.length).to.equal(1);
             expect(result.cards[0].name).to.equal('Ichor Wellspring');
             expect(result.sideboard.length).to.equal(0);
-        })
+        });
     });
 
     it('should read card definitions from a decklist', () => {
-        let res : CardDecklist = lineMatchCard('4 Ichor Wellspring');
-        expect(res.amount).to.equal(4);
-        expect(res.name).to.equal('Ichor Wellspring');
+        let res: DecklistCard | null = lineMatchCard('4 Ichor Wellspring');
+        expect(res).to.not.equal(null);
+        if (res !== null) {
+            expect(res.amount).to.equal(4);
+            expect(res.name).to.equal('Ichor Wellspring');
+        }
 
     });
 
@@ -62,24 +65,22 @@ describe('Deck Management Module', () => {
 
         expect(lineMatchSideboard('4 Ichor Wellspring')).to.be.false;
         expect(lineMatchSideboard('Sideboard:')).to.be.true;
-    })
-
+    });
 
     it('add card to deck', () => {
-        let myDeck : DeckContents = {
+        let myDeck: DeckWithCards = {
             cards: [],
-            sideboard: [],
+            sideboard: []
         };
 
-        let myCard : Card = {
+        let myCard: Card = {
             name: 'UltraLord',
-            id: 'UltraId',
-        }
+            id: 'UltraId'
+        };
 
         addCardToDeck(myDeck, myCard);
-
         expect(myDeck.cards.length).to.equal(1);
 
-    })
+    });
 
 });

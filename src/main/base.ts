@@ -1,19 +1,19 @@
-const fs = require('fs');
-const https = require('https');
+import * as fs from 'fs';
+import * as https from 'https';
 
-export function prop(obj, name) {
+export function prop(obj: any, name: string) {
     return obj ? obj[name] : null;
 }
 
-export function matchRegex(regex, param? : any) {
+export function matchRegex(regex: RegExp, param?: any) {
     return regex.exec(param);
 }
 
-export function matchRegexGroup(regex, param? : any) {
+export function matchRegexGroup(regex: RegExp, param?: any) {
     return exports.prop(exports.matchRegex(regex, param), 'groups');
 }
 
-export function readFile(filename) {
+export function readFile(filename: string) {
     return new Promise((success, failure) => {
         fs.readFile(filename, 'ascii', function(err, data) {
             if (err) {
@@ -23,9 +23,9 @@ export function readFile(filename) {
             }
         });
     });
-};
+}
 
-export function writeFile(filename, contents) {
+export function writeFile(filename: string, contents: string) {
     return new Promise((success, failure) => {
         fs.writeFile(filename, contents, (err) => {
             if (err) {
@@ -37,31 +37,31 @@ export function writeFile(filename, contents) {
         });
     });
 
-};
+}
 
-export function writeFileSync(filename, contents) {
+export function writeFileSync(filename: string, contents: string) {
     fs.writeFileSync(filename, contents);
-};
+}
 
-export function ls(directory) {
+export function ls(directory: string) {
     return exports._simpleCallbackFunctionToPromise(fs.readdir, [directory]);
 }
 
-export function mkdir(directory) {
+export function mkdir(directory: string) {
     return exports._simpleCallbackFunctionToPromise(fs.mkdir, [directory]);
 }
 
-export function isdir(path) {
+export function isdir(path: string) {
     return fs.lstatSync(path).isDirectory();
 }
 
-export function isfile(path) {
+export function isfile(path: string) {
     return fs.lstatSync(path).isFile();
 }
 
-export function _simpleCallbackFunctionToPromise(func, args) {
+export function _simpleCallbackFunctionToPromise(func: () => void, args: any) {
     return new Promise((success, failure) => {
-        let cb = ((err, res) => {
+        let cb = ((err: string, res: string) => {
             if (err) {
                 failure(err);
             } else {
@@ -71,9 +71,9 @@ export function _simpleCallbackFunctionToPromise(func, args) {
         args.push(cb);
         func.apply(null, args);
     });
-};
+}
 
-export function getJSONCb(url, success) {
+export function getJSONCb(url: string, success: (body: string) => void) {
     https.get(url, res => {
         res.setEncoding('utf8');
         let body = '';
@@ -84,12 +84,11 @@ export function getJSONCb(url, success) {
             body = JSON.parse(body);
             success(body);
         });
-        res.on('error', () => {
-        });
+        res.on('error', () => console.error);
     });
-};
+}
 
-export function getJSON(url) {
+export function getJSON(url: string): Promise<string> {
     return new Promise((success, failure) => {
         https.get(url, res => {
             res.setEncoding('utf8');
@@ -106,12 +105,12 @@ export function getJSON(url) {
             });
         });
     });
-};
+}
 
-export function getJSONTransformed(url, transformFunc) {
+export function getJSONTransformed(url: string, transformFunc: (data: string) => any) {
     return new Promise((success, failure) => {
         exports.getJSON(url)
-            .then((res) => success(transformFunc(res)))
+            .then((res: string) => success(transformFunc(res)))
             .catch(failure);
     });
-};
+}

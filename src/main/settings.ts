@@ -1,12 +1,13 @@
 import * as base from './base';
 import * as fs from 'fs';
+import { Settings } from './umtgTypes';
 
 let settingsPath = process.env.HOME + '/.umtg';
 let decksPath = settingsPath + '/decks';
 let settingsFile = settingsPath + '/settings.json';
 
-var data = {
-    'setTypes': {
+let data: Settings = {
+    setTypes: {
         core: true,
         expansion: true,
         masters: true,
@@ -27,11 +28,13 @@ var data = {
         token: false,
         memorabilia: false
     },
-    'isGridActive': false,
+    isGridActive: false
 };
 
 export { data };
 
+let _writeSettingsFile = (settings: Settings) =>
+    base.writeFileSync(settingsFile, JSON.stringify(settings, null, 4));
 
 export function init() {
 
@@ -50,20 +53,14 @@ export function init() {
     let data = fs.readFileSync(settingsFile);
     let settingsJson = JSON.parse(JSON.stringify(data));
     exports.data = settingsJson;
-};
+}
 
-export function setGridActive(status) {
+export function setGridActive(status: boolean) {
     exports.data.isGridActive = status;
     _writeSettingsFile(exports.data);
-};
+}
 
-
-export function setSetTypeVisible(set, status) {
+export function setSetTypeVisible(set: string, status: boolean) {
     exports.data.setTypes[set] = status;
     _writeSettingsFile(exports.data);
-};
-
-
-let _writeSettingsFile = (settings) => 
-    base.writeFileSync(settingsFile, JSON.stringify(settings, null, 4));
-
+}

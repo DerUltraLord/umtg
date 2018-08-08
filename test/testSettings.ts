@@ -3,11 +3,10 @@ import * as settings from '../src/main/settings';
 import * as testUtils from './testUtils';
 import * as base from '../src/main/base';
 
-
 describe('Test Settings of umtg app', () => {
 
     beforeEach(() => {
-        testUtils.mockFileRead('{"setTypes": {"ultra": false}, "isGridActive": false}')
+        testUtils.mockFileRead('{"setTypes": {"ultra": false}, "isGridActive": false}');
         testUtils.mockBasicReturn(base, 'isdir', true);
         testUtils.mockBasicReturn(base, 'isfile', true);
         testUtils.mockToDoNothing(settings, 'init');
@@ -15,7 +14,6 @@ describe('Test Settings of umtg app', () => {
     });
 
     afterEach(() => testUtils.shutdown());
-
 
     it('should read settings from a file', () => {
         settings.init();

@@ -1,31 +1,29 @@
-import 'bootstrap/dist/css/bootstrap.css'
-import 'open-iconic/font/css/open-iconic-bootstrap.css'
-import 'bootstrap'
-import Vue from 'vue'
-import App from './App.vue'
+import 'bootstrap/dist/css/bootstrap.css';
+import 'open-iconic/font/css/open-iconic-bootstrap.css';
+import 'bootstrap';
+import Vue from 'vue';
+import App from './App.vue';
 
-import * as Model from '../main/model.ts'
-console.log("Load model ...");
-let initialization = Model.init('test.db')
-console.log("Model loaded");
+import * as Model from '../main/model';
+console.log('Load model ...');
+let initialization = Model.init('test.db');
+console.log('Model loaded');
 
-let Events = new Vue()
+let Events = new Vue();
 
 Object.defineProperties(Vue.prototype, {
     Events: {
         get: function() {
-            return Events
+            return Events;
         }
     }
-})
-
+});
 
 initialization.then(() => {
-    new Vue({
-            el: '#app',
-            template: '<App/>',
-            components: { App }
-
-    })
+    return new Vue({
+        el: '#app',
+        template: '<App/>',
+        components: { App }
+    });
 })
 .catch(console.error);

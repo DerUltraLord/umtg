@@ -1,0 +1,18 @@
+{
+  "lintOptions": {
+    "typeCheck": true
+  },
+  "extends": "tslint-config-standard",
+  "rules": {
+    "indent": [true, "spaces" , 4],
+    "ter-indent": [true, 4],
+    "semicolon": [true, "always"],
+    "space-before-function-paren": false,
+    "no-unused-expression": false,
+    "no-inferrable-types": true,
+    "no-use-before-declare": true,
+    "no-floating-promises": false,
+    "strict-type-predicates": true,
+    "await-promise": true
+  }
+}

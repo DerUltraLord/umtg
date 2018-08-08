@@ -1,47 +1,47 @@
 import { readdirSync } from 'fs';
-import { Card, Deck, DeckContents, CardDecklist } from './umtgTypes'
-import { readFile, matchRegex } from './base'
+import { Card, Deck, Decklist, DecklistCard, DeckWithCards } from './umtgTypes';
+import { readFile, matchRegex } from './base';
 import { cardExistsByName, getCardByName, cardAdd } from './db';
 import * as scry from './scryfall';
 
-var DECKS_PATH = process.env.HOME + '/.umtg/decks';
+let DECKS_PATH = process.env.HOME + '/.umtg/decks';
 
-export function getDecks() : Deck[] {
-    let result : Deck[] = readdirSync(DECKS_PATH).map((filename : string) => {
-        let deckItem : Deck = {
+export function getDecks(): Deck[] {
+    let result: Deck[] = readdirSync(DECKS_PATH).map((filename: string) => {
+        let deckItem: Deck = {
             name: filename.split('.')[0],
-            filename: filename,
-        }
+            filename: filename
+        };
         return deckItem;
-    })
+    });
     return result;
-};
+}
 
-export async function getCardsOfDeck(deck : Deck) : Promise<DeckContents> {
+export async function getCardsOfDeck(deck: Deck): Promise<DeckWithCards> {
     let contents = await readFile(DECKS_PATH + '/' + deck.filename);
     let deckResult = exports.traverseCards(contents);
 
-    let cards = await exports.getCardObjectsFromCardNames(deckResult.cards);
-    let sideboard = await exports.getCardObjectsFromCardNames(deckResult.sideboard);
+    let cards = await getCardObjectsFromCardNames(deckResult.cards);
+    let sideboard = await getCardObjectsFromCardNames(deckResult.sideboard);
 
-    let result : DeckContents = {
+    let result: DeckWithCards = {
         cards: cards,
-        sideboard: sideboard,
-    }
+        sideboard: sideboard
+    };
     return result;
-};
+}
 
-exports.getCardObjectsFromCardNames = cards => {
-    let addedIds = [];
-    return cards.reduce(async (p, card) => {
-        let data = await p;
+function getCardObjectsFromCardNames(cards: Card[]) {
+    let addedIds: string[] = [];
+    return cards.reduce(async (p: any, card) => {
+        let data: any = await p;
         let exists = await cardExistsByName(card.name);
-        let dbCard = null;
+        let dbCard: Card;
         if (exists) {
             dbCard = await getCardByName(card.name);
         } else {
             dbCard = await scry.getCardByName(card.name);
-            if (addedIds.indexOf(dbCard.id) == -1) {
+            if (addedIds.indexOf(dbCard.id) === -1) {
                 cardAdd(dbCard, 0);
                 addedIds.push(dbCard.id);
             }
@@ -50,20 +50,21 @@ exports.getCardObjectsFromCardNames = cards => {
         data.push(dbCard);
         return Promise.resolve(data);
     }, Promise.resolve([]));
-};
+}
 
-export function traverseCards(content : String) : any {
+export function traverseCards(content: String): any {
 
     let result = {};
-    let initialValue = {};
+    let initialValue: Decklist = {
+        cards: [],
+        sideboard: []
+    };
     let isSideboardActive = false;
 
     result = content
         .trim()
         .split('\n')
-        .reduce((result, line) => {
-            result['cards'] = result['cards'] || [];
-            result['sideboard'] = result['sideboard'] || [];
+        .reduce((result: Decklist, line: string) => {
 
             let cardlist;
             cardlist = isSideboardActive ? result['sideboard'] : result['cards'];
@@ -85,25 +86,24 @@ export function traverseCards(content : String) : any {
         }, initialValue);
     return result;
 
-};
+}
 
-export function lineMatchCard(line : String) : CardDecklist {
+export function lineMatchCard(line: String): DecklistCard | null {
     let regexResult = matchRegex(/(\d+)\s(.*)/, line);
-    let res = null;
     if (regexResult) {
-        res = {
+        let res: DecklistCard = {
             amount: Number(regexResult[1]),
-            name: regexResult[2],
+            name: regexResult[2]
         };
+        return res;
     }
-    return res;
-};
+    return null;
+}
 
-export function lineMatchSideboard(line : String) {
+export function lineMatchSideboard(line: String) {
     return matchRegex(/Sideboard:\s*/, line) ? true : false;
 }
 
-export function addCardToDeck(deck : DeckContents, card : Card) : void {
+export function addCardToDeck(deck: DeckWithCards, card: Card): void {
     deck.cards.push(card);
-};
-
+}
