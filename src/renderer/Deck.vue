@@ -1,5 +1,5 @@
 <template>
-    <p>{{ deck }}</p>
+    <p>{{ deck.name }}</p>
 </template>
 
 <script>
