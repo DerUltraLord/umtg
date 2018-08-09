@@ -68,7 +68,9 @@ export default {
 
     },
     mounted: function() {
-        this.$refs.manaSymbols.insertAdjacentHTML('beforeend', this.getTagsForMana(this.card));
+        if (!this.settings.isGridActive) {
+            this.$refs.manaSymbols.insertAdjacentHTML('beforeend', this.getTagsForMana(this.card));
+        }
     },
     components: {
         CardButtons,
