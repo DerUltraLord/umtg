@@ -204,7 +204,7 @@ export async function init(database: string) {
     }
 }
 
-export let state = {
+let state = {
     currentPage: 'search',
     pages: {
         search: {
@@ -236,3 +236,5 @@ export let state = {
     selectedSet: null,
     events: null
 };
+
+export { state };

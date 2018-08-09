@@ -51,7 +51,7 @@ export function init() {
     }
 
     let data = fs.readFileSync(settingsFile);
-    let settingsJson = JSON.parse(JSON.stringify(data));
+    let settingsJson = JSON.parse(data.toString());
     exports.data = settingsJson;
 }
 

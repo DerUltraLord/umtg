@@ -2,7 +2,6 @@
   "name": "umtg",
   "version": "0.1.0",
   "description": "Magic The Gathering Tool",
-  "main": "main.js",
   "scripts": {
     "test": "./node_modules/.bin/mocha ./test/*.ts -r ts-node/register --watch-extensions ts --watch || true",
     "coverage": "./node_modules/.bin/nyc ./node_modules/.bin/mocha ./test/*.ts -r ts-node/register",
