@@ -18,6 +18,7 @@ export interface DeckWithCards {
     deck: Deck;
     cards: Card[];
     sideboard: Card[];
+    cardAmount: Dict<number>;
 }
 
 export interface Decklist {

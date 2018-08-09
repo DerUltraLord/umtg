@@ -8,7 +8,7 @@
     
         <div class="decksPage">
             <div class="scrollable">
-                <DeckList @deckSelected=deckSelected :decks=state.pages.decks.decks :selectedDeck=state.selectedDeck></DeckList>
+                <DeckList @deckSelected=deckSelected :decks=state.pages.decks.decks :selectedDeck=state.pages.decks.selectedDeck></DeckList>
             </div>
             <div class="scrollable">
                 <CardList @cardClicked="cardClicked" :cards=state.pages.decks.selectedDeck.cards :settings=state.settings :selectedCard=state.pages.decks.selectedCard></CardList>
@@ -38,12 +38,6 @@ export default {
     },
     methods: {
         showCardsOfDeck(deck) {
-            this.loading = true;
-            this.state.selectedDeck = deck;
-            Model.selectDeck(this.state.selectedDeck)
-                .then(() => this.loading = false)
-                .catch(console.error);
-
         },
         deckSelected(deck) {
             Model.selectDeck(deck);

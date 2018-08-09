@@ -224,6 +224,7 @@ export function selectDeck(deck: Deck): Promise<any> {
         deck: deck,
         cards: [],
         sideboard: [],
+        cardAmount: {},
     };
     state.pages.decks.selectedDeck = selectedDeck;
     return DeckManager.getCardsOfDeck(deck)

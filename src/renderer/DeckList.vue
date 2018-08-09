@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Deck @click.native="$emit('deckSelected', deck)" v-for="deck in decks" v-bind:data="deck" v-bind:key="deck.filename" v-bind:class="['list-group-item', selectedDeck != null && selectedDeck == deck ? 'list-group-item-info' : '']" :deck=deck></Deck>
+        <Deck @click.native="$emit('deckSelected', deck)" v-for="deck in decks" v-bind:data="deck" v-bind:key="deck.filename" v-bind:class="['list-group-item', selectedDeck != null && selectedDeck.deck.filename == deck.filename ? 'list-group-item-info' : '']" :deck=deck></Deck>
         <div class="list-group-item">
             <input ref="deckName">
             <button @click="createDeck" type="button" class="btn btn-sm btn-success">

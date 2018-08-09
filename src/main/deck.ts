@@ -1,5 +1,5 @@
 import { writeFile, readdirSync } from 'fs';
-import { Card, Deck, Decklist, DecklistCard, DeckWithCards } from './umtgTypes';
+import { Card, Deck, Decklist, DecklistCard, DeckWithCards, Dict } from './umtgTypes';
 import { readFile, matchRegex } from './base';
 import { cardExistsByName, getCardByName, cardAdd } from './db';
 import * as scry from './scryfall';
@@ -20,20 +20,26 @@ export function getDecks(): Deck[] {
 
 export async function getCardsOfDeck(deck: Deck): Promise<DeckWithCards> {
     let contents = await readFile(DECKS_PATH + '/' + deck.filename);
-    let deckResult = exports.traverseCards(contents);
+    let deckResult = traverseCards(contents);
 
     let cards = await getCardObjectsFromCardNames(deckResult.cards);
     let sideboard = await getCardObjectsFromCardNames(deckResult.sideboard);
+    let amountDict: Dict<number> = {};
+
+    cards.forEach((card, i)  => {
+        amountDict[card.id] = deckResult.cards[i].amount;
+    });
 
     let result: DeckWithCards = {
         deck: deck,
         cards: cards,
-        sideboard: sideboard
+        sideboard: sideboard,
+        cardAmount: amountDict,
     };
     return result;
 }
 
-function getCardObjectsFromCardNames(cards: Card[]) {
+function getCardObjectsFromCardNames(cards: DecklistCard[]): Promise<Card[]> {
     let addedIds: string[] = [];
     return cards.reduce(async (p: any, card) => {
         let data: any = await p;
@@ -54,9 +60,9 @@ function getCardObjectsFromCardNames(cards: Card[]) {
     }, Promise.resolve([]));
 }
 
-export function traverseCards(content: String): any {
+export function traverseCards(content: String): Decklist {
 
-    let result = {};
+    let result :Decklist;
     let initialValue: Decklist = {
         cards: [],
         sideboard: []
@@ -107,7 +113,11 @@ export function lineMatchSideboard(line: String) {
 }
 
 export function addCardToDeck(deck: DeckWithCards, card: Card): void {
-    deck.cards.push(card);
+    if (!(card.id in deck.cardAmount)) {
+        deck.cards.push(card);
+        deck.cardAmount[card.id] = 0;
+    }
+    deck.cardAmount[card.id] += 1;
     // TODO: sideboard
 }
 

@@ -4,11 +4,15 @@ import { createSandbox, SinonSandbox } from 'sinon';
 import * as Model from '../src/main/model';
 import * as Settings from '../src/main/settings';
 import * as DeckManager from '../src/main/deck';
-import { Deck, DeckWithCards, Card } from '../src/main/umtgTypes';
+import { Deck, DeckWithCards, Card, Dict } from '../src/main/umtgTypes';
 
 let sandbox: SinonSandbox;
 
 let fakeDeck1 = { name: 'deck1', filename: 'deck1.txt' };
+let fakeCard: Card = {
+    id: 'ultra-id',
+    name: 'Ultra Lord',
+};
 
 describe('model.js', function() {
     beforeEach(function(done) {
@@ -21,17 +25,17 @@ describe('model.js', function() {
             return res;
         });
         sandbox.stub(DeckManager, 'getCardsOfDeck').callsFake(() => {
-            let fakeCard: Card = {
-                id: 'ultra-id',
-                name: 'Ultra Lord',
-            };
+            let cardAmount: Dict<number> = {};
+            cardAmount[fakeCard.id] = 1;
             let res: DeckWithCards = {
                 deck: fakeDeck1,
                 cards: [fakeCard],
-                sideboard: []
+                sideboard: [],
+                cardAmount: cardAmount,
             };
             return Promise.resolve(res);
         });
+        sandbox.stub(DeckManager, 'writeDeckToDisk').callsFake(() => null);
         Model.init(':memory:')
         .then(done)
         .catch(console.error);
@@ -59,6 +63,15 @@ describe('model.js', function() {
             expect(selectedDeck!.cards[0].amount).to.be.equal(0);
             done();
         });
+    });
+
+    it('can add a card to selected deck', () => {
+        Model.addCardToSelectedDeck({ name: 'AddCardTest', id: 'AddCardTest' });
+        let selectedDeck: DeckWithCards = Model.getDecksPage().selectedDeck!;
+        // TODO: handle card with same name
+        expect(selectedDeck.cards.length).to.be.equal(2);
+        expect(selectedDeck.cards[1].name).to.be.equal('AddCardTest');
+        expect(selectedDeck.cardAmount[selectedDeck.cards[1].id]).to.be.equal(1);
     });
 
 

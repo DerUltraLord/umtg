@@ -13,7 +13,7 @@ export function matchRegexGroup(regex: RegExp, param?: any) {
     return exports.prop(exports.matchRegex(regex, param), 'groups');
 }
 
-export function readFile(filename: string) {
+export function readFile(filename: string): Promise<string> {
     return new Promise((success, failure) => {
         fs.readFile(filename, 'ascii', function(err, data) {
             if (err) {

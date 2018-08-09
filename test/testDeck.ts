@@ -76,7 +76,8 @@ describe('Deck Management Module', () => {
         let myDeck: DeckWithCards = {
             deck: testDeck,
             cards: [],
-            sideboard: []
+            sideboard: [],
+            cardAmount: {},
         };
 
         let myCard: Card = {
@@ -84,9 +85,22 @@ describe('Deck Management Module', () => {
             id: 'UltraId'
         };
 
+        let otherCard: Card = {
+            name: 'OtherCard',
+            id: 'OtherCard'
+        };
+
         addCardToDeck(myDeck, myCard);
         expect(myDeck.cards.length).to.equal(1);
+        expect(myDeck.cardAmount[myCard.id]).to.be.equal(1);
+        addCardToDeck(myDeck, myCard);
+        expect(myDeck.cards.length).to.equal(1);
+        expect(myDeck.cardAmount[myCard.id]).to.be.equal(2);
+        addCardToDeck(myDeck, otherCard);
+        expect(myDeck.cards.length).to.equal(2);
+        expect(myDeck.cardAmount[otherCard.id]).to.be.equal(1);
 
     });
+
 
 });
