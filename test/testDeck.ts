@@ -10,6 +10,11 @@ import * as db from '../src/main/db';
 
 let mySandbox: SinonSandbox;
 
+let testDeck: Deck = {
+    filename: 'foo.txt',
+    name: 'foo',
+};
+
 describe('Deck Management Module', () => {
 
     before(() => {
@@ -69,6 +74,7 @@ describe('Deck Management Module', () => {
 
     it('add card to deck', () => {
         let myDeck: DeckWithCards = {
+            deck: testDeck,
             cards: [],
             sideboard: []
         };

@@ -8,10 +8,10 @@
     
         <div class="decksPage">
             <div class="scrollable">
-                <DeckList @deckSelected=deckSelected :decks=state.decks :selectedDeck=state.selectedDeck></DeckList>
+                <DeckList @deckSelected=deckSelected :decks=state.pages.decks.decks :selectedDeck=state.selectedDeck></DeckList>
             </div>
             <div class="scrollable">
-                <CardList @cardClicked="cardClicked" :cards=state.pages.decks.cards :settings=state.settings :selectedCard=state.pages.decks.selectedCard></CardList>
+                <CardList @cardClicked="cardClicked" :cards=state.pages.decks.selectedDeck.cards :settings=state.settings :selectedCard=state.pages.decks.selectedCard></CardList>
                 <Loader :loading=loading></Loader>
             </div>
         </div>
@@ -31,7 +31,7 @@ export default {
         };
     },
     created: function () {
-        if (Object.keys(this.state.pages.decks.cards).length == 0) {
+        if (Object.keys(this.state.pages.decks.selectedDeck.cards).length == 0) {
             this.showCardsOfDeck(this.state.selectedDeck);
         }
 
@@ -40,15 +40,13 @@ export default {
         showCardsOfDeck(deck) {
             this.loading = true;
             this.state.selectedDeck = deck;
-            Model.updateDeckCards(this.state.selectedDeck)
+            Model.selectDeck(this.state.selectedDeck)
                 .then(() => this.loading = false)
                 .catch(console.error);
 
         },
         deckSelected(deck) {
-            if (this.state.selectedDeck != deck) {
-                this.showCardsOfDeck(deck);
-            }
+            Model.selectDeck(deck);
         },
         cardClicked(card) {
             this.state.pages.decks.selectedCard = card;

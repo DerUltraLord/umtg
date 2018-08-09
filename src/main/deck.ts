@@ -1,10 +1,11 @@
-import { readdirSync } from 'fs';
+import { writeFile, readdirSync } from 'fs';
 import { Card, Deck, Decklist, DecklistCard, DeckWithCards } from './umtgTypes';
 import { readFile, matchRegex } from './base';
 import { cardExistsByName, getCardByName, cardAdd } from './db';
 import * as scry from './scryfall';
 
 let DECKS_PATH = process.env.HOME + '/.umtg/decks';
+
 
 export function getDecks(): Deck[] {
     let result: Deck[] = readdirSync(DECKS_PATH).map((filename: string) => {
@@ -25,6 +26,7 @@ export async function getCardsOfDeck(deck: Deck): Promise<DeckWithCards> {
     let sideboard = await getCardObjectsFromCardNames(deckResult.sideboard);
 
     let result: DeckWithCards = {
+        deck: deck,
         cards: cards,
         sideboard: sideboard
     };
@@ -106,4 +108,13 @@ export function lineMatchSideboard(line: String) {
 
 export function addCardToDeck(deck: DeckWithCards, card: Card): void {
     deck.cards.push(card);
+    // TODO: sideboard
+}
+
+export function writeDeckToDisk(deck: DeckWithCards) {
+    let data = '';
+    deck.cards.forEach((card) => {
+        data += card.amount + " " + card.name + "\n";
+    });
+    writeFile(DECKS_PATH + '/' + deck.deck.filename, data, 'ascii', (err) => console.error(err));
 }

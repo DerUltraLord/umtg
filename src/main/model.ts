@@ -1,9 +1,47 @@
 import * as Settings from './settings';
 import * as Scryfall from './scryfall';
 import * as Db from './db';
-import { getDecks, getCardsOfDeck } from './deck';
+import * as DeckManager from './deck';
 import * as Base from './base';
-import { MagicSet, Dict, Card, Deck } from './umtgTypes';
+import { MagicSet, Dict, Card, Deck, UmtgState, DeckWithCards, DecksPage } from './umtgTypes';
+
+let state: UmtgState = {
+    currentPage: 'search',
+    pages: {
+        search: {
+            name: 'Seach',
+            cards: {},
+            selectedCard: null
+        },
+        collection: {
+            name: 'Collection',
+            cards: {},
+            selectedCard: null
+        },
+        decks: {
+            name: 'Decks',
+            selectedDeck: null,
+            selectedCard: null,
+            decks: [],
+        },
+        settings: {
+            name: 'Settings'
+        },
+        about: {
+            name: 'About'
+        }
+    },
+    settings: null,
+    sets: {},
+    selectedSet: null,
+    events: null
+};
+
+export { state };
+
+export function getDecksPage(): DecksPage {
+    return state.pages.decks;
+}
 
 // Settings
 export function setGridActive(status: boolean) {
@@ -167,20 +205,9 @@ export function getPercentageOfSet(set: MagicSet): Promise<number> {
 }
 
 // Decks
-export function updateDecks() {
-    exports.state.decks = getDecks();
-    if (exports.state.decks.length > 0) {
-        getCardsOfDeck(exports.state.decks[0])
-            .then((deck) => {
-                exports.state.pages.decks.cards = deck.cards;
-            });
-    }
-}
 
 export function updateDeckCards(deck: Deck) {
     // TODO: sideboard
-    return getCardsOfDeck(deck)
-        .then((deck) => exports.state.pages.decks.cards = updateCards(deck.cards));
 }
 
 export function createDeck(name: string) {
@@ -188,53 +215,43 @@ export function createDeck(name: string) {
     // exports.updateDecks();
 }
 
-export function addCardToDeck(deck: Deck, card: Card) {
-    // Deck.addCardToDeck(deck, card)
-        //  .then((deck) => exports.state.pages.decks.cards = deck.cards);
+export function selectDeck(deck: Deck): Promise<any> {
+    let alreadySelectedDeck = state.pages.decks.selectedDeck;
+    if (alreadySelectedDeck !== null && deck.filename === alreadySelectedDeck.deck.filename) {
+        return Promise.resolve();
+    }
+    let selectedDeck: DeckWithCards = {
+        deck: deck,
+        cards: [],
+        sideboard: [],
+    };
+    state.pages.decks.selectedDeck = selectedDeck;
+    return DeckManager.getCardsOfDeck(deck)
+        .then((deck) => state.pages.decks.selectedDeck!.cards = deck.cards.map((card) => {
+            card.amount = 0;
+            Db.getAmountOfCardById(card.id, (amount: number) => card.amount);
+            return card;
+        }) as Card[]);
+}
+
+export function addCardToSelectedDeck(card: Card) {
+    let deck = exports.state.pages.decks.selectedDeck;
+    if (deck !== null) {
+        DeckManager.addCardToDeck(deck, card);
+        DeckManager.writeDeckToDisk(deck);
+    }
 }
 
 // State
 export async function init(database: string) {
     Settings.init();
     Db.init(database);
-    exports.state.settings = Settings.data;
-    await exports.updateDecks();
-    if (exports.state.decks.length > 0) {
-        exports.state.selectedDeck = exports.state.decks[0];
+    state.settings = Settings.data;
+    state.pages.decks.decks = DeckManager.getDecks();
+    if (state.pages.decks.decks.length > 0) {
+        selectDeck(state.pages.decks.decks[0])
+    //    .then(null)
+        .catch(console.error);
     }
 }
 
-let state = {
-    currentPage: 'search',
-    pages: {
-        search: {
-            name: 'Seach',
-            cards: {},
-            selectedCard: null
-        },
-        collection: {
-            name: 'Collection',
-            cards: {},
-            selectedCard: null
-        },
-        decks: {
-            name: 'Decks',
-            cards: {},
-            selectedCard: null
-        },
-        settings: {
-            name: 'Settings'
-        },
-        about: {
-            name: 'About'
-        }
-    },
-    settings: null,
-    sets: {},
-    decks: [],
-    selectedDeck: null,
-    selectedSet: null,
-    events: null
-};
-
-export { state };
