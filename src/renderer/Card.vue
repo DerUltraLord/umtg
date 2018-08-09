@@ -21,7 +21,7 @@
         </div>
 
         <div v-else>
-            <div class="container">
+            <div class="container cardImage">
                 <div class="row">
                     <div class="col">
                         <img v-bind:src="getImageUri()" width="250">
@@ -75,3 +75,10 @@ export default {
     },
 };
 </script>
+
+<style scoped>
+.cardImage{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+</style>

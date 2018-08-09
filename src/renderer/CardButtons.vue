@@ -1,7 +1,7 @@
 <template>
     <div class="btn-group btn-group-sm">
         <button id="removeButton" @click="removeCardFromCollection" class="btn btn-default delete" role="group"></button>
-        <label class="btn btn-default" role="group">{{ card.ownedAmount }}</label>
+        <span class="label label-default bg-light" role="group">{{ card.ownedAmount }}</span>
         <button id="addButton" @click="addCardToCollection" class="btn btn-default add" role="group"></button>
     </div>
 </template>
@@ -28,6 +28,11 @@ export default {
 }
 .add:before {
     content: "\271A";
+}
+span {
+    padding-right: 10px;
+    padding-left: 10px;
+    padding-top: 2px;
 }
 </style>
 
