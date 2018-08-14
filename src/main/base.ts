@@ -1,15 +1,7 @@
 import * as https from 'https';
 
-export function prop(obj: any, name: string) {
-    return obj ? obj[name] : null;
-}
-
 export function matchRegex(regex: RegExp, param?: any) {
     return regex.exec(param);
-}
-
-export function matchRegexGroup(regex: RegExp, param?: any) {
-    return exports.prop(exports.matchRegex(regex, param), 'groups');
 }
 
 export function _simpleCallbackFunctionToPromise(func: () => void, args: any) {

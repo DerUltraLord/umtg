@@ -28,14 +28,6 @@ describe('Test base javascript lib', () => {
         }
     });
 
-    it('can match regex with named groups', () => {
-        let res = base.matchRegexGroup(/\s(?<first>.*)\s(?<second>.*)\s/, ' hey dude ');
-        expect(res.first).to.be.equal('hey');
-        expect(res.second).to.be.equal('dude');
-
-    });
-
-
     it('can make a json request', () => {
         return base.getJSON('some url');
     });
