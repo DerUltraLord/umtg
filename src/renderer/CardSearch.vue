@@ -29,6 +29,7 @@ export default {
     methods: {
         handleSubmit() {
             let filter = Model.getScryfallSearchFilter(this.$data.name, this.$data.searchType, this.$data.text, this.$data.edition);
+            console.log(this.$data.edition);
             this.$emit('searchCard', filter);
         }
     }

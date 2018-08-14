@@ -66,14 +66,19 @@ let updateCards = (cards: Card[]) => {
 };
 
 export function searchScryfallByFilter(filter: string) {
+    console.log(filter);
     return Scryfall.searchByFilter(filter)
-        .then((response: any) => exports.state.pages.search.cards = updateCards(response.data));
+    .then((response: any) => { 
+        if (response.data) {
+            exports.state.pages.search.cards = updateCards(response.data);
+        }
+    });
     // TODO: has more??
     // TODO: empty response
 }
 
-export function getScryfallSearchFilter(name: string, type?: string) {
-    return Scryfall.getSearchFilter(name, type);
+export function getScryfallSearchFilter(name: string, type?: string, text?: string, edition?: string) {
+    return Scryfall.getSearchFilter(name, type, text, edition);
 }
 
 // Collection
