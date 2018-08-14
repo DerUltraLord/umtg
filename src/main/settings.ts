@@ -4,6 +4,7 @@ import { Settings } from './umtgTypes';
 let settingsPath = process.env.HOME + '/.umtg';
 let decksPath = settingsPath + '/decks';
 let settingsFile = settingsPath + '/settings.json';
+let PATH_DB = settingsPath;
 
 let data: Settings = {
     setTypes: {
@@ -30,7 +31,7 @@ let data: Settings = {
     isGridActive: false
 };
 
-export { data };
+export { data , PATH_DB };
 
 let _writeSettingsFile = (settings: Settings) =>
     fs.writeFileSync(settingsFile, JSON.stringify(settings, null, 4));

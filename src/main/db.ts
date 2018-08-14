@@ -1,9 +1,13 @@
 import { Card, MagicSet } from './umtgTypes';
+import { PATH_DB } from './settings';
 import * as sqlite3 from 'sqlite3';
 
 export let db: sqlite3.Database;
 
 export function init(dbname: string) {
+    if (!dbname.includes('memory')) {
+        dbname = PATH_DB + '/' + dbname;
+    }
     db = new sqlite3.Database(dbname);
     db.serialize(function() {
         db.run('CREATE TABLE IF NOT EXISTS Card (id TEXT PRIMARY KEY, jsonString TEXT, amount INTEGER, foilAmount INTEGER)');

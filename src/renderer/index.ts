@@ -6,7 +6,7 @@ import App from './App.vue';
 
 import * as Model from '../main/model';
 console.log('Load model ...');
-let initialization = Model.init('test.db');
+let initialization = Model.init('umtg.db');
 console.log('Model loaded');
 
 let Events = new Vue();
