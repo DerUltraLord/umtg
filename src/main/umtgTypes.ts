@@ -1,11 +1,13 @@
 export interface Card {
     id: string;
     name: string;
+    ownedAmount?: number;
     [others: string]: any;
 }
 
 export interface MagicSet {
     code: string;
+    collectionAmount?: number;
     [others: string]: any;
 }
 
@@ -52,6 +54,7 @@ export interface SearchPage extends Page {
 export interface CollectionPage extends Page{
     cards: Dict<Card>;
     selectedCard: Card | null;
+    sets: Dict<MagicSet>;
 }
 
 export interface DecksPage extends Page {
@@ -73,7 +76,6 @@ export interface UmtgState {
     currentPage: string;
     pages: Pages;
     settings: any;
-    sets: Dict<MagicSet>;
     selectedSet: MagicSet | null;
     events: any;
 }

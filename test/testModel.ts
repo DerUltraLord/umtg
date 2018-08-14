@@ -4,6 +4,7 @@ import { createSandbox, SinonSandbox } from 'sinon';
 import * as Model from '../src/main/model';
 import * as Settings from '../src/main/settings';
 import * as DeckManager from '../src/main/deck';
+import * as Db from '../src/main/db';
 import { Deck, DeckWithCards, Card, Dict } from '../src/main/umtgTypes';
 
 let sandbox: SinonSandbox;
@@ -72,6 +73,25 @@ describe('model.js', function() {
         expect(selectedDeck.cards.length).to.be.equal(2);
         expect(selectedDeck.cards[1].name).to.be.equal('AddCardTest');
         expect(selectedDeck.cardAmount[selectedDeck.cards[1].id]).to.be.equal(1);
+    });
+
+    it('can add a card to the collection', (done) => {
+        Model.addCardToCollection(fakeCard)
+        .then(() => {
+            expect(Model.state.pages.collection.cards[fakeCard.id].ownedAmount).to.be.equal(1);
+            done();
+        });
+    });
+
+    it('can remove a card from the collection', (done) => {
+        Db.db.serialize(() => {
+            Model.addCardToCollection(fakeCard)
+            .then(() => Model.removeCardFromCollection(fakeCard))
+            .then(() => {
+                expect(Model.state.pages.collection.cards[fakeCard.id].ownedAmount).to.be.equal(0);
+                done();
+            });
+        });
     });
 
 

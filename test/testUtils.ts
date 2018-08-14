@@ -9,7 +9,7 @@ export function initSandbox() {
         sandbox = sinon.createSandbox();
         exports.sandbox = sandbox;
     }
-};
+}
 
 let mock = function(module: any, func: any, mockedFunc: any) {
     sandbox.stub(module, func).callsFake(mockedFunc);

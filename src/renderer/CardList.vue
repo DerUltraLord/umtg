@@ -8,7 +8,7 @@
 import Card from './Card.vue';
 
 export default {
-    props: ['cards', 'settings', 'selectedCard'],
+    props: ['cards','settings', 'selectedCard'],
     methods: {
     },
     components: {

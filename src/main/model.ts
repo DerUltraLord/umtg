@@ -16,7 +16,8 @@ let state: UmtgState = {
         collection: {
             name: 'Collection',
             cards: {},
-            selectedCard: null
+            selectedCard: null,
+            sets: {},
         },
         decks: {
             name: 'Decks',
@@ -32,7 +33,6 @@ let state: UmtgState = {
         }
     },
     settings: null,
-    sets: {},
     selectedSet: null,
     events: null
 };
@@ -107,7 +107,7 @@ export function updateSets() {
     return getSets()
         .then((sets) => {
             let filteredSets = sets.filter((set) => exports.state.settings.setTypes[set.set_type]);
-            exports.state.sets = filteredSets.reduce((obj, set) => {
+            exports.state.pages.collection.sets = filteredSets.reduce((obj, set) => {
                 set.ownedAmount = null;
                 obj[set.code] = set;
                 obj[set.code].ownedCards = 0;
@@ -171,23 +171,29 @@ export function updateCardsBySet(set: MagicSet) {
 }
 
 let updateCardAmountOfCard = (card: Card, amount: number) => {
-    card = exports.state.pages.collection.cards[card.id];
-    card.ownedAmount = amount;
+    state.pages.collection.cards[card.id] = card;
+    state.pages.collection.cards[card.id].ownedAmount = amount;
     Db.getOwnedCardAmountBySetCode(card.set)
-        .then((amount) => exports.state.sets[card.set].ownedCards = amount);
+    .then((amount) => {
+        if (state.pages.collection. sets[card.set]) {
+            state.pages.collection.sets[card.set].collectionAmount = amount;
+        }
+    });
 };
 
-export function removeCardFromCollection(card: Card) {
+export function removeCardFromCollection(card: Card): Promise<void> {
     return Db.cardExistsById(card.id)
         .then((exists) => {
             if (exists) {
-                Db.cardAdjustAmount(card, -1)
+                return Db.cardAdjustAmount(card, -1)
                     .then((amount) => updateCardAmountOfCard(card, amount));
+            } else {
+                throw Error(`Card ${card.name} does not exist`);
             }
         });
 }
 
-export function addCardToCollection(card: Card) {
+export function addCardToCollection(card: Card): Promise<void> {
     return Db.cardExistsById(card.id)
         .then((exists) => {
             if (exists) {
