@@ -24,7 +24,7 @@
             <div class="container cardImage">
                 <div class="row">
                     <div class="col">
-                        <img v-bind:src="getImageUri()" width="250">
+                        <img v-bind:src="getImageUri()" width="250px" height="348px">
                     </div>
                 </div>
                 <div class="row mt10">
