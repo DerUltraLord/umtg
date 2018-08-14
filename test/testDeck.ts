@@ -5,7 +5,6 @@ import * as fs from 'fs';
 import * as testUtils from './testUtils';
 import { getDecks, getCardsOfDeck, lineMatchCard, lineMatchSideboard, addCardToDeck } from '../src/main/deck';
 import { Deck, Card, DecklistCard, DeckWithCards } from '../src/main/umtgTypes';
-import * as base from '../src/main/base';
 import * as db from '../src/main/db';
 
 let mySandbox: SinonSandbox;
@@ -20,7 +19,7 @@ describe('Deck Management Module', () => {
     before(() => {
         mySandbox = createSandbox();
         mySandbox.stub(fs, 'readdirSync').callsFake(() => ['deck1.txt', 'deck2.txt']);
-        mySandbox.stub(base, 'readFile').callsFake(() => Promise.resolve('4 Ichor Wellspring'));
+        mySandbox.stub(fs, 'readFileSync').callsFake(() => '4 Ichor Wellspring');
         mySandbox.stub(db, 'getCardByName').callsFake((cardname: string) => {
             let result: Card = {
                 id: cardname,

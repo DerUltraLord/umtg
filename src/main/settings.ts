@@ -1,4 +1,3 @@
-import * as base from './base';
 import * as fs from 'fs';
 import { Settings } from './umtgTypes';
 
@@ -34,7 +33,7 @@ let data: Settings = {
 export { data };
 
 let _writeSettingsFile = (settings: Settings) =>
-    base.writeFileSync(settingsFile, JSON.stringify(settings, null, 4));
+    fs.writeFileSync(settingsFile, JSON.stringify(settings, null, 4));
 
 export function init() {
 

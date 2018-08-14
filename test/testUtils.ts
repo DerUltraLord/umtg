@@ -4,7 +4,7 @@ import * as fs from 'fs';
 
 let sandbox: sinon.SinonSandbox;
 
-let initSandbox = () => {
+export function initSandbox() {
     if (!sandbox) {
         sandbox = sinon.createSandbox();
         exports.sandbox = sandbox;
@@ -12,7 +12,6 @@ let initSandbox = () => {
 };
 
 let mock = function(module: any, func: any, mockedFunc: any) {
-    initSandbox();
     sandbox.stub(module, func).callsFake(mockedFunc);
 };
 
@@ -29,14 +28,12 @@ export function promiseShouldFail(p: Promise<any>) {
 }
 
 export function mockFileRead(result: any) {
-    initSandbox();
     sandbox.stub(fs, 'readFile').callsFake((path, encoding, callback) => {
         callback(null, result);
     });
 }
 
 export function mockReadDir(result: any) {
-    initSandbox();
     sandbox.stub(fs, 'readdir').callsFake((path, callback) => {
         callback(null, result);
     });

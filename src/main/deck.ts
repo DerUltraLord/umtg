@@ -1,6 +1,6 @@
-import { writeFile, readdirSync } from 'fs';
+import { writeFile, readFileSync, readdirSync } from 'fs';
 import { Card, Deck, Decklist, DecklistCard, DeckWithCards, Dict } from './umtgTypes';
-import { readFile, matchRegex } from './base';
+import { matchRegex } from './base';
 import { cardExistsByName, getCardByName, cardAdd } from './db';
 import * as scry from './scryfall';
 
@@ -19,7 +19,7 @@ export function getDecks(): Deck[] {
 }
 
 export async function getCardsOfDeck(deck: Deck): Promise<DeckWithCards> {
-    let contents = await readFile(DECKS_PATH + '/' + deck.filename);
+    let contents = readFileSync(DECKS_PATH + '/' + deck.filename).toString();
     let deckResult = traverseCards(contents);
 
     let cards = await getCardObjectsFromCardNames(deckResult.cards);

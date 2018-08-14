@@ -1,4 +1,3 @@
-import * as fs from 'fs';
 import * as https from 'https';
 
 export function prop(obj: any, name: string) {
@@ -11,52 +10,6 @@ export function matchRegex(regex: RegExp, param?: any) {
 
 export function matchRegexGroup(regex: RegExp, param?: any) {
     return exports.prop(exports.matchRegex(regex, param), 'groups');
-}
-
-export function readFile(filename: string): Promise<string> {
-    return new Promise((success, failure) => {
-        fs.readFile(filename, 'ascii', function(err, data) {
-            if (err) {
-                failure(err);
-            } else {
-                success(data);
-            }
-        });
-    });
-}
-
-export function writeFile(filename: string, contents: string) {
-    return new Promise((success, failure) => {
-        fs.writeFile(filename, contents, (err) => {
-            if (err) {
-                failure(err);
-            } else {
-                success();
-            }
-
-        });
-    });
-
-}
-
-export function writeFileSync(filename: string, contents: string) {
-    fs.writeFileSync(filename, contents);
-}
-
-export function ls(directory: string) {
-    return exports._simpleCallbackFunctionToPromise(fs.readdir, [directory]);
-}
-
-export function mkdir(directory: string) {
-    return exports._simpleCallbackFunctionToPromise(fs.mkdir, [directory]);
-}
-
-export function isdir(path: string) {
-    return fs.lstatSync(path).isDirectory();
-}
-
-export function isfile(path: string) {
-    return fs.lstatSync(path).isFile();
 }
 
 export function _simpleCallbackFunctionToPromise(func: () => void, args: any) {

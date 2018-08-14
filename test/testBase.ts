@@ -6,6 +6,7 @@ import * as testUtils from './testUtils';
 describe('Test base javascript lib', () => {
 
     before(() => {
+        testUtils.initSandbox();
         testUtils.mockFileRead('myTestContent');
         testUtils.mockReadDir(['test1.txt', 'test2.txt']);
         testUtils.mockGetJson({ name: 'dude' });
@@ -34,12 +35,6 @@ describe('Test base javascript lib', () => {
 
     });
 
-    it('can read file contents', () => {
-        base.readFile('somePath')
-        .then((res) => {
-            expect(res).to.be.equal('myTestContent');
-        });
-    });
 
     it('can make a json request', () => {
         return base.getJSON('some url');
