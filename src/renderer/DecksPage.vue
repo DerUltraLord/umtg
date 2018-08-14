@@ -40,7 +40,11 @@ export default {
         showCardsOfDeck(deck) {
         },
         deckSelected(deck) {
-            Model.selectDeck(deck);
+            this.loading = true;
+            Model.selectDeck(deck)
+                .then((cards) => {
+                    this.loading = false;
+                });
         },
         cardClicked(card) {
             this.state.pages.decks.selectedCard = card;
