@@ -5,7 +5,7 @@
                 <img class="" v-bind:src=set.icon_svg_uri>
             </div>
             <div class="col-10">
-                <span class="badge badge-default">{{ set.name }}</span>
+                <span v-bind:class="[set.downloaded ? 'badge badge-default' : 'badge badge-danger']">{{ set.name }}</span>
             </div>
         </div>
         <div class="row">

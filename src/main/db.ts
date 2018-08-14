@@ -153,9 +153,17 @@ export function getSets(types?: string[]): Promise<MagicSet[]> {
     return exports._promiseStatementWithDataTransform(stmt, (sets: MagicSet[]) => sets.map((set) => JSON.parse(set.jsonString)));
 }
 
+
 export function getCardsOfSet(set: MagicSet): Promise<Card[]> {
     let stmt = 'SELECT * from [Card] WHERE json_extract([Card].jsonString, \'$.set\') = \'' + set.code + '\'';
     return exports._promiseStatementWithDataTransform(stmt, (cards: Card[]) => cards.map((card) => JSON.parse(card.jsonString)));
+}
+
+export function isSetDownloaded(set: MagicSet): Promise<boolean> {
+    return getCardsOfSet(set)
+        .then((cards: Card[]) => {
+            return cards.length > 0;
+        });
 }
 
 export function _promiseStatement(stmt: string): Promise<any> {

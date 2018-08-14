@@ -8,6 +8,7 @@ export interface Card {
 export interface MagicSet {
     code: string;
     collectionAmount?: number;
+    downloaded?: boolean;
     [others: string]: any;
 }
 

@@ -124,6 +124,23 @@ describe('Test Database', () => {
         });
     });
 
+    it ('check cards of set are downloaded', (done) => {
+        Db.db.serialize(() => {
+            Db.isSetDownloaded(testSet)
+                .then((isDownloaded: boolean) => {
+                    expect(isDownloaded).to.be.false;
+                })
+                .then(() => {
+                    Db.cardAdd(testCard, 0)
+                    return Db.isSetDownloaded(testSet);
+                })
+                .then((isDownloaded: boolean) => {
+                    expect(isDownloaded).to.be.true;
+                    done();
+                });
+        });
+    });
+
     it('cant adjust the card amount if card is not in db', () => {
         testUtils.promiseShouldFail(Db.cardAdjustAmount(testCard, 1));
     });

@@ -116,8 +116,11 @@ export function updateSets(): Promise<void> {
                 set.ownedAmount = null;
                 obj[set.code] = set;
                 obj[set.code].ownedCards = 0;
-                Db.getOwnedCardAmountBySetCode(set.code).
-                    then((amount) => obj[set.code].ownedCards = amount);
+                obj[set.code].downloaded = false;
+                Db.getOwnedCardAmountBySetCode(set.code)
+                    .then((amount) => obj[set.code].ownedCards = amount);
+                Db.isSetDownloaded(set)
+                    .then((isDownloaded) => obj[set.code].downloaded = isDownloaded);
                 return obj;
             }, initialValue);
         });
@@ -139,23 +142,23 @@ let storeSetCardsFromScryfallInDb = (uri: string, success: () => void) => {
 
 export function getCardsOfSet(set: MagicSet): Promise<Card[]> {
     return new Promise((success, failure) => {
-
-        Db.getCardsOfSet(set)
-            .then((cards: Card[]) => {
-
-                if (cards.length < set.card_count) {
-                    storeSetCardsFromScryfallInDb(set.search_uri, () => {
-                        Db.db.serialize(() => {
+        Db.isSetDownloaded(set)
+            .then((isDownloaded) => {
+                if (isDownloaded) {
+                    Db.getCardsOfSet(set)
+                        .then(success);
+                } else {
+                    Db.db.serialize(() => {
+                        storeSetCardsFromScryfallInDb(set.search_uri, () => {
                             Db.getCardsOfSet(set)
-                                .then(success)
-                                .catch(failure);
+                            .then((cards) => {
+                                state.pages.collection.sets[set.code].downloaded = true;
+                                success(cards);
+                            });
                         });
                     });
-                } else {
-                    success(cards);
                 }
-            })
-            .catch(failure);
+            });
     });
 }
 
