@@ -16,7 +16,7 @@ let testSet: MagicSet = {
     card_count: 10
 };
 
-describe('Test Database', function() {
+describe('Test Database', () => {
 
     beforeEach(() => {
         Db.init(':memory:');

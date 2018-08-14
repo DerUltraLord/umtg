@@ -13,6 +13,6 @@
     "no-floating-promises": false,
     "strict-type-predicates": true,
     "await-promise": true,
-    "typedef": [false, "call-signature"]
+    "typedef": [true, "call-signature"]
   }
 }

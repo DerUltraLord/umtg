@@ -36,7 +36,7 @@ export { data , PATH_DB };
 let _writeSettingsFile = (settings: Settings) =>
     fs.writeFileSync(settingsFile, JSON.stringify(settings, null, 4));
 
-export function init() {
+export function init(): void {
 
     if (!fs.existsSync(settingsPath)) {
         fs.mkdirSync(settingsPath);
@@ -55,12 +55,12 @@ export function init() {
     exports.data = settingsJson;
 }
 
-export function setGridActive(status: boolean) {
+export function setGridActive(status: boolean): void {
     exports.data.isGridActive = status;
     _writeSettingsFile(exports.data);
 }
 
-export function setSetTypeVisible(set: string, status: boolean) {
+export function setSetTypeVisible(set: string, status: boolean): void {
     exports.data.setTypes[set] = status;
     _writeSettingsFile(exports.data);
 }

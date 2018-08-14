@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import * as scry from '../src/main/scryfall';
 import * as testUtils from './testUtils';
 
-describe('scryfall.js', function() {
+describe('scryfall.js', () => {
 
     before(() => {
         testUtils.mockGetJson({ data: [{ name: 'Ichor Wellspring' }] });
@@ -22,7 +22,7 @@ describe('scryfall.js', function() {
         return scry.search('e:xln');
     });
 
-    it('transform search fields to scryfall search', function() {
+    it('transform search fields to scryfall search', () => {
         let res = scry.getSearchFilter('Ichor');
         expect(res['name']).to.be.equal('Ichor');
 
@@ -58,7 +58,7 @@ describe('scryfall.js', function() {
 
     });
 
-    it('build a search string for from object', function() {
+    it('build a search string for from object', () => {
         let filter = {
             'name': 'foo',
             't:': 'enchantment creature',

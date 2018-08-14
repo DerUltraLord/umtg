@@ -44,11 +44,11 @@ export function getDecksPage(): DecksPage {
 }
 
 // Settings
-export function setGridActive(status: boolean) {
+export function setGridActive(status: boolean): void {
     return Settings.setGridActive(status);
 }
 
-export function setSetTypeVisible(set: string, status: boolean) {
+export function setSetTypeVisible(set: string, status: boolean): void {
     return Settings.setSetTypeVisible(set, status);
 }
 
@@ -65,7 +65,7 @@ let updateCards = (cards: Card[]) => {
     }, initalValue);
 };
 
-export function searchScryfallByFilter(filter: string) {
+export function searchScryfallByFilter(filter: string): void {
     console.log(filter);
     return Scryfall.searchByFilter(filter)
     .then((response: any) => { 
@@ -77,7 +77,7 @@ export function searchScryfallByFilter(filter: string) {
     // TODO: empty response
 }
 
-export function getScryfallSearchFilter(name: string, type?: string, text?: string, edition?: string) {
+export function getScryfallSearchFilter(name: string, type?: string, text?: string, edition?: string): any {
     return Scryfall.getSearchFilter(name, type, text, edition);
 }
 
@@ -107,7 +107,7 @@ function getSets(): Promise<MagicSet[]> {
     });
 }
 
-export function updateSets() {
+export function updateSets(): Promise<void> {
     let initialValue: Dict<MagicSet> = {};
     return getSets()
         .then((sets) => {
@@ -159,7 +159,7 @@ export function getCardsOfSet(set: MagicSet): Promise<Card[]> {
     });
 }
 
-export function updateCardsBySet(set: MagicSet) {
+export function updateCardsBySet(set: MagicSet): Promise<void> {
     return exports.getCardsOfSet(set)
         .then((cards: Card[]) => {
             let initalValue: Dict<Card> = {};
@@ -217,11 +217,11 @@ export function getPercentageOfSet(set: MagicSet): Promise<number> {
 
 // Decks
 
-export function updateDeckCards(deck: Deck) {
+export function updateDeckCards(deck: Deck): void {
     // TODO: sideboard
 }
 
-export function createDeck(name: string) {
+export function createDeck(name: string): void {
     // Deck.createDeck(name);
     // exports.updateDecks();
 }
@@ -246,7 +246,7 @@ export function selectDeck(deck: Deck): Promise<any> {
         }) as Card[]);
 }
 
-export function addCardToSelectedDeck(card: Card) {
+export function addCardToSelectedDeck(card: Card): void {
     let deck = exports.state.pages.decks.selectedDeck;
     if (deck !== null) {
         DeckManager.addCardToDeck(deck, card);
@@ -255,15 +255,14 @@ export function addCardToSelectedDeck(card: Card) {
 }
 
 // State
-export async function init(database: string) {
+export function init(database: string): Promise<void> {
     Settings.init();
     Db.init(database);
     state.settings = Settings.data;
     state.pages.decks.decks = DeckManager.getDecks();
     if (state.pages.decks.decks.length > 0) {
-        selectDeck(state.pages.decks.decks[0])
-    //    .then(null)
-        .catch(console.error);
+        return selectDeck(state.pages.decks.decks[0]);
     }
+    return Promise.resolve();
 }
 

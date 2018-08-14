@@ -4,19 +4,19 @@ import * as sqlite3 from 'sqlite3';
 
 export let db: sqlite3.Database;
 
-export function init(dbname: string) {
+export function init(dbname: string): void {
     if (!dbname.includes('memory')) {
         dbname = PATH_DB + '/' + dbname;
     }
     db = new sqlite3.Database(dbname);
-    db.serialize(function() {
+    db.serialize(() => {
         db.run('CREATE TABLE IF NOT EXISTS Card (id TEXT PRIMARY KEY, jsonString TEXT, amount INTEGER, foilAmount INTEGER)');
         db.run('CREATE TABLE IF NOT EXISTS [Set] (id TEXT PRIMARY KEY, jsonString TEXT)');
     });
     exports.db = db;
 }
 
-let dbString = function(s: string) {
+let dbString = function(s: string): string {
     return s.replace('\'', '\'\'');
 };
 
@@ -121,24 +121,23 @@ export function cardAdjustAmount(card: Card, amount: number): Promise<number> {
 export function getAmountOfCardById(id: string, callback: (amount: number) => void): void {
     // TODO: foil
     //
-    function stmtFinished(err: string, res: any) {
+    let stmtFinished = (err: string, res: any) => {
         let result = 0;
         if (!err && res.length > 0) {
             result = res[0].amount;
         }
         callback(result);
-
-    }
+    };
 
     db.all('SELECT * FROM Card where id = \'' + id + '\'', stmtFinished);
 }
 
 export function getCardByName(name: string): Promise<Card> {
-    function transform(res: any) {
+    let transform = (res: any) => {
         if (res.length > 0) {
             return JSON.parse(res[0].jsonString);
         }
-    }
+    };
     return exports._promiseStatementWithDataTransform('SELECT * FROM Card where json_extract(Card.jsonString, \'$.name\') = \'' + dbString(name) + '\'',
         transform);
 }
@@ -161,7 +160,7 @@ export function getCardsOfSet(set: MagicSet): Promise<Card[]> {
 
 export function _promiseStatement(stmt: string): Promise<any> {
     let res = new Promise((resolve, reject) => {
-        function onFinished(err: string, dbResult: any) {
+        function onFinished(err: string, dbResult: any): void {
             if (err) {
                 reject(err);
             } else {

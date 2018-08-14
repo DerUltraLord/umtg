@@ -15,8 +15,8 @@ let fakeCard: Card = {
     name: 'Ultra Lord',
 };
 
-describe('model.js', function() {
-    beforeEach(function(done) {
+describe('model.js', () => {
+    beforeEach((done) => {
         sandbox = createSandbox();
         sandbox.stub(Settings, 'init').callsFake(() => {});
         sandbox.stub(DeckManager, 'getDecks').callsFake(() => {
@@ -38,8 +38,7 @@ describe('model.js', function() {
         });
         sandbox.stub(DeckManager, 'writeDeckToDisk').callsFake(() => null);
         Model.init(':memory:')
-        .then(done)
-        .catch(console.error);
+        .then(() => done());
     });
 
     afterEach(() => sandbox.restore());

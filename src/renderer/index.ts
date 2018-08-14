@@ -13,7 +13,7 @@ let Events = new Vue();
 
 Object.defineProperties(Vue.prototype, {
     Events: {
-        get: function() {
+        get: function(): any {
             return Events;
         }
     }

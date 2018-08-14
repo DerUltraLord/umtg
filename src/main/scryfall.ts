@@ -1,7 +1,7 @@
 import * as base from './base';
 import { Card, Dict } from './umtgTypes';
 
-export function scryfallGetSets() {
+export function scryfallGetSets() : any {
     return base.getJSON('https://api.scryfall.com/sets');
 }
 
@@ -15,7 +15,7 @@ export function search(searchText: string): Promise<string> {
     return base.getJSON('https://api.scryfall.com/cards/search?order=cmc&q=' + searchText);
 }
 
-export function buildSearchString(filter: any) {
+export function buildSearchString(filter: any): any {
     let res = filter['name'];
     for (let property in filter) {
         if (property !== 'name') {
@@ -29,7 +29,7 @@ export function buildSearchString(filter: any) {
     return res;
 }
 
-export function searchByFilter(filter: any) {
+export function searchByFilter(filter: any): any {
     let searchString = exports.buildSearchString(filter);
     return exports.search(searchString);
 }
@@ -45,7 +45,7 @@ let applyRegex = function(re: RegExp, a: string, b: string): [string, string] {
     return [a, b];
 };
 
-export function getSearchFilter(name: string, type?: string, text?: string, edition?: string) {
+export function getSearchFilter(name: string, type?: string, text?: string, edition?: string): Dict<string> {
     let res: Dict<string> = {};
     type = type || '';
     text = text || '';

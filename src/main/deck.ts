@@ -108,7 +108,7 @@ export function lineMatchCard(line: String): DecklistCard | null {
     return null;
 }
 
-export function lineMatchSideboard(line: String) {
+export function lineMatchSideboard(line: String): boolean {
     return matchRegex(/Sideboard:\s*/, line) ? true : false;
 }
 
@@ -121,7 +121,7 @@ export function addCardToDeck(deck: DeckWithCards, card: Card): void {
     // TODO: sideboard
 }
 
-export function writeDeckToDisk(deck: DeckWithCards) {
+export function writeDeckToDisk(deck: DeckWithCards): void {
     let data = '';
     deck.cards.forEach((card) => {
         data += card.amount + " " + card.name + "\n";
