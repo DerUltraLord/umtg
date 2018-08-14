@@ -129,10 +129,12 @@ describe('Test Database', function() {
     });
 
     it('can adjust the card amount if card is in db', (done) => {
-        Db.cardAdd(testCard, 2);
-        let p = Db.cardAdjustAmount(testCard, 1);
-        testUtils.assertPromiseResult(p, done, (res: number) => {
-            expect(res).to.be.equal(3);
+        Db.db.serialize(() => {
+            Db.cardAdd(testCard, 2);
+            let p = Db.cardAdjustAmount(testCard, 1);
+            testUtils.assertPromiseResult(p, done, (res: number) => {
+                expect(res).to.be.equal(3);
+            });
         });
     });
 
