@@ -1,39 +1,51 @@
 import { expect } from 'chai';
 import * as fs from 'fs';
-import * as settings from '../src/renderer/store/settings';
-import * as testUtils from './testUtils';
+import * as sinon from 'sinon';
+import _, { mutations, actions, getters } from '../src/renderer/store/modules/settings';
+import { Settings } from '../src/renderer/store/umtgTypes';
 
-describe('Test Settings of umtg app', () => {
+
+let sandbox: sinon.SinonSandbox;
+let state : Settings;
+
+describe('store/modules/settings.ts for Settings Management', () => {
 
     beforeEach(() => {
-        testUtils.mockFileRead('{"setTypes": {"ultra": false}, "isGridActive": false}');
-        testUtils.mockToDoNothing(settings, 'init');
-        testUtils.mockToDoNothing(fs, 'writeFileSync');
+        sandbox = sinon.createSandbox();
+        state = {
+            setTypes: {
+                ultra: true,
+            },
+            isGridActive: false,
+            settingsPath: 'foo',
+            decksFolder: 'foo',
+            settingsFile: 'foo',
+        }
+        sandbox.stub(fs, 'existsSync').callsFake(() => true);
+        sandbox.stub(fs, 'readFileSync').callsFake(() => JSON.stringify(state));
     });
 
-    afterEach(() => testUtils.shutdown());
+    afterEach(() => sandbox.restore());
 
-    it('should read settings from a file', () => {
-        settings.init();
+    it('mutations: setGridActive', () => {
+        expect(getters.isGridActive(state)).to.be.false;
+        mutations.setGridActive(state, true);
+        expect(getters.isGridActive(state)).to.be.true;
     });
 
-    it('should manage show grid settings', () => {
-        settings.init();
-        expect(settings.data.isGridActive).to.be.false;
-        settings.setGridActive(true);
-        expect(settings.data.isGridActive).to.be.true;
+    it('mutations: setSetVisibleStatus', () => {
+        expect(getters.getSetTypes(state)['ultra']).to.be.true;
+        mutations.setSetVisibleStatus(state, {setKey: 'ultra', value: false});
+        expect(getters.getSetTypes(state)['ultra']).to.be.false;
     });
 
-    it('check if specific set type should be displayed', () => {
-        settings.init();
-        expect(settings.data.setTypes['core']).to.be.true;
+    it('action: initSettings', () => {
+        const dispatch = sinon.spy();
+        actions.initSettings({state, dispatch});
     });
 
-    it('change display status of specific set type', () => {
-        settings.init();
-        expect(settings.data.setTypes['core']).to.be.true;
-        settings.setSetTypeVisible('core', false);
-        expect(settings.data.setTypes['core']).to.be.false;
+    it('getter: getSetTypes', () => {
+        expect(getters.getSetTypes(state)['ultra']).to.be.true;
     });
 
 });

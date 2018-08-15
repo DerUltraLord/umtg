@@ -1,20 +1,13 @@
 import { expect } from 'chai';
-import { createSandbox, SinonSandbox } from 'sinon';
+import { createSandbox, SinonSandbox, spy } from 'sinon';
 import * as fs from 'fs';
 
-import * as testUtils from './testUtils';
-import { getDecks, getCardsOfDeck, lineMatchCard, lineMatchSideboard, addCardToDeck } from '../src/renderer/store/deck';
-import { Deck, Card, DecklistCard, DeckWithCards } from '../src/renderer/store/umtgTypes';
+import _, { state, mutations, actions, lineMatchCard, lineMatchSideboard, DeckState } from '../src/renderer/store/modules/deck';
+import { Card, DecklistCard } from '../src/renderer/store/umtgTypes';
 import * as db from '../src/renderer/store/db';
 
 let mySandbox: SinonSandbox;
-
-let testDeck: Deck = {
-    filename: 'foo.txt',
-    name: 'foo',
-};
-
-describe('Deck Management Module', () => {
+describe('store/modules/deck.ts for DeckManagement', () => {
 
     before(() => {
         mySandbox = createSandbox();
@@ -34,28 +27,8 @@ describe('Deck Management Module', () => {
         mySandbox.restore() ;
     });
 
-    it('should provide a list with all decks', () => {
-        let res: Deck[] = getDecks();
-        expect(res[0].name).to.equal('deck1');
-        expect(res[0].filename).to.equal('deck1.txt');
-        expect(res[1].name).to.equal('deck2');
-        expect(res[1].filename).to.equal('deck2.txt');
-    });
-
-    it('should provide all cards of a specific deck', (done) => {
-        let myDeck: Deck = {
-            name: 'foo',
-            filename: 'filename.txt'
-        };
-        let p: Promise<DeckWithCards> = getCardsOfDeck(myDeck);
-        testUtils.assertPromiseResult(p, done, (result: DeckWithCards) => {
-            expect(result.cards.length).to.equal(1);
-            expect(result.cards[0].name).to.equal('Ichor Wellspring');
-            expect(result.sideboard.length).to.equal(0);
-        });
-    });
-
-    it('should read card definitions from a decklist', () => {
+    
+    it('helper: lineMatchCard', () => {
         let res: DecklistCard | null = lineMatchCard('4 Ichor Wellspring');
         expect(res).to.not.equal(null);
         if (res !== null) {
@@ -64,42 +37,78 @@ describe('Deck Management Module', () => {
         }
 
     });
-
-    it('should read the sideboard definition from a decklist', () => {
-
+    
+    it('helper: lineMatchSideboard', () => {
+    
         expect(lineMatchSideboard('4 Ichor Wellspring')).to.be.false;
         expect(lineMatchSideboard('Sideboard:')).to.be.true;
     });
 
-    it('add card to deck', () => {
-        let myDeck: DeckWithCards = {
-            deck: testDeck,
-            cards: [],
-            sideboard: [],
-            cardAmount: {},
-        };
+    it('mutation: addCardToDeck', () => {
 
+        let stateMock: DeckState = {
+            decksPath: 'mydecksPath',
+            decks: [],
+            deck: {
+                deck: {name: 'mydeck', filename: 'mydeck.txt'},
+                cards: [],
+                sideboard: [],
+                cardAmount: {},
+            }
+        };
+        
         let myCard: Card = {
             name: 'UltraLord',
             id: 'UltraId'
         };
-
+    
         let otherCard: Card = {
             name: 'OtherCard',
             id: 'OtherCard'
         };
-
-        addCardToDeck(myDeck, myCard);
-        expect(myDeck.cards.length).to.equal(1);
-        expect(myDeck.cardAmount[myCard.id]).to.be.equal(1);
-        addCardToDeck(myDeck, myCard);
-        expect(myDeck.cards.length).to.equal(1);
-        expect(myDeck.cardAmount[myCard.id]).to.be.equal(2);
-        addCardToDeck(myDeck, otherCard);
-        expect(myDeck.cards.length).to.equal(2);
-        expect(myDeck.cardAmount[otherCard.id]).to.be.equal(1);
-
+    
+        mutations.addCardToDeck(stateMock, myCard);
+        expect(stateMock.deck!.cards.length).to.equal(1);
+        expect(stateMock.deck!.cardAmount[myCard.id]).to.be.equal(1);
+        mutations.addCardToDeck(stateMock, myCard);
+        expect(stateMock.deck!.cards.length).to.equal(1);
+        expect(stateMock.deck!.cardAmount[myCard.id]).to.be.equal(2);
+        mutations.addCardToDeck(stateMock, otherCard);
+        expect(stateMock.deck!.cards.length).to.equal(2);
+        expect(stateMock.deck!.cardAmount[otherCard.id]).to.be.equal(1);
+    
     });
 
+
+    it('action: updateDecks', () => {
+        const commit = spy();
+        actions.updateDecks({state: state, commit: commit});
+        expect(commit.args[0][0]).to.be.equal('setDecks');
+        const decklist = commit.args[0][1];
+        expect(decklist[0].name).to.equal('deck1');
+        expect(decklist[0].filename).to.equal('deck1.txt');
+        expect(decklist[1].name).to.equal('deck2');
+        expect(decklist[1].filename).to.equal('deck2.txt');
+    });
+    
+    it('action: selectDeck', (done) => {
+        const commit = spy();
+        let myDeck = {
+            name: 'foo',
+            filename: 'filename.txt'
+        };
+        actions.selectDeck({state: state, commit: commit, payload: myDeck})
+        .then(() => {
+
+            expect(commit.args[0][0]).to.be.equal('setDeck');
+            let result = commit.args[0][1];
+            expect(result.cards.length).to.equal(1);
+            expect(result.cards[0].name).to.equal('Ichor Wellspring');
+            expect(result.sideboard.length).to.equal(0);
+            done();
+        });
+
+    });
+    
 
 });

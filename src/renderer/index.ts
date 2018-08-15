@@ -2,12 +2,18 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'open-iconic/font/css/open-iconic-bootstrap.css';
 import 'bootstrap';
 import Vue from 'vue';
+import Vuex from 'vuex';
 import App from './components/App.vue';
 
-import * as Model from './store/model';
-console.log('Load model ...');
-let initialization = Model.init('umtg.db');
-console.log('Model loaded');
+import storeDefinition from './store/store';
+import { init } from './store/db';
+init('TODO.db');
+
+Vue.use(Vuex);
+
+const store = new Vuex.Store(storeDefinition);
+
+console.log(store.getters.settings);
 
 let Events = new Vue();
 
@@ -19,11 +25,9 @@ Object.defineProperties(Vue.prototype, {
     }
 });
 
-initialization.then(() => {
-    return new Vue({
-        el: '#app',
-        template: '<App/>',
-        components: { App }
-    });
-})
-.catch(console.error);
+new Vue({
+    el: '#app',
+    store,
+    template: '<App/>',
+    components: { App }
+});

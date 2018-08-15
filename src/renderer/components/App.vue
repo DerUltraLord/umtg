@@ -1,17 +1,17 @@
 <template>
     <div>
-        <Navigation :pages=state.pages :currentPage=state.currentPage @pageSelected="state.currentPage = $event"/>
-        <SearchPage :state=state v-if="state.currentPage == 'search'"/>
-        <CollectionPage :state=state v-if="state.currentPage == 'collection'"/>
-        <DecksPage :state=state v-if="state.currentPage == 'decks'"/>
-        <SettingsPage :state=state v-if="state.currentPage == 'settings'"/>
+        <Navigation :pages=$store.state.umtg.pages :currentPage=$store.state.umtg.currentPage @pageSelected="$store.commit('setCurrentPage', $event)"/>
+        <SearchPage v-if="$store.state.umtg.currentPage == 'search'"/>
+        <!--
+        <CollectionPage :state=state v-if="currentPage == 'collection'"/>
+        <DecksPage :state=state v-if="currentPage == 'decks'"/>
+        <SettingsPage :state=state v-if="currentPage == 'settings'"/>
         <Footer :state=state></Footer>
+        -->
     </div>
 </template>
 
 <script>
-import * as Model from '../store/model.ts';
-
 import Navigation from './Navigation.vue';
 import SearchPage from './SearchPage.vue';
 import CollectionPage from './CollectionPage.vue';
@@ -20,11 +20,6 @@ import SettingsPage from './SettingsPage.vue';
 import Footer from './Footer.vue';
 
 export default {
-    data() {
-        return {
-            state: Model.state,
-        };
-    },
     methods: {
     },
     components: {
@@ -35,6 +30,9 @@ export default {
         SettingsPage,
         Footer,
     },
+    created: function() {
+        console.log(this.$store);
+    }
 };
 </script>
 

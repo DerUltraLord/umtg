@@ -41,6 +41,9 @@ export interface Dict<T> {
 export interface Settings {
     setTypes: any;
     isGridActive: boolean;
+    settingsPath: string;
+    decksFolder: string;
+    settingsFile: string;
 }
 
 export interface Page {
@@ -73,10 +76,10 @@ export interface Pages {
     about: Page;
 }
 
-export interface UmtgState {
-    currentPage: string;
-    pages: Pages;
-    settings: any;
-    selectedSet: MagicSet | null;
-    events: any;
-}
+//export interface UmtgState {
+//    currentPage: string;
+//    pages: Pages;
+//    settings: any;
+//    selectedSet: MagicSet | null;
+//    events: any;
+//}

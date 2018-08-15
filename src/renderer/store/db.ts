@@ -1,8 +1,9 @@
 import { Card, MagicSet } from './umtgTypes';
-import { PATH_DB } from './settings';
+import { state } from './modules/settings';
 import * as sqlite3 from 'sqlite3';
 
 export let db: sqlite3.Database;
+let PATH_DB = state.settingsPath;
 
 export function init(dbname: string): void {
     if (!dbname.includes('memory')) {

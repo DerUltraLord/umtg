@@ -2,13 +2,13 @@
     <div>
         <form @submit.prevent="handleSubmit" class="cardSearchContainer">
             <label>Name:</label>
-            <input v-model="name" placeholder="Name or Scryfall search" type="text">
+            <input v-model="$store.state.search.name" placeholder="Name or Scryfall search" type="text">
             <label>Type:</label>
-            <input v-model="searchType" placeholder="Creature">
+            <input v-model=$store.state.search.type placeholder="Creature">
             <label>Text:</label>
-            <input v-model="text" placeholder="Oracle Text">
+            <input v-model="$store.state.search.text" placeholder="Oracle Text">
             <label>Edition:</label>
-            <input v-model="edition" placeholder="XLN">
+            <input v-model="$store.state.search.edition" placeholder="XLN">
             <div/>
             <button type="submit" class="btn btn-primary">Search</button>
         </form>
@@ -16,20 +16,10 @@
 </template>
 
 <script>
-import * as Model from '../store/model.ts';
 export default {
-    data() {
-        return {
-            name: '',
-            searchType: '',
-            text: '',
-            edition: '',
-        };
-    },
     methods: {
         handleSubmit() {
-            let filter = Model.getScryfallSearchFilter(this.$data.name, this.$data.searchType, this.$data.text, this.$data.edition);
-            this.$emit('searchCard', filter);
+            this.$store.dispatch('search/doSearch');
         }
     }
 };

@@ -1,6 +1,6 @@
 <template>
-    <div ref="root" v-bind:class="[settings.isGridActive ? 'd-flex flex-row flex-wrap' : 'list-group-item']">
-        <div v-if="!settings.isGridActive" class="container"> 
+    <div ref="root" v-bind:class="[$store.getters['settings/isGridActive'] ? 'd-flex flex-row flex-wrap' : 'list-group-item']">
+        <div v-if="!$store.getters['settings/isGridActive']" class="container"> 
             <div class="row"> 
                 <div class="col col-12"> 
                     <div class="media">
@@ -68,7 +68,7 @@ export default {
 
     },
     mounted: function() {
-        if (!this.settings.isGridActive) {
+        if (!this.$store.getters['settings.isGridActive']) {
             this.$refs.manaSymbols.insertAdjacentHTML('beforeend', this.getTagsForMana(this.card));
         }
     },

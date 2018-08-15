@@ -1,10 +1,10 @@
 <template>
     <div class="cardSearch">
 
-        <CardSearch @searchCard=searchCard></CardSearch>
+        <CardSearch></CardSearch>
         <div class="scrollable">
-            <CardList @cardClicked="cardClicked" :cards=state.pages.search.cards :settings=state.settings :selectedCard=state.pages.search.selectedCard></CardList>
-            <Loader :loading=loading></Loader>
+            <CardList :cards="$store.state.search.cards" :selectedCard=$store.state.search.selectedCard></CardList>
+            <Loader :loading=$store.state.search.loading></Loader>
         </div>
     </div>
 
@@ -18,24 +18,9 @@ import Loader from './Loader.vue';
 import * as Model from '../store/model.ts';
 
 export default {
-    props: ['state'],
-    data() {
-        return {
-            loading: false,
-        };
-    },
     mounted: function() {
     },
     methods: {
-        searchCard(filter) {
-            this.loading = true;
-            Model.searchScryfallByFilter(filter)
-                .then(() => this.loading = false)
-                .catch(console.error);
-        },
-        cardClicked(card) {
-            this.state.pages.search.selectedCard = card;
-        },
     },
     components: {
         CardSearch,
