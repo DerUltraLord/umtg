@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import * as fs from 'fs';
-import * as settings from '../src/main/settings';
+import * as settings from '../src/renderer/store/settings';
 import * as testUtils from './testUtils';
 
 describe('Test Settings of umtg app', () => {

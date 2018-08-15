@@ -1,11 +1,11 @@
 import { expect } from 'chai';
 import { createSandbox, SinonSandbox } from 'sinon';
 
-import * as Model from '../src/main/model';
-import * as Settings from '../src/main/settings';
-import * as DeckManager from '../src/main/deck';
-import * as Db from '../src/main/db';
-import { Deck, DeckWithCards, Card, Dict } from '../src/main/umtgTypes';
+import * as Model from '../src/renderer/store/model';
+import * as Settings from '../src/renderer/store/settings';
+import * as DeckManager from '../src/renderer/store/deck';
+import * as Db from '../src/renderer/store/db';
+import { Deck, DeckWithCards, Card, Dict } from '../src/renderer/store/umtgTypes';
 
 let sandbox: SinonSandbox;
 

@@ -2,9 +2,9 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'open-iconic/font/css/open-iconic-bootstrap.css';
 import 'bootstrap';
 import Vue from 'vue';
-import App from './App.vue';
+import App from './components/App.vue';
 
-import * as Model from '../main/model';
+import * as Model from './store/model';
 console.log('Load model ...');
 let initialization = Model.init('umtg.db');
 console.log('Model loaded');

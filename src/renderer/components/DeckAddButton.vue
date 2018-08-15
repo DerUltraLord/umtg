@@ -10,7 +10,7 @@
     </div>
 </template>
 <script>
-import * as Model from '../main/model.ts';
+import * as Model from '../store/model.ts';
 export default {
     props: ['state'],
     mounted: function() {

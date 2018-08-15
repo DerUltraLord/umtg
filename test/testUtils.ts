@@ -1,5 +1,5 @@
 import * as sinon from 'sinon';
-import * as base from '../src/main/base';
+import * as base from '../src/renderer/store/base';
 import * as fs from 'fs';
 
 let sandbox: sinon.SinonSandbox;

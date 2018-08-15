@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import * as base from '../src/main/base';
+import * as base from '../src/renderer/store/base';
 import * as testUtils from './testUtils';
 
 describe('Test base javascript lib', () => {

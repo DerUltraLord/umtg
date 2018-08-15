@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 
-import * as Db from '../src/main/db';
+import * as Db from '../src/renderer/store/db';
 import * as testUtils from './testUtils';
-import { Card, MagicSet } from '../src/main/umtgTypes';
+import { Card, MagicSet } from '../src/renderer/store/umtgTypes';
 
 let testCard: Card = {
     name: 'Ichor Wellspring',

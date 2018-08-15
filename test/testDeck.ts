@@ -3,9 +3,9 @@ import { createSandbox, SinonSandbox } from 'sinon';
 import * as fs from 'fs';
 
 import * as testUtils from './testUtils';
-import { getDecks, getCardsOfDeck, lineMatchCard, lineMatchSideboard, addCardToDeck } from '../src/main/deck';
-import { Deck, Card, DecklistCard, DeckWithCards } from '../src/main/umtgTypes';
-import * as db from '../src/main/db';
+import { getDecks, getCardsOfDeck, lineMatchCard, lineMatchSideboard, addCardToDeck } from '../src/renderer/store/deck';
+import { Deck, Card, DecklistCard, DeckWithCards } from '../src/renderer/store/umtgTypes';
+import * as db from '../src/renderer/store/db';
 
 let mySandbox: SinonSandbox;
 

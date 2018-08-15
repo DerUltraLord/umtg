@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import * as scry from '../src/main/scryfall';
+import * as scry from '../src/renderer/store/scryfall';
 import * as testUtils from './testUtils';
 
 describe('scryfall.js', () => {

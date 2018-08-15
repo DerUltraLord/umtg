@@ -22,7 +22,7 @@
 import DeckList from './DeckList.vue';
 import CardList from './CardList.vue';
 import Loader from './Loader.vue';
-import * as Model from '../main/model.ts';
+import * as Model from '../store/model.ts';
 export default {
     props: ['state'],
     data() {
