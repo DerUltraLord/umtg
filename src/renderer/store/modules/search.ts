@@ -22,7 +22,7 @@ export const state = {
     edition: ''
 }
 
-let updateCards = (cards: Card[]) => {
+export function updateCards(cards: Card[]): Dict<Card> {
     let initalValue: Dict<Card> = {};
     return cards.reduce((obj: Dict<Card>, card: Card) => {
         obj[card.id] = card;
@@ -37,7 +37,6 @@ let updateCards = (cards: Card[]) => {
 export const mutations = {
     setCards(state: SearchState, cards: Dict<Card>) {
         state.cards = cards;
-        console.log(state.cards);
         state.loading = false;
     }
 };
@@ -48,7 +47,6 @@ export const actions = {
         let filter = Scryfall.getSearchFilter(state.name, state.type, state.text, state.edition);
         Scryfall.searchByFilter(filter)
         .then((response: any) => {
-            console.log(response.data);
             if (response.data) {
                 commit('setCards', updateCards(response.data));
             }
