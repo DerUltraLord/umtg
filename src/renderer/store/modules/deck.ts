@@ -77,6 +77,7 @@ export function traverseCards(content: String): Decklist {
 
 }
 
+
 export interface DeckState {
     loading: boolean;
     decksPath: string;
@@ -92,6 +93,18 @@ export const state: DeckState = {
     deck: null,
     selectedCard: null
 }
+
+export function initDeckState(store: any): void {
+    console.log("init deck state");
+    if (store.state.deck.decks.length === 0) {
+        store.dispatch('deck/updateDecks');
+    }
+
+    let availableDecks = store.state.deck.decks;
+    if (!store.state.deck.selectedDeck && availableDecks.length > 0) {
+        store.dispatch('deck/selectDeck', availableDecks[0]);
+    }
+};
 
 export const mutations = {
     setDecks(state: DeckState, decks: Deck[]): void {

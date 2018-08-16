@@ -1,10 +1,10 @@
 <template>
-    <div class="btn-group btn-group-lg float-lg-left" role="group">
+    <div v-if=$store.state.deck.deck class="btn-group btn-group-lg float-lg-left" role="group">
         <button type="button" id="btnAddToDeck" @click="addCardToDeck" class="btn btn-default">+</button>
         <div class="btn-group btn-group-sm dropup" role="group">
-            <button type="button" class="textOverflowHidden btn btn-default dropdown-toggle btnDeck w300 text-left" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ this.state.pages.decks.selectedDeck.deck.name }}</button>
+            <button type="button" class="textOverflowHidden btn btn-default dropdown-toggle btnDeck w300 text-left" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ this.$store.state.deck.deck.deck.name }}</button>
             <div class="dropdown-menu" aria-labelledby="btnDeck">
-                <a v-for="deck in state.pages.decks.decks" v-bind:key="deck.filename" class="dropdown-item" @click="deckSelected(deck)">{{ deck.name }}</a>
+                <a v-for="deck in $store.state.deck.decks" v-bind:key="deck.filename" class="dropdown-item" @click="deckSelected(deck)">{{ deck.name }}</a>
             </div>
         </div>
     </div>
@@ -12,18 +12,19 @@
 <script>
 import * as Model from '../store/model.ts';
 export default {
-    props: ['state'],
     mounted: function() {
     },
     methods: {
         addCardToDeck() {
-            let selectedCard = this.state.pages[this.state.currentPage].selectedCard;
+            let selectedCard = this.$store.state.umtg.pages[this.$store.state.umtg.currentPage].selectedCard;
             if (selectedCard) {
-                Model.addCardToSelectedDeck(selectedCard);
+                alert("TODO");
+                //Model.addCardToSelectedDeck(selectedCard);
             }
         },
         deckSelected(deck) {
-            Model.selectDeck(deck);
+            alert("TODO");
+            //Model.selectDeck(deck);
         },
     }
 };

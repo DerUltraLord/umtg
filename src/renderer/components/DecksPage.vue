@@ -8,7 +8,6 @@
     
         <div class="decksPage">
             <div class="scrollable">
-                <p>DECKLSIT</p>
                 <DeckList @deckSelected=deckSelected :decks=$store.state.deck.decks :selectedDeck=$store.state.deck.deck></DeckList>
             </div>
             <div class="scrollable">
@@ -26,14 +25,6 @@ import Loader from './Loader.vue';
 import * as Model from '../store/model.ts';
 export default {
     created: function () {
-        if (this.$store.state.deck.decks.length === 0) {
-            this.$store.dispatch('deck/updateDecks');
-        }
-
-        let availableDecks = this.$store.state.deck.decks;
-        if (!this.$store.state.deck.selectedDeck && availableDecks.length > 0) {
-            this.$store.dispatch('deck/selectDeck', availableDecks[0]);
-        }
 
     },
     methods: {

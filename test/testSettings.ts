@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import * as fs from 'fs';
 import * as sinon from 'sinon';
-import _, { mutations, actions, getters } from '../src/renderer/store/modules/settings';
+import _, { initSettings, mutations, actions, getters } from '../src/renderer/store/modules/settings';
 import { Settings } from '../src/renderer/store/umtgTypes';
 
 
@@ -27,6 +27,18 @@ describe('store/modules/settings.ts for Settings Management', () => {
 
     afterEach(() => sandbox.restore());
 
+    it('helpers: initSettings', () => {
+        const dispatch = sinon.spy();
+        let store = {
+            'state': {
+                'settings': state
+            },
+            'dispatch': dispatch,
+
+        }
+        initSettings(store);
+    });
+
     it('mutations: setGridActive', () => {
         expect(getters.isGridActive(state)).to.be.false;
         mutations.setGridActive(state, true);
@@ -37,11 +49,6 @@ describe('store/modules/settings.ts for Settings Management', () => {
         expect(getters.getSetTypes(state)['ultra']).to.be.true;
         mutations.setSetVisibleStatus(state, {setKey: 'ultra', value: false});
         expect(getters.getSetTypes(state)['ultra']).to.be.false;
-    });
-
-    it('action: initSettings', () => {
-        const dispatch = sinon.spy();
-        actions.initSettings({state, dispatch});
     });
 
     it('getter: getSetTypes', () => {

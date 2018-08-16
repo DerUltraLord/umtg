@@ -1,5 +1,5 @@
 <template>
-    <div v-bind:class="[$store.getters['settings.isGridActive'] ? 'd-flex flex-wrap' : '']">
+    <div v-bind:class="[$store.getters['settings/isGridActive'] ? 'd-flex flex-row flex-wrap' : '']">
         <Card @click.native="$emit('cardClicked', c)" v-for="c in cards" v-bind:data="c" v-bind:key="c.id" :card=c v-bind:class="[selectedCard != null && selectedCard.id == c.id ? 'bg-primary' : '']"></Card>
     </div>
 </template>

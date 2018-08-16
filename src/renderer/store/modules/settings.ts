@@ -31,6 +31,28 @@ export const state: Settings = {
     settingsFile: 'settings.json'
 }
 
+export function initSettings(store: any): void {
+    const state: Settings = store.state.settings;
+
+    if (!fs.existsSync(store.state.settings.settingsPath)) {
+        fs.mkdirSync(store.state.settings.settingsPath);
+    }
+
+    let decksFolder = join(store.state.settings.settingsPath, store.state.settings.decksFolder);
+    if (!fs.existsSync(decksFolder)) {
+        fs.mkdirSync(decksFolder);
+    }
+
+    let settingsFile = join(store.state.settings.settingsPath, store.state.settings.settingsFile);
+    if (!fs.existsSync(settingsFile)) {
+        store.dispatch('writeSettingsToFile');
+    }
+
+    let data = fs.readFileSync(settingsFile);
+    let settingsJson = JSON.parse(data.toString());
+    store.state.settings = settingsJson;
+};
+
 export const mutations = {
 
     setGridActive(state: Settings, value: boolean): void {
@@ -44,26 +66,6 @@ export const mutations = {
 
 export const actions = {
 
-    initSettings({state, dispatch}: {state: any, dispatch: any}): void {
-
-        if (!fs.existsSync(state.settingsPath)) {
-            fs.mkdirSync(state.settingsPath);
-        }
-
-        let decksFolder = join(state.settingsPath, state.decksFolder);
-        if (!fs.existsSync(decksFolder)) {
-            fs.mkdirSync(decksFolder);
-        }
-
-        let settingsFile = join(state.settingsPath, state.settingsFile);
-        if (!fs.existsSync(settingsFile)) {
-            dispatch('writeSettingsToFile');
-        }
-
-        let data = fs.readFileSync(settingsFile);
-        let settingsJson = JSON.parse(data.toString());
-        state = settingsJson;
-    },
 
     writeSettingsToFile({state: any}: {state:any}): void {
         fs.writeFileSync(join(state.settingsPath, state.settingsFile), JSON.stringify(state, null, 4));

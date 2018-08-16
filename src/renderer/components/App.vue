@@ -5,9 +5,7 @@
         <CollectionPage v-if="$store.state.umtg.currentPage == 'collection'"/>
         <DecksPage v-if="$store.state.umtg.currentPage == 'deck'"/>
         <SettingsPage v-if="$store.state.umtg.currentPage == 'settings'"/>
-        <!--
-        <Footer :state=state></Footer>
-        -->
+        <Footer></Footer>
     </div>
 </template>
 
@@ -18,6 +16,9 @@ import CollectionPage from './CollectionPage.vue';
 import DecksPage from './DecksPage.vue';
 import SettingsPage from './SettingsPage.vue';
 import Footer from './Footer.vue';
+
+import { initDeckState } from '../store/modules/deck';
+import { initSettings } from '../store/modules/settings';
 
 export default {
     methods: {
@@ -31,7 +32,8 @@ export default {
         Footer,
     },
     created: function() {
-        console.log(this.$store);
+        initDeckState(this.$store);
+        initSettings(this.$store);
     }
 };
 </script>

@@ -3,17 +3,17 @@
         <div class="container-flex">
             <div class="row" style="margin: 5px">
                 <div class="col col-4">
-                    <DeckAddButton :state=state></DeckAddButton>
+                    <DeckAddButton></DeckAddButton>
                 </div>
                 <div class="col col-5">
                 </div>
                 <div class="col col-3 text-right">
                     <div class="btn-group btn-group-lg btn-group-toggle" data-toggle="buttons">
-                        <label v-bind:class="[state.settings.isGridActive ? 'btn btn-primary focus active' : 'btn btn-secondary']" @click="handleViewSettingClick">
+                        <label v-bind:class="[$store.state.settings.isGridActive ? 'btn btn-primary focus active' : 'btn btn-secondary']" @click="handleViewSettingClick">
                             <input type="radio" name="view" id="true" autocomplete="off">
                             <button><span class="oi oi-grid-two-up" title="icon audito" aria-hidden="false"></span></button>
                         </label>
-                        <label v-bind:class="[ !state.settings.isGridActive ? 'btn btn-primary focus active' : 'btn btn-secondary']" @click="handleViewSettingClick">
+                        <label v-bind:class="[ !$store.state.settings.isGridActive ? 'btn btn-primary focus active' : 'btn btn-secondary']" @click="handleViewSettingClick">
                             <input type="radio" name="view" id="flase" autocomplete="off">
                             <span class="oi oi-list" title="icon audito" aria-hidden="false"></span>
                         </label>
@@ -29,7 +29,6 @@ import DeckAddButton from './DeckAddButton.vue';
 import * as Model from '../store/model.ts';
 import $ from 'jquery';
 export default {
-    props: ['state'],
     created: function() {
     },
     methods: {
@@ -37,7 +36,7 @@ export default {
             $(this.root).find('.btn-primary').removeClass('btn-primary').addClass('btn-secondary');
             let lbl = $(e.srcElement).closest('label');
             lbl.removeClass('btn-secondary').addClass('btn-primary');
-            Model.setGridActive(lbl.find('input').attr('id') == 'true');
+            this.$store.commit('settings/setGridActive', lbl.find('input').attr('id') == 'true');
         }
     },
     components: {

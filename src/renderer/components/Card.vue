@@ -1,5 +1,5 @@
 <template>
-    <div ref="root" v-bind:class="[$store.getters['settings/isGridActive'] ? 'd-flex flex-row flex-wrap' : 'list-group-item']">
+    <div ref="root" v-bind:class="[$store.getters['settings/isGridActive'] ? 'p-2' : 'list-group-item']">
         <div v-if="!$store.getters['settings/isGridActive']" class="container"> 
             <div class="row"> 
                 <div class="col col-12"> 
@@ -19,18 +19,15 @@
                 </div>
             </div>
         </div>
-
-        <div v-else>
-            <div class="container cardImage">
-                <div class="row">
-                    <div class="col">
-                        <img v-bind:src="getImageUri()" width="250px" height="348px">
-                    </div>
+        <div v-else class="container">
+            <div class="row">
+                <div class="col">
+                    <img v-bind:src="getImageUri()" width="250px" height="348px">
                 </div>
-                <div class="row mt10">
-                    <div class="col">
-                        <CardButtons :card=card></CardButtons>
-                    </div>
+            </div>
+            <div class="row mt10">
+                <div class="col">
+                    <CardButtons :card=card></CardButtons>
                 </div>
             </div>
         </div>
@@ -41,7 +38,7 @@
 import CardButtons from './CardButtons.vue';
 
 export default {
-    props: ['card', 'settings'],
+    props: ['card'],
     methods: {
         getImageUri() {
             let uri = '';
@@ -68,7 +65,7 @@ export default {
 
     },
     mounted: function() {
-        if (!this.$store.getters['settings.isGridActive']) {
+        if (!this.$store.getters['settings/isGridActive']) {
             this.$refs.manaSymbols.insertAdjacentHTML('beforeend', this.getTagsForMana(this.card));
         }
     },
@@ -79,8 +76,4 @@ export default {
 </script>
 
 <style scoped>
-.cardImage{
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
 </style>
