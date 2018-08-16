@@ -158,7 +158,7 @@ export function getCardsOfSet(set: MagicSet): Promise<Card[]> {
 export function isSetDownloaded(set: MagicSet): Promise<boolean> {
     return getCardsOfSet(set)
         .then((cards: Card[]) => {
-            return cards.length > 0;
+            return cards.length == set.card_count;
         });
 }
 

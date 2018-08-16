@@ -13,7 +13,7 @@ let testCard: Card = {
 let testSet: MagicSet = {
     name: 'Ultra Set',
     code: 'ultra',
-    card_count: 10
+    card_count: 1
 };
 
 describe('Test Database', () => {
@@ -170,7 +170,7 @@ describe('Test Database', () => {
             Db.setAdd(testSet);
             let p = Db.getCardAmountOfSet(testSet);
             testUtils.assertPromiseResult(p, done, (amount: number) => {
-                expect(amount).to.be.equal(10);
+                expect(amount).to.be.equal(1);
             });
         });
 
@@ -194,7 +194,7 @@ describe('Test Database', () => {
             Db.setAdd(testSet);
             let p = Db.getPercentageOfSet(testSet);
             testUtils.assertPromiseResult(p, done, (amount: number) => {
-                expect(amount).to.be.equal(0.1);
+                expect(amount).to.be.equal(1);
             });
 
         });
