@@ -108,14 +108,14 @@ describe('store/modules/collection.ts', () => {
         const scryfallReqest = sandbox.stub(Scryfall, 'scryfallReqest').resolves([fakeCard])
         const cardAdd = sandbox.stub(Db, 'cardAdd').resolves()
         const getCardsOfSet = sandbox.stub(Db, 'getCardsOfSet').resolves([fakeCard])
-        const updateCards = sandbox.stub(Umtg, 'updateCards').resolves({'UltraId': fakeCard})
+        const extendCards = sandbox.stub(Umtg, 'extendCards').resolves({'UltraId': fakeCard})
 
         actions.selectSet({state, commit}, fakeSet)
             .then((result) => {
                 assert.calledOnce(scryfallReqest);
                 assert.calledOnce(cardAdd);
                 assert.calledOnce(getCardsOfSet);
-                assert.calledOnce(updateCards);
+                assert.calledOnce(extendCards);
 
                 expect(commit.getCall(0).args[0]).to.be.equal('setCards');
                 expect(commit.getCall(0).args[1]).to.deep.equal({'UltraId': fakeCard});

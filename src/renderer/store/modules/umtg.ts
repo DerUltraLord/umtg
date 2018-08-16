@@ -6,7 +6,7 @@ export interface UmtgState {
     pages: any,
 }
 
-export async function updateCards(cards: Card[]): Promise<Dict<Card>> {
+export async function extendCards(cards: Card[]): Promise<Dict<Card>> {
     let result: Dict<Card> = {};
 
     for (const card of cards) {

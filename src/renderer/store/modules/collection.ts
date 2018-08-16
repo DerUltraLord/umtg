@@ -1,5 +1,5 @@
 
-import { updateCards } from './umtg';
+import { extendCards } from './umtg';
 import { Dict, MagicSet, Card } from '../umtgTypes';
 import { getCardsOfSet, getSets, setAdd, getOwnedCardAmountBySetCode, isSetDownloaded, cardAdd } from '../db';
 import { scryfallGetSets, scryfallReqest } from '../scryfall';
@@ -70,7 +70,7 @@ export const actions = {
         }
 
         cards = await getCardsOfSet(set);
-        let cardsDict: Dict<Card> = await updateCards(cards);
+        let cardsDict: Dict<Card> = await extendCards(cards);
 
         commit('setCards', cardsDict);
 

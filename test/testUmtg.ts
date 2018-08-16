@@ -1,7 +1,7 @@
 import { createSandbox, SinonSandbox } from 'sinon';
 import { expect } from 'chai';
 
-import { updateCards } from '../src/renderer/store/modules/umtg';
+import { extendCards } from '../src/renderer/store/modules/umtg';
 import * as Db from '../src/renderer/store/db';
 
 let sandbox: SinonSandbox;
@@ -15,7 +15,7 @@ describe('store/modules/umtg.ts', () => {
 
     afterEach(() => sandbox.restore);
 
-    it('helper: updateCards', (done) => {
+    it('helper: extendCards', (done) => {
         let cards = [
             {
                 id: 'ultraid',
@@ -24,7 +24,7 @@ describe('store/modules/umtg.ts', () => {
         ]
 
         const getAmountOfCardById = sandbox.stub(Db, 'getAmountOfCardById').resolves(1);
-        updateCards(cards)
+        extendCards(cards)
             .then((result) => {
                 expect(result.ultraid.ownedAmount).to.be.equal(1);
                 done();
