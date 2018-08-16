@@ -3,7 +3,7 @@ import { createSandbox, SinonSandbox, spy } from 'sinon';
 import * as fs from 'fs';
 
 import _, { state, mutations, actions, lineMatchCard, lineMatchSideboard, DeckState } from '../src/renderer/store/modules/deck';
-import { Card, DecklistCard } from '../src/renderer/store/umtgTypes';
+import { Deck, Card, DecklistCard } from '../src/renderer/store/umtgTypes';
 import * as db from '../src/renderer/store/db';
 
 let mySandbox: SinonSandbox;
@@ -47,6 +47,7 @@ describe('store/modules/deck.ts for DeckManagement', () => {
     it('mutation: addCardToDeck', () => {
 
         let stateMock: DeckState = {
+            loading: false,
             decksPath: 'mydecksPath',
             decks: [],
             deck: {
@@ -54,7 +55,8 @@ describe('store/modules/deck.ts for DeckManagement', () => {
                 cards: [],
                 sideboard: [],
                 cardAmount: {},
-            }
+            },
+            selectedCard: null,
         };
         
         let myCard: Card = {
@@ -93,11 +95,11 @@ describe('store/modules/deck.ts for DeckManagement', () => {
     
     it('action: selectDeck', (done) => {
         const commit = spy();
-        let myDeck = {
+        let myDeck: Deck = {
             name: 'foo',
             filename: 'filename.txt'
         };
-        actions.selectDeck({state: state, commit: commit, payload: myDeck})
+        actions.selectDeck({state, commit}, myDeck)
         .then(() => {
 
             expect(commit.args[0][0]).to.be.equal('setDeck');

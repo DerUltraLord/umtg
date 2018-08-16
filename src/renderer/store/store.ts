@@ -1,6 +1,7 @@
 import umtg from './modules/umtg';
 import search from './modules/search';
 import collection from './modules/collection';
+import deck from './modules/deck';
 import settings from './modules/settings';
 
 
@@ -9,6 +10,7 @@ export default {
         umtg: umtg,
         search: search,
         collection: collection,
-        settings: settings,
+        deck: deck,
+        settings: settings
     }
 };

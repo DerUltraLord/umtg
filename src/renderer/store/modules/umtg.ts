@@ -26,6 +26,9 @@ export const state: UmtgState = {
         'collection': {
             name: 'Collection'
         },
+        'deck': {
+            name: 'Decks'
+        },
     },
 };
 

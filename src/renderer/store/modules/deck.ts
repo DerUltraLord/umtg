@@ -78,23 +78,29 @@ export function traverseCards(content: String): Decklist {
 }
 
 export interface DeckState {
+    loading: boolean;
     decksPath: string;
     decks: Deck[];
     deck: DeckWithCards | null;
+    selectedCard: Card | null;
 }
 
 export const state: DeckState = {
+    loading: false,
     decksPath: process.env.HOME + '/.umtg/decks',
     decks: [],
     deck: null,
+    selectedCard: null
 }
 
 export const mutations = {
     setDecks(state: DeckState, decks: Deck[]): void {
         state.decks = decks;
+        state.loading = false;
     },
     setDeck(state: DeckState, deck: DeckWithCards): void {
         state.deck = deck;
+        state.loading = false;
     },
     addCardToDeck(state: DeckState, card: Card): void {
 
@@ -113,6 +119,7 @@ export const mutations = {
 export const actions = {
 
     updateDecks({state, commit}: {state: DeckState, commit: any}): void {
+        state.loading = true;
         let decks: Deck[] = readdirSync(state.decksPath).map((filename: string) => {
             let deckItem: Deck = {
                 name: filename.split('.')[0],
@@ -123,8 +130,9 @@ export const actions = {
         commit('setDecks', decks);
     },
 
-    async selectDeck({state, commit, payload}: {state: DeckState, commit: any, payload: Deck}): Promise<void> {
-        let contents = readFileSync(state.decksPath + '/' + payload.filename).toString();
+    async selectDeck({state, commit}: {state: DeckState, commit: any}, deck: Deck): Promise<void> {
+        state.loading = true;
+        let contents = readFileSync(state.decksPath + '/' + deck.filename).toString();
         let deckResult = traverseCards(contents);
 
         let cards = await getCardObjectsFromCardNames(deckResult.cards);
@@ -136,7 +144,7 @@ export const actions = {
         });
 
         let result: DeckWithCards = {
-            deck: payload,
+            deck: deck,
             cards: cards,
             sideboard: sideboard,
             cardAmount: amountDict,
@@ -157,6 +165,7 @@ export const actions = {
 
 
 export default {
+    namespaced: true,
     state: state,
     mutations: mutations,
     actions: actions

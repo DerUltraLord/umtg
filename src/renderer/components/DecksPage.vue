@@ -8,11 +8,12 @@
     
         <div class="decksPage">
             <div class="scrollable">
-                <DeckList @deckSelected=deckSelected :decks=state.pages.decks.decks :selectedDeck=state.pages.decks.selectedDeck></DeckList>
+                <p>DECKLSIT</p>
+                <DeckList @deckSelected=deckSelected :decks=$store.state.deck.decks :selectedDeck=$store.state.deck.deck></DeckList>
             </div>
             <div class="scrollable">
-                <CardList @cardClicked="cardClicked" :cards=state.pages.decks.selectedDeck.cards :settings=state.settings :selectedCard=state.pages.decks.selectedCard></CardList>
-                <Loader :loading=loading></Loader>
+                <CardList v-if=$store.state.deck.deck @cardClicked="cardClicked" :cards=$store.state.deck.deck.cards :selectedCard=$store.state.deck.selectedCard></CardList>
+                <Loader :loading=$store.state.deck.loading></Loader>
             </div>
         </div>
     </div>
@@ -24,15 +25,14 @@ import CardList from './CardList.vue';
 import Loader from './Loader.vue';
 import * as Model from '../store/model.ts';
 export default {
-    props: ['state'],
-    data() {
-        return {
-            loading: false,
-        };
-    },
     created: function () {
-        if (Object.keys(this.state.pages.decks.selectedDeck.cards).length == 0) {
-            this.showCardsOfDeck(this.state.selectedDeck);
+        if (this.$store.state.deck.decks.length === 0) {
+            this.$store.dispatch('deck/updateDecks');
+        }
+
+        let availableDecks = this.$store.state.deck.decks;
+        if (!this.$store.state.deck.selectedDeck && availableDecks.length > 0) {
+            this.$store.dispatch('deck/selectDeck', availableDecks[0]);
         }
 
     },
@@ -40,14 +40,10 @@ export default {
         showCardsOfDeck(deck) {
         },
         deckSelected(deck) {
-            this.loading = true;
-            Model.selectDeck(deck)
-                .then((cards) => {
-                    this.loading = false;
-                });
+            this.$store.dispatch('deck/selectDeck', deck);
         },
         cardClicked(card) {
-            this.state.pages.decks.selectedCard = card;
+            this.$store.state.deck.selectedCard = card;
         },
     },
     components: {
