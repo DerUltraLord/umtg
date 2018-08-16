@@ -124,9 +124,10 @@ export const mutations = {
             }
             state.deck.cardAmount[card.id] += 1;
         }
+    },
+    setSelectedCard(state: DeckState, card: Card): void {
+        state.selectedCard = card;
     }
-    
-
 }
 
 export const actions = {

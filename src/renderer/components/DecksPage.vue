@@ -34,7 +34,7 @@ export default {
             this.$store.dispatch('deck/selectDeck', deck);
         },
         cardClicked(card) {
-            this.$store.state.deck.selectedCard = card;
+            this.$store.commit('deck/setSelectedCard', card);
         },
     },
     components: {

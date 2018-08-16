@@ -28,6 +28,9 @@ export const mutations = {
     setCards(state: SearchState, cards: Dict<Card>) {
         state.cards = cards;
         state.loading = false;
+    },
+    setSelectedCard(state: SearchState, card: Card): void {
+        state.selectedCard = card;
     }
 };
 

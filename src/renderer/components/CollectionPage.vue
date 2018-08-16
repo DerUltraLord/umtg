@@ -36,7 +36,7 @@ export default {
             this.$store.dispatch('collection/selectSet', set);
         },
         cardClicked(card) {
-            //this.state.pages.collection.selectedCard = card;
+            this.$store.commit('collection/setSelectedCard', card);
         },
         onCards() {
             //this.loading = false;

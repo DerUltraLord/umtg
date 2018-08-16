@@ -37,10 +37,17 @@ export const mutations = {
         state.sets = sets;
         state.loading = false;
     },
+    setSelectedSet(state: CollectionState, set: MagicSet): void {
+        state.selectedSet = set;
+    },
     setCards(state: CollectionState, cards: Dict<Card>) {
         state.cards = cards;
         state.loading = false;
+    },
+    setSelectedCard(state: CollectionState, card: Card): void {
+        state.selectedCard = card;
     }
+
 };
 
 export const actions = {
@@ -73,6 +80,7 @@ export const actions = {
         let cardsDict: Dict<Card> = await extendCards(cards);
 
         commit('setCards', cardsDict);
+        commit('setSelectedSet', set);
 
         return null;
     }
