@@ -3,7 +3,7 @@ import { expect } from 'chai';
 
 import * as Scryfall from '../src/renderer/store/scryfall';
 import * as Db from '../src/renderer/store/db';
-import { updateCards, mutations, actions, SearchState } from '../src/renderer/store/modules/search';
+import { mutations, actions, SearchState } from '../src/renderer/store/modules/search';
 import { Card } from '../src/renderer/store/umtgTypes';
 
 let sandbox: SinonSandbox;
@@ -30,13 +30,6 @@ describe('store/modules/search.ts', () => {
         sandbox.restore();
     })
 
-    it('helper: updateCards', () => {
-        const getAmountOfCardById = sandbox.stub(Db, 'getAmountOfCardById').resolves(1);
-        let result = updateCards([fakeCard,]);
-        expect(result.fakeid).to.be.equal(fakeCard);
-
-        assert.calledOnce(getAmountOfCardById);
-    });
 
     it('mutations: setCards', () => {
         mutations.setCards(state, { 'fakeid': fakeCard });
@@ -51,12 +44,14 @@ describe('store/modules/search.ts', () => {
         const commit = spy();
         const getSearchFilter = sandbox.stub(Scryfall, 'getSearchFilter').callsFake(() => getSearchFilter);
         const searchByFilter = sandbox.stub(Scryfall, 'searchByFilter').resolves(fakeResult);
-        actions.doSearch({state, commit});
+        actions.doSearch({state, commit})
+        .then(() => {
+            commit.calledWith('setCards', fakeResult); 
+            assert.calledOnce(getSearchFilter);
+            assert.calledOnce(searchByFilter);
+            expect(state.loading).to.be.true;
+        });
 
-        commit.calledWith('setCards', fakeResult); 
-        assert.calledOnce(getSearchFilter);
-        assert.calledOnce(searchByFilter);
-        expect(state.loading).to.be.true;
 
     });
 });

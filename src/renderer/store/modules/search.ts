@@ -1,6 +1,7 @@
 import { Card, Dict } from '../umtgTypes';
 import * as Scryfall from '../scryfall';
 import { getAmountOfCardById } from '../db';
+import { extendCards } from './umtg';
 
 export interface SearchState  {
     loading: boolean;
@@ -22,17 +23,6 @@ export const state = {
     edition: ''
 }
 
-export function updateCards(cards: Card[]): Dict<Card> {
-    let initalValue: Dict<Card> = {};
-    return cards.reduce((obj: Dict<Card>, card: Card) => {
-        obj[card.id] = card;
-        obj[card.id].ownedAmount = 0;
-        getAmountOfCardById(card.id).then((amount) => {
-            obj[card.id].ownedAmount = amount;
-        });
-        return obj;
-    }, initalValue);
-};
 
 export const mutations = {
     setCards(state: SearchState, cards: Dict<Card>) {
@@ -42,15 +32,13 @@ export const mutations = {
 };
 
 export const actions = {
-    doSearch({state, commit}: {state: SearchState, commit: any}): void {
+    async doSearch({state, commit}: {state: SearchState, commit: any}): Promise<null> {
         state.loading = true;
         let filter = Scryfall.getSearchFilter(state.name, state.type, state.text, state.edition);
-        Scryfall.searchByFilter(filter)
-        .then((response: any) => {
-            if (response.data) {
-                commit('setCards', updateCards(response.data));
-            }
-        });
+        let cards: Card[] = await Scryfall.searchByFilter(filter)
+        let cardsDict: Dict<Card> = await extendCards(cards);
+        commit('setCards', cardsDict);
+        return null;
     }
 }
 

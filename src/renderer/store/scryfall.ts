@@ -50,9 +50,9 @@ export function buildSearchString(filter: any): any {
     return res;
 }
 
-export function searchByFilter(filter: any): any {
+export async function searchByFilter(filter: any): Promise<Card[]> {
     let searchString = exports.buildSearchString(filter);
-    return exports.search(searchString);
+    return search<Card>(searchString);
 }
 
 let applyRegex = function(re: RegExp, a: string, b: string): [string, string] {
