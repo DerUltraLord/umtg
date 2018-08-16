@@ -2,8 +2,8 @@
     <div>
         <Navigation :pages=$store.state.umtg.pages :currentPage=$store.state.umtg.currentPage @pageSelected="$store.commit('setCurrentPage', $event)"/>
         <SearchPage v-if="$store.state.umtg.currentPage == 'search'"/>
+        <CollectionPage v-if="$store.state.umtg.currentPage == 'collection'"/>
         <!--
-        <CollectionPage :state=state v-if="currentPage == 'collection'"/>
         <DecksPage :state=state v-if="currentPage == 'decks'"/>
         <SettingsPage :state=state v-if="currentPage == 'settings'"/>
         <Footer :state=state></Footer>

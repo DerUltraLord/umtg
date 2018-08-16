@@ -31,7 +31,7 @@ describe('store/modules/search.ts', () => {
     })
 
     it('helper: updateCards', () => {
-        const getAmountOfCardById = sandbox.stub(Db, 'getAmountOfCardById').callsFake(() => null); 
+        const getAmountOfCardById = sandbox.stub(Db, 'getAmountOfCardById').resolves(1);
         let result = updateCards([fakeCard,]);
         expect(result.fakeid).to.be.equal(fakeCard);
 

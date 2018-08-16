@@ -5,6 +5,7 @@
         "module": "commonjs",
         "moduleResolution": "node",
         "sourceMap": true,
+        "noUnusedLocals": false,
         "lib": [ "es2015", "dom" ],
     },
     "exclude": [

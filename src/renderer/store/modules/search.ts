@@ -27,7 +27,7 @@ export function updateCards(cards: Card[]): Dict<Card> {
     return cards.reduce((obj: Dict<Card>, card: Card) => {
         obj[card.id] = card;
         obj[card.id].ownedAmount = 0;
-        getAmountOfCardById(card.id, (amount) => {
+        getAmountOfCardById(card.id).then((amount) => {
             obj[card.id].ownedAmount = amount;
         });
         return obj;

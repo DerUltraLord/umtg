@@ -21,7 +21,7 @@ let dbString = function(s: string): string {
     return s.replace('\'', '\'\'');
 };
 
-export function cardAdd (card: Card, amount: number): void {
+export function cardAdd(card: Card, amount: number): void {
     let stmt = db.prepare('INSERT INTO Card VALUES(?, ?, ?, ?)');
     stmt.run(card.id, JSON.stringify(card), amount, 0, (err: string) => {
         if (err && !String(err).includes('SQLite: UNIQUE constraint failed')) {
@@ -119,19 +119,14 @@ export function cardAdjustAmount(card: Card, amount: number): Promise<number> {
     });
 }
 
-export function getAmountOfCardById(id: string, callback: (amount: number) => void): void {
-    // TODO: foil
-    //
-    let stmtFinished = (err: string, res: any) => {
-        let result = 0;
-        if (!err && res.length > 0) {
-            result = res[0].amount;
-        }
-        callback(result);
-    };
-
-    db.all('SELECT * FROM Card where id = \'' + id + '\'', stmtFinished);
+export async function getAmountOfCardById(id: string): Promise<number> {
+    let result = await _promiseStatement('SELECT * FROM Card where id = \'' + id + '\'');
+    if (result.length > 0) {
+        return result[0].amount;
+    }
+    return 0;
 }
+
 
 export function getCardByName(name: string): Promise<Card> {
     let transform = (res: any) => {

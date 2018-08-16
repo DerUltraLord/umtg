@@ -1,18 +1,39 @@
-import * as base from './base';
+import * as Base from './base';
 import { Card, Dict } from './umtgTypes';
 
-export function scryfallGetSets() : any {
-    return base.getJSON('https://api.scryfall.com/sets');
+export function scryfallGetSets() : Promise<any> {
+    return Base.getJSON('https://api.scryfall.com/sets');
 }
 
-export function getCardByName(name: string): Promise<Card> {
-    return base.getJSONTransformed('https://api.scryfall.com/cards/search?q=' + name.replace(/ /g, '+'), (res: any) => {
-        return res.data[0] as Card;
-    }) as Promise<Card>;
+export async function getCardByName(name: string): Promise<Card> {
+    let result: Card[] = await scryfallReqest<Card>('https://api.scryfall.com/cards/search?q=' + name.replace(/ /g, '+'));
+    if (result.length > 0) {
+        return result[0];
+    } else {
+        throw Error("card not found");
+    }
 }
 
-export function search(searchText: string): Promise<string> {
-    return base.getJSON('https://api.scryfall.com/cards/search?order=cmc&q=' + searchText);
+export function search<T>(searchText: string): Promise<T[]> {
+    return scryfallReqest<T>('https://api.scryfall.com/cards/search?order=cmc&q=' + searchText);
+}
+
+export async function scryfallReqest<T>(uri: string): Promise<T[]> {
+    let response: any = await Base.getJSON(uri);
+    let result: T[] = [];
+    if (!response.data) {
+        throw Error("no data for request " + uri);
+    }
+    for (const d of response.data) {
+        result.push(d as T);
+    }
+
+    if (response.has_more) {
+        let hasMoreResult = await scryfallReqest<T>(response.next_page);
+        result.push(...hasMoreResult);
+    }
+
+    return result;
 }
 
 export function buildSearchString(filter: any): any {

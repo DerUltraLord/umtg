@@ -1,11 +1,11 @@
 <template>
     <div class="collectionPage">
         <div class="scrollable">
-            <SetList @setClicked="showSet" :sets=state.pages.collection.sets :selectedSet=state.selectedSet></SetList>
+            <SetList @setClicked="showSet" :sets=$store.state.collection.sets :selectedSet=$store.state.collection.selectedSet></SetList>
         </div>
         <div class="scrollable">
-            <CardList @cardClicked="cardClicked" :cards=state.pages.collection.cards :settings=state.settings :selectedCard=state.pages.collection.selectedCard></CardList>
-            <Loader :loading=loading></Loader>
+            <CardList @cardClicked="cardClicked" :cards=$store.state.collection.cards :selectedCard=$store.state.collection.selectedCard></CardList>
+            <Loader :loading=$store.state.collection.loading></Loader>
         </div>
     </div>
 </template>
@@ -17,41 +17,29 @@ import Loader from './Loader.vue';
 import * as Model from '../store/model.ts';
 export default {
 
-    props: ['state'],
-    data() {
-        return {
-            loading: false,
-        };
-    },
     created: function () {
-        if (Object.keys(this.state.pages.collection.sets).length == 0) {
-            this.loading = true;
-            Model.updateSets()
-                .then(this.onUpdateSets)
-                .catch(console.error);
+        if (Object.keys(this.$store.state.collection.sets).length == 0) {
+            this.$store.dispatch('collection/updateSets');
         }
         
     },
     methods: {
-        onUpdateSets() {
-            let setKeys = Object.keys(this.state.pages.collection.sets);
-            if (setKeys.length > 0) {
-                this.showSet(this.state.pages.collection.sets[setKeys[0]]);
-            } else {
-                this.loading = false;
-            }
-        },
+        //onUpdateSets() {
+        //    let setKeys = Object.keys(this.state.pages.collection.sets);
+        //    if (setKeys.length > 0) {
+        //        this.showSet(this.state.pages.collection.sets[setKeys[0]]);
+        //    } else {
+        //        this.loading = false;
+        //    }
+        //},
         showSet(set) {
-            this.loading = true;
-            this.state.selectedSet = set;
-            Model.updateCardsBySet(set)
-                .then(this.onCards);
+            this.$store.dispatch('collection/selectSet', set);
         },
         cardClicked(card) {
-            this.state.pages.collection.selectedCard = card;
+            //this.state.pages.collection.selectedCard = card;
         },
         onCards() {
-            this.loading = false;
+            //this.loading = false;
         },
 
     },

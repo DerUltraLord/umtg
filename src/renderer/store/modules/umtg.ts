@@ -1,9 +1,21 @@
 import { Card, Dict } from '../umtgTypes';
+import { getAmountOfCardById } from '../db';
 
 export interface UmtgState {
     currentPage: string;
     pages: any,
 }
+
+export async function updateCards(cards: Card[]): Promise<Dict<Card>> {
+    let result: Dict<Card> = {};
+
+    for (const card of cards) {
+        result[card.id] = card;
+        result[card.id].ownedAmount = await getAmountOfCardById(card.id)
+    }
+
+    return result;
+};
 
 export const state: UmtgState = {
     currentPage: 'search',
