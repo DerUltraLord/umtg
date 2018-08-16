@@ -4,8 +4,8 @@
         <SearchPage v-if="$store.state.umtg.currentPage == 'search'"/>
         <CollectionPage v-if="$store.state.umtg.currentPage == 'collection'"/>
         <DecksPage v-if="$store.state.umtg.currentPage == 'deck'"/>
+        <SettingsPage v-if="$store.state.umtg.currentPage == 'settings'"/>
         <!--
-        <SettingsPage :state=state v-if="currentPage == 'settings'"/>
         <Footer :state=state></Footer>
         -->
     </div>
