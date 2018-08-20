@@ -2,11 +2,24 @@ import { expect } from 'chai';
 import { createSandbox, SinonSandbox, spy } from 'sinon';
 import * as fs from 'fs';
 
-import _, { state, mutations, actions, lineMatchCard, lineMatchSideboard, DeckState } from '../src/renderer/store/modules/deck';
+import _, { mutations, actions, deckAdjustCardAmount, lineMatchCard, lineMatchSideboard, DeckState } from '../src/renderer/store/modules/deck';
 import { Deck, Card, DecklistCard } from '../src/renderer/store/umtgTypes';
 import * as db from '../src/renderer/store/db';
 
 let mySandbox: SinonSandbox;
+let state: DeckState;
+
+let card1: Card = {
+    name: 'UltraLord',
+    id: 'UltraId'
+};
+
+let card2: Card = {
+    name: 'OtherCard',
+    id: 'OtherCard'
+};
+    
+
 describe('store/modules/deck.ts for DeckManagement', () => {
 
     before(() => {
@@ -21,6 +34,19 @@ describe('store/modules/deck.ts for DeckManagement', () => {
             return result;
         });
         mySandbox.stub(db, 'cardExistsByName').callsFake((cardname: string) => true);
+
+        state = {
+            loading: false,
+            decksPath: 'mydecksPath',
+            decks: [],
+            deck: {
+                deck: {name: 'mydeck', filename: 'mydeck.txt'},
+                cards: [],
+                sideboard: [],
+                cardAmount: {},
+            },
+            selectedCard: null,
+        };
     });
 
     after(() => {
@@ -44,40 +70,38 @@ describe('store/modules/deck.ts for DeckManagement', () => {
         expect(lineMatchSideboard('Sideboard:')).to.be.true;
     });
 
-    it('mutation: addCardToDeck', () => {
+    it('helper: deckAdjustCardAmount', () => {
+        deckAdjustCardAmount(state.deck!, card1, 2);
+        expect(state.deck!.cardAmount[card1.id]).to.be.equal(2);
+        deckAdjustCardAmount(state.deck!, card1, -1);
+        expect(state.deck!.cardAmount[card1.id]).to.be.equal(1);
+        deckAdjustCardAmount(state.deck!, card1, -100);
+        expect(state.deck!.cardAmount[card1.id]).to.be.equal(0);
+    
+    });
 
-        let stateMock: DeckState = {
-            loading: false,
-            decksPath: 'mydecksPath',
-            decks: [],
-            deck: {
-                deck: {name: 'mydeck', filename: 'mydeck.txt'},
-                cards: [],
-                sideboard: [],
-                cardAmount: {},
-            },
-            selectedCard: null,
-        };
+    it('mutation: removeCardFromSelectedDeck', () => {
+        mutations.addCardToSelectedDeck(state, card1);
+        expect(state.deck!.cards.length).to.equal(1);
+        expect(state.deck!.cardAmount[card1.id]).to.be.equal(1);
+        mutations.removeCardFromSelectedDeck(state, card1);
+        expect(state.deck!.cards.length).to.equal(1);
+        expect(state.deck!.cardAmount[card1.id]).to.be.equal(0);
+
+    }),
+
+    it('mutation: addCardToSelectedDeck', () => {
+
         
-        let myCard: Card = {
-            name: 'UltraLord',
-            id: 'UltraId'
-        };
-    
-        let otherCard: Card = {
-            name: 'OtherCard',
-            id: 'OtherCard'
-        };
-    
-        mutations.addCardToDeck(stateMock, myCard);
-        expect(stateMock.deck!.cards.length).to.equal(1);
-        expect(stateMock.deck!.cardAmount[myCard.id]).to.be.equal(1);
-        mutations.addCardToDeck(stateMock, myCard);
-        expect(stateMock.deck!.cards.length).to.equal(1);
-        expect(stateMock.deck!.cardAmount[myCard.id]).to.be.equal(2);
-        mutations.addCardToDeck(stateMock, otherCard);
-        expect(stateMock.deck!.cards.length).to.equal(2);
-        expect(stateMock.deck!.cardAmount[otherCard.id]).to.be.equal(1);
+        mutations.addCardToSelectedDeck(state, card1);
+        expect(state.deck!.cards.length).to.equal(1);
+        expect(state.deck!.cardAmount[card1.id]).to.be.equal(1);
+        mutations.addCardToSelectedDeck(state, card1);
+        expect(state.deck!.cards.length).to.equal(1);
+        expect(state.deck!.cardAmount[card1.id]).to.be.equal(2);
+        mutations.addCardToSelectedDeck(state, card2);
+        expect(state.deck!.cards.length).to.equal(2);
+        expect(state.deck!.cardAmount[card2.id]).to.be.equal(1);
     
     });
 
@@ -106,6 +130,7 @@ describe('store/modules/deck.ts for DeckManagement', () => {
             let result = commit.args[0][1];
             expect(result.cards.length).to.equal(1);
             expect(result.cards[0].name).to.equal('Ichor Wellspring');
+            expect(result.cardAmount[result.cards[0].id]).to.be.equal(4);
             expect(result.sideboard.length).to.equal(0);
             done();
         });

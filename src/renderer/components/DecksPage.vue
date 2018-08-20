@@ -11,7 +11,7 @@
                 <DeckList @deckSelected=deckSelected :decks=$store.state.deck.decks :selectedDeck=$store.state.deck.deck></DeckList>
             </div>
             <div class="scrollable">
-                <CardList v-if=$store.state.deck.deck @cardClicked="cardClicked" :cards=$store.state.deck.deck.cards :selectedCard=$store.state.deck.selectedCard></CardList>
+                <CardList v-if=$store.state.deck.deck @cardClicked="cardClicked" :cards=$store.state.deck.deck.cards :selectedCard=$store.state.deck.selectedCard :deck=$store.state.deck.deck></CardList>
                 <Loader :loading=$store.state.deck.loading></Loader>
             </div>
         </div>

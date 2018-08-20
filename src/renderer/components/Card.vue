@@ -27,7 +27,10 @@
             </div>
             <div class="row mt10">
                 <div class="col">
-                    <CardButtons :card=card></CardButtons>
+                    <CardButtons @addCard="addCardToCollection" @removeCard="removeCardFromCollection" :card=card :amount=card.ownedAmount></CardButtons>
+                </div>
+                <div v-if=this.deck class="col text-right">
+                    <CardButtons @addCard="addCardToDeck" @removeCard="removeCardFromDeck" :card=card :amount=deck.cardAmount[card.id] :deck=deck></CardButtons>
                 </div>
             </div>
         </div>
@@ -38,7 +41,7 @@
 import CardButtons from './CardButtons.vue';
 
 export default {
-    props: ['card'],
+    props: ['card', 'deck'],
     methods: {
         getImageUri() {
             let uri = '';
@@ -61,7 +64,19 @@ export default {
                 m = re.exec(card.mana_cost);
             }
             return res;
-        }
+        },
+        addCardToCollection() {
+        },
+        removeCardFromCollection() {
+        },
+        addCardToDeck() {
+            this.$store.commit('deck/addCardToSelectedDeck', this.card);
+            this.$store.dispatch('deck/writeDeckToDisk');
+        },
+        removeCardFromDeck() {
+            this.$store.commit('deck/removeCardFromSelectedDeck', this.card);
+            this.$store.dispatch('deck/writeDeckToDisk');
+        },
 
     },
     mounted: function() {

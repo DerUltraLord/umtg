@@ -1,7 +1,7 @@
 import { readdirSync, readFileSync, writeFile } from 'fs';
 import { Deck, DeckWithCards, Decklist, DecklistCard, Card, Dict } from '../umtgTypes';
 import { matchRegex } from '../base';
-import { cardExistsByName, getCardByName, cardAdd } from '../db';
+import { getAmountOfCardById, cardExistsByName, getCardByName, cardAdd } from '../db';
 import * as scry from '../scryfall';
 
 function getCardObjectsFromCardNames(cards: DecklistCard[]): Promise<Card[]> {
@@ -19,7 +19,7 @@ function getCardObjectsFromCardNames(cards: DecklistCard[]): Promise<Card[]> {
                 addedIds.push(dbCard.id);
             }
         }
-        dbCard['amount'] = Number(card.amount);
+        dbCard.ownedAmount = await getAmountOfCardById(dbCard.id);
         data.push(dbCard);
         return Promise.resolve(data);
     }, Promise.resolve([]));
@@ -77,6 +77,19 @@ export function traverseCards(content: String): Decklist {
 
 }
 
+export function deckAdjustCardAmount(deck: DeckWithCards, card: Card, amount: number): void {
+    if (!(card.id in deck.cardAmount)) {
+        deck.cards.push(card);
+        deck.cardAmount[card.id] = 0;
+    }
+    deck.cardAmount[card.id] += amount;
+
+    if (deck.cardAmount[card.id] < 0) {
+        deck.cardAmount[card.id] = 0;
+    }
+
+}
+
 
 export interface DeckState {
     loading: boolean;
@@ -115,14 +128,15 @@ export const mutations = {
         state.deck = deck;
         state.loading = false;
     },
-    addCardToDeck(state: DeckState, card: Card): void {
+    removeCardFromSelectedDeck(state: DeckState, card: Card): void {
+        if (state.deck) {
+            deckAdjustCardAmount(state.deck, card, -1);
+        }
+    },
+    addCardToSelectedDeck(state: DeckState, card: Card): void {
 
         if (state.deck) {
-            if (!(card.id in state.deck.cardAmount)) {
-                state.deck.cards.push(card);
-                state.deck.cardAmount[card.id] = 0;
-            }
-            state.deck.cardAmount[card.id] += 1;
+            deckAdjustCardAmount(state.deck, card, 1);
         }
     },
     setSelectedCard(state: DeckState, card: Card): void {
@@ -170,9 +184,9 @@ export const actions = {
         if (state.deck) {
             let data = '';
             state.deck.cards.forEach((card) => {
-                data += card.amount + " " + card.name + "\n";
+                data += state.deck!.cardAmount[card.id] + " " + card.name + "\n";
             });
-            writeFile(state.decksPath + '/' + state.deck.deck.filename, data, 'ascii', (err) => console.error(err));
+            writeFile(state.decksPath + '/' + state.deck.deck.filename, data, 'ascii', (err) => err ? console.error(err) : null);
         }
     }
 }

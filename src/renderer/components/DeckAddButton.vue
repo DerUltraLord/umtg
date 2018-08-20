@@ -16,15 +16,16 @@ export default {
     },
     methods: {
         addCardToDeck() {
-            let selectedCard = this.$store.state.umtg.pages[this.$store.state.umtg.currentPage].selectedCard;
+            let selectedCard = this.$store.state[this.$store.state.umtg.currentPage].selectedCard;
             if (selectedCard) {
-                alert("TODO");
-                //Model.addCardToSelectedDeck(selectedCard);
+                this.$store.commit('deck/addCardToSelectedDeck', selectedCard);
+                this.$store.dispatch('deck/writeDeckToDisk');
+            } else {
+                alert('No card selected');
             }
         },
         deckSelected(deck) {
-            alert("TODO");
-            //Model.selectDeck(deck);
+            this.$store.dispatch('deck/selectDeck', deck);
         },
     }
 };

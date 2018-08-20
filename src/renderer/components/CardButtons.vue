@@ -1,24 +1,15 @@
 <template>
     <div class="btn-group btn-group-sm">
-        <button id="removeButton" @click="removeCardFromCollection" class="btn btn-default delete" role="group"></button>
-        <span class="label label-default bg-light" role="group">{{ card.ownedAmount }}</span>
-        <button id="addButton" @click="addCardToCollection" class="btn btn-default add" role="group"></button>
+        <button id="removeButton" @click="$emit('removeCard')" class="btn btn-default delete" role="group"></button>
+        <span class="label label-default bg-light" role="group">{{ this.amount }}</span>
+        <button id="addButton" @click="$emit('addCard')" class="btn btn-default add" role="group"></button>
     </div>
 </template>
 
 <script>
 import * as Model from '../store/model.ts';
 export default {
-    props: ['card'],
-    methods: {
-        removeCardFromCollection() {
-            Model.removeCardFromCollection(this.card);
-        },
-        addCardToCollection() {
-            Model.addCardToCollection(this.card);
-        }
-    }
-
+    props: ['card', 'amount'],
 };
 </script>
 
