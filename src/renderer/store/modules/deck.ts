@@ -1,4 +1,6 @@
-import Vue from 'vue';
+const Vue = require('vue');
+//import Vue from 'vue';
+// TODO: import Vue does not work
 import { openSync, readdirSync, readFileSync, writeFile } from 'fs';
 import { Deck, DeckWithCards, Decklist, DecklistCard, Card, Dict } from '../umtgTypes';
 import { matchRegex } from '../base';

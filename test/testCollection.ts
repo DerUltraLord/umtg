@@ -7,6 +7,7 @@ import { MagicSet, Card } from '../src/renderer/store/umtgTypes';
 import * as Db from '../src/renderer/store/db';
 import * as Scryfall from '../src/renderer/store/scryfall';
 
+
 let state: Collection.CollectionState;
 let fakeSet: MagicSet;
 let fakeSetFiltered: MagicSet;
@@ -23,6 +24,7 @@ describe('store/modules/collection.ts', () => {
             sets: {},
             selectedSet: null,
             cards: {},
+            allCards: {},
             selectedCard: null,
         };
         fakeSet = {
