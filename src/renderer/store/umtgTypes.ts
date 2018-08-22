@@ -19,8 +19,8 @@ export interface Deck {
 
 export interface DeckWithCards {
     deck: Deck;
-    cards: Card[];
-    sideboard: Card[];
+    cards: Dict<Card>;
+    sideboard: Dict<Card>;
     cardAmount: Dict<number>;
 }
 

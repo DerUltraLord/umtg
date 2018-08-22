@@ -4,6 +4,7 @@ import { getAmountOfCardById } from '../db';
 export interface UmtgState {
     currentPage: string;
     pages: any;
+    filterColors: string[];
 }
 
 export async function extendCards(cards: Card[]): Promise<Dict<Card>> {
@@ -14,6 +15,19 @@ export async function extendCards(cards: Card[]): Promise<Dict<Card>> {
         result[card.id].ownedAmount = await getAmountOfCardById(card.id);
     }
 
+    return result;
+}
+
+export function filterCards(cards: Dict<Card>, colors: string[]): Dict<Card> {
+
+    let result: Dict<Card> = {};
+    if (cards) {
+        for (const cardId of Object.keys(cards)) {
+            if (colors.some((color) => cards[cardId].colors && cards[cardId].colors.includes(color))) {
+                result[cardId] = cards[cardId];
+            }
+        }
+    }
     return result;
 }
 
@@ -33,6 +47,7 @@ export const state: UmtgState = {
             name: 'Settings'
         },
     },
+    filterColors: ["W", "U", "B", "R", "G"]
 };
 
 export const mutations = {

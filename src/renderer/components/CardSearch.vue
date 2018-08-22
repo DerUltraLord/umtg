@@ -18,8 +18,9 @@
 <script>
 export default {
     methods: {
-        handleSubmit() {
-            this.$store.dispatch('search/doSearch');
+        async handleSubmit() {
+            await this.$store.dispatch('search/doSearch');
+            await this.$store.dispatch('search/filterCards');
         }
     }
 };

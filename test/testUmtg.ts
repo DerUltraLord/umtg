@@ -1,7 +1,8 @@
 import { createSandbox, SinonSandbox } from 'sinon';
 import { expect } from 'chai';
 
-import { extendCards } from '../src/renderer/store/modules/umtg';
+import { extendCards, filterCards } from '../src/renderer/store/modules/umtg';
+import { Dict, Card } from '../src/renderer/store/umtgTypes';
 import * as Db from '../src/renderer/store/db';
 
 let sandbox: SinonSandbox;
@@ -29,6 +30,32 @@ describe('store/modules/umtg.ts', () => {
                 expect(result.ultraid.ownedAmount).to.be.equal(1);
                 done();
             });
+
+    });
+
+    it('helper: filterCards', () => {
+
+        let cards = {
+            'ultraid': {
+                'id': 'ultraid',
+                'name': 'Ultra Lord',
+                'colors': ['B']
+            },
+            'otherCard': {
+                'id': 'otherCard',
+                'name': 'otherCard',
+                'colors': ['U']
+            },
+            'otherCard2': {
+                'id': 'otherCard2',
+                'name': 'otherCard',
+                'colors': ['R']
+            }
+        };
+
+        let result = filterCards(cards, ['B', 'U']);
+        expect(Object.keys(result).length).to.be.equal(2);
+        expect(result['ultraid'].id).to.be.equal('ultraid');
 
     });
 

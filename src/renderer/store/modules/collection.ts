@@ -1,5 +1,5 @@
 
-import { extendCards } from './umtg';
+import { extendCards, filterCards } from './umtg';
 import { Dict, MagicSet, Card } from '../umtgTypes';
 import { cardAdjustAmount, cardExistsById, getCardsOfSet, getSets, setAdd, getOwnedCardAmountBySetCode, isSetDownloaded, cardAdd } from '../db';
 import { scryfallGetSets, scryfallReqest } from '../scryfall';
@@ -9,6 +9,7 @@ export interface CollectionState {
     sets: Dict<MagicSet>;
     selectedSet: MagicSet | null;
     cards: Dict<Card>;
+    allCards: Dict<Card>;
     selectedCard: Card | null;
 }
 
@@ -52,6 +53,9 @@ export const mutations = {
     setCards(state: CollectionState, cards: Dict<Card>): void {
         state.cards = cards;
         state.loading = false;
+    },
+    setAllCards(state: CollectionState, cards: Dict<Card>): void {
+        state.allCards = cards;
     },
     setSelectedCard(state: CollectionState, card: Card): void {
         state.selectedCard = card;
@@ -102,6 +106,7 @@ export const actions = {
         let cardsDict: Dict<Card> = await extendCards(cards);
 
         commit('setCards', cardsDict);
+        commit('setAllCards', cardsDict);
         commit('setSelectedSet', set);
 
         return null;
@@ -124,6 +129,9 @@ export const actions = {
         commit('setCollectedAmountBySetCode', {setCode: setCode, amount: collectedAmount});
         return null;
     },
+    filterCards({state, commit, rootState}: {state: CollectionState, commit: any, rootState: any}): void {
+        commit('setCards', filterCards(state.allCards, rootState.umtg.filterColors));
+    }
 };
 
 export default {

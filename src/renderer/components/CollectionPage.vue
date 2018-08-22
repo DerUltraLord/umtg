@@ -31,8 +31,10 @@ export default {
         //        this.loading = false;
         //    }
         //},
-        showSet(set) {
-            this.$store.dispatch('collection/selectSet', set);
+        async showSet(set) {
+            await this.$store.dispatch('collection/selectSet', set);
+            await this.$store.dispatch('collection/filterCards', set);
+
         },
         cardClicked(card) {
             this.$store.commit('collection/setSelectedCard', card);

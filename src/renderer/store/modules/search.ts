@@ -1,11 +1,12 @@
 import { Card, Dict } from '../umtgTypes';
 import * as Scryfall from '../scryfall';
 import { getAmountOfCardById } from '../db';
-import { extendCards } from './umtg';
+import { extendCards, filterCards } from './umtg';
 
 export interface SearchState  {
     loading: boolean;
     cards: Dict<Card>;
+    allCards: Dict<Card>;
     selectedCard: Card | null;
     name: string;
     type: string;
@@ -29,6 +30,9 @@ export const mutations = {
         state.cards = cards;
         state.loading = false;
     },
+    setAllCards(state: SearchState, cards: Dict<Card>): void {
+        state.allCards = cards;
+    },
     setSelectedCard(state: SearchState, card: Card): void {
         state.selectedCard = card;
     }
@@ -40,9 +44,13 @@ export const actions = {
         let filter = Scryfall.getSearchFilter(state.name, state.type, state.text, state.edition);
         let cards: Card[] = await Scryfall.searchByFilter(filter);
         let cardsDict: Dict<Card> = await extendCards(cards);
-        commit('setCards', cardsDict);
+        commit('setAllCards', cardsDict);
         return null;
+    },
+    filterCards({state, commit, rootState}: {state: SearchState, commit: any, rootState: any}): void {
+        commit('setCards', filterCards(state.allCards, rootState.umtg.filterColors));
     }
+
 };
 
 export default {

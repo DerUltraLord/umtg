@@ -4,8 +4,9 @@ import { Deck, DeckWithCards, Decklist, DecklistCard, Card, Dict } from '../umtg
 import { matchRegex } from '../base';
 import { getAmountOfCardById, cardExistsByName, getCardByName, cardAdd } from '../db';
 import * as scry from '../scryfall';
+import { filterCards } from './umtg';
 
-function getCardObjectsFromCardNames(cards: DecklistCard[]): Promise<Card[]> {
+function getCardObjectsFromCardNames(cards: DecklistCard[]): Promise<Dict<Card>> {
     let addedIds: string[] = [];
     return cards.reduce(async (p: any, card) => {
         let data: any = await p;
@@ -21,9 +22,9 @@ function getCardObjectsFromCardNames(cards: DecklistCard[]): Promise<Card[]> {
             }
         }
         dbCard.ownedAmount = await getAmountOfCardById(dbCard.id);
-        data.push(dbCard);
+        data[dbCard.id] = dbCard;
         return Promise.resolve(data);
-    }, Promise.resolve([]));
+    }, Promise.resolve({}));
 }
 
 export function lineMatchCard(line: String): DecklistCard | null {
@@ -80,7 +81,7 @@ export function traverseCards(content: String): Decklist {
 
 export function deckAdjustCardAmount(deck: DeckWithCards, card: Card, amount: number): void {
     if (!(card.id in deck.cardAmount)) {
-        deck.cards.push(card);
+        deck.cards[card.id] = card;
         Vue.set(deck.cardAmount, card.id, 0);
     }
     deck.cardAmount[card.id] += amount;
@@ -96,6 +97,7 @@ export interface DeckState {
     decksPath: string;
     decks: Deck[];
     deck: DeckWithCards | null;
+    cards: Dict<Card>;
     selectedCard: Card | null;
 }
 
@@ -104,6 +106,7 @@ export const state: DeckState = {
     decksPath: process.env.HOME + '/.umtg/decks',
     decks: [],
     deck: null,
+    cards: {},
     selectedCard: null
 };
 
@@ -126,6 +129,10 @@ export const mutations = {
     },
     setDeck(state: DeckState, deck: DeckWithCards): void {
         state.deck = deck;
+        state.loading = false;
+    },
+    setCards(state: DeckState, cards: Dict<Card>): void {
+        state.cards = cards;
         state.loading = false;
     },
     removeCardFromSelectedDeck(state: DeckState, card: Card): void {
@@ -158,7 +165,7 @@ export const actions = {
         commit('setDecks', decks);
     },
 
-    async selectDeck({state, commit}: {state: DeckState, commit: any}, deck: Deck): Promise<void> {
+    async selectDeck({state, commit, rootState}: {state: DeckState, commit: any, rootState: any}, deck: Deck): Promise<void> {
         state.loading = true;
         let contents = readFileSync(state.decksPath + '/' + deck.filename).toString();
         let deckResult = traverseCards(contents);
@@ -167,8 +174,8 @@ export const actions = {
         let sideboard = await getCardObjectsFromCardNames(deckResult.sideboard);
         let amountDict: Dict<number> = {};
 
-        cards.forEach((card, i)  => {
-            amountDict[card.id] = deckResult.cards[i].amount;
+        Object.keys(cards).forEach((cardId: string, i: number)  => {
+            amountDict[cardId] = deckResult.cards[i].amount;
         });
 
         let result: DeckWithCards = {
@@ -178,14 +185,16 @@ export const actions = {
             cardAmount: amountDict,
         };
         commit('setDeck', result);
+        commit('setCards', filterCards(result.cards, rootState.umtg.filterColors));
     },
 
     writeDeckToDisk({state}: {state: DeckState}): void {
         if (state.deck) {
             let data = '';
-            state.deck.cards.forEach((card) => {
+            for (const cardId of Object.keys(state.deck.cards)) {
+                let card = state.deck.cards[cardId];
                 data += state.deck!.cardAmount[card.id] + " " + card.name + "\n";
-            });
+            }
             writeFile(state.decksPath + '/' + state.deck.deck.filename, data, 'ascii', (err) => err ? console.error(err) : null);
         }
         },
@@ -193,6 +202,9 @@ export const actions = {
     createDeck({state, commit}: {state: DeckState, commit: any}, deckname: string): Promise<void> {
         openSync(state.decksPath + '/' + deckname + '.txt', 'w');
         return Promise.resolve();
+    },
+    filterCards({state, commit, rootState}: {state: DeckState, commit: any, rootState: any}): void {
+        commit('setCards', filterCards(state.deck!.cards, rootState.umtg.filterColors));
     }
 };
 
