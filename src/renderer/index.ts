@@ -7,7 +7,7 @@ import App from './components/App.vue';
 
 import storeDefinition from './store/store';
 import { init } from './store/db';
-init('TODO.db');
+init('umtg.db');
 
 Vue.use(Vuex);
 

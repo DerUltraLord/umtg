@@ -22,7 +22,8 @@ export default {
         createDeck() {
             let deckName = this.$refs.deckName.value;
             if (deckName) {
-                Model.createDeck(deckName);
+                this.$store.dispatch('deck/createDeck', deckName);
+                this.$store.dispatch('deck/updateDecks');
             }
 
         }

@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync, writeFile } from 'fs';
+import { openSync, readdirSync, readFileSync, writeFile } from 'fs';
 import { Deck, DeckWithCards, Decklist, DecklistCard, Card, Dict } from '../umtgTypes';
 import { matchRegex } from '../base';
 import { getAmountOfCardById, cardExistsByName, getCardByName, cardAdd } from '../db';
@@ -188,6 +188,11 @@ export const actions = {
             });
             writeFile(state.decksPath + '/' + state.deck.deck.filename, data, 'ascii', (err) => err ? console.error(err) : null);
         }
+        },
+
+    createDeck({state, commit}: {state: DeckState, commit: any}, deckname: string): Promise<void> {
+        openSync(state.decksPath + '/' + deckname + '.txt', 'w');
+        return Promise.resolve();
     }
 }
 

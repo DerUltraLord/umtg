@@ -66,8 +66,16 @@ export default {
             return res;
         },
         addCardToCollection() {
+            this.$store.dispatch('collection/addCardToCollection', this.card)
+                .then(() => {
+                    this.$store.dispatch('collection/updateCollectedAmountBySetCode', this.card.set);
+                });
         },
         removeCardFromCollection() {
+            this.$store.dispatch('collection/removeCardFromCollection', this.card)
+                .then(() => {
+                    this.$store.dispatch('collection/updateCollectedAmountBySetCode', this.card.set);
+                });
         },
         addCardToDeck() {
             this.$store.commit('deck/addCardToSelectedDeck', this.card);

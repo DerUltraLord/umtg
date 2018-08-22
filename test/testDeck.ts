@@ -136,6 +136,18 @@ describe('store/modules/deck.ts for DeckManagement', () => {
         });
 
     });
+
+    it('action: createDeck', (done) => {
+        const commit = spy();
+        const openSync = mySandbox.stub(fs, 'openSync').callsFake(() => null);
+
+        actions.createDeck({state, commit}, 'testdeck')
+        .then(() => {
+            expect(openSync.calledOnce).to.be.true;
+            done();
+        });
+        
+    });
     
 
 });
