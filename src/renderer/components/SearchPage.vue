@@ -15,7 +15,6 @@
 import CardSearch from './CardSearch.vue';
 import CardList from './CardList.vue';
 import Loader from './Loader.vue';
-import * as Model from '../store/model.ts';
 
 export default {
     mounted: function() {

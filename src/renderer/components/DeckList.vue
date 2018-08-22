@@ -12,7 +12,6 @@
 
 <script>
 import Deck from './Deck.vue';
-import * as Model from '../store/model.ts';
 export default {
     props: ['decks', 'selectedDeck'],
     components: {

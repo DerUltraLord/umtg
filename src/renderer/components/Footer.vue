@@ -26,7 +26,6 @@
 
 <script>
 import DeckAddButton from './DeckAddButton.vue';
-import * as Model from '../store/model.ts';
 import $ from 'jquery';
 export default {
     created: function() {

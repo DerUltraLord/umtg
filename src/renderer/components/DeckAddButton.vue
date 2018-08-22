@@ -10,7 +10,6 @@
     </div>
 </template>
 <script>
-import * as Model from '../store/model.ts';
 export default {
     mounted: function() {
     },

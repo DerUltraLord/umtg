@@ -7,7 +7,6 @@
 </template>
 
 <script>
-import * as Model from '../store/model.ts';
 export default {
     props: ['card', 'amount'],
 };
