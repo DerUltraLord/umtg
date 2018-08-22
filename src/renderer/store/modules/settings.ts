@@ -69,7 +69,7 @@ export const mutations = {
 
 export const actions = {
 
-    writeSettingsToFile({state: any}: {state:any}): void {
+    writeSettingsToFile({state}: {state: Settings}): void {
         fs.writeFileSync(join(state.settingsPath, state.settingsFile), JSON.stringify(state, null, 4));
     }
 };
