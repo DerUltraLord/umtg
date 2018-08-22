@@ -17,6 +17,7 @@ import DecksPage from './DecksPage.vue';
 import SettingsPage from './SettingsPage.vue';
 import Footer from './Footer.vue';
 
+import { init } from '../store/db';
 import { initDeckState } from '../store/modules/deck';
 import { initSettings } from '../store/modules/settings';
 
@@ -31,9 +32,10 @@ export default {
         SettingsPage,
         Footer,
     },
-    created: function() {
-        initDeckState(this.$store);
+    beforeCreate: function() {
         initSettings(this.$store);
+        init('umtg.db');
+        initDeckState(this.$store);
     }
 };
 </script>

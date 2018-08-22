@@ -33,19 +33,22 @@ export const state: Settings = {
 
 export function initSettings(store: any): void {
     const state: Settings = store.state.settings;
+    console.log("initSettings");
 
     if (!fs.existsSync(store.state.settings.settingsPath)) {
+        console.log("create settings folder");
         fs.mkdirSync(store.state.settings.settingsPath);
     }
 
     let decksFolder = join(store.state.settings.settingsPath, store.state.settings.decksFolder);
     if (!fs.existsSync(decksFolder)) {
+        console.log("create decks folder");
         fs.mkdirSync(decksFolder);
     }
 
     let settingsFile = join(store.state.settings.settingsPath, store.state.settings.settingsFile);
     if (!fs.existsSync(settingsFile)) {
-        store.dispatch('writeSettingsToFile');
+        actions.writeSettingsToFile(store.state.settings);
     }
 
     let data = fs.readFileSync(settingsFile);
