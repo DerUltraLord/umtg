@@ -74,7 +74,7 @@ input {
 
 .scrollable {
     overflow: auto;
-    max-height: calc(100vh - 45px);
+    max-height: calc(100vh - 120px);
 }
 
 </style>
