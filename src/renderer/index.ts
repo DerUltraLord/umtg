@@ -11,7 +11,7 @@ init('umtg.db');
 
 Vue.use(Vuex);
 
-const store = new Vuex.Store(storeDefinition);
+const store: any = new Vuex.Store(storeDefinition);
 
 console.log(store.getters.settings);
 

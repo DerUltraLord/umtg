@@ -12,7 +12,7 @@ let fakeSet: MagicSet;
 let fakeSetFiltered: MagicSet;
 let fakeCard: Card;
 
-let sandbox: SinonSandbox
+let sandbox: SinonSandbox;
 
 describe('store/modules/collection.ts', () => {
 
@@ -51,18 +51,18 @@ describe('store/modules/collection.ts', () => {
         const getOwnedCardAmountBySetCode = sandbox.stub(Db, 'getOwnedCardAmountBySetCode').resolves(2); 
         const isSetDownloaded = sandbox.stub(Db, 'isSetDownloaded').resolves(true);
         Collection.extendSets(sets)
-        .then((result) => {
-            expect(result['ultra'].collectedAmount).to.be.equal(2);
-            expect(result['ultra'].downloaded).to.be.true;
-            assert.calledTwice(getOwnedCardAmountBySetCode);
-            assert.calledTwice(isSetDownloaded);
-            done();
-        })
+            .then((result) => {
+                expect(result['ultra'].collectedAmount).to.be.equal(2);
+                expect(result['ultra'].downloaded).to.be.true;
+                assert.calledTwice(getOwnedCardAmountBySetCode);
+                assert.calledTwice(isSetDownloaded);
+                done();
+            });
 
     });
     it('helpers: adjustCardAmountOfCollection()', (done) => {
-        const cardAdd = sandbox.stub(Db, 'cardAdd').callsFake(() => null)
-        const cardExistsById = sandbox.stub(Db, 'cardExistsById').resolves(false)
+        const cardAdd = sandbox.stub(Db, 'cardAdd').callsFake(() => null);
+        const cardExistsById = sandbox.stub(Db, 'cardExistsById').resolves(false);
         Collection.adjustCardAmountOfCollection(state, fakeCard, 2)
             .then((amount) => {
                 expect(cardAdd.calledOnce).to.be.true;        
@@ -70,7 +70,7 @@ describe('store/modules/collection.ts', () => {
 
                 expect(amount).to.be.equal(2);
                 done();
-            })
+            });
     });
 
     it('mutations: setSets()', () => {
@@ -130,10 +130,10 @@ describe('store/modules/collection.ts', () => {
 
     it('actions: updateSets() when no set is in db', (done) => {
         const commit = spy();
-        const scryfallReqest = sandbox.stub(Scryfall, 'scryfallReqest').resolves([fakeCard])
-        const cardAdd = sandbox.stub(Db, 'cardAdd').callsFake(() => null)
-        const getCardsOfSet = sandbox.stub(Db, 'getCardsOfSet').resolves([fakeCard])
-        const extendCards = sandbox.stub(Umtg, 'extendCards').resolves({'UltraId': fakeCard})
+        const scryfallReqest = sandbox.stub(Scryfall, 'scryfallReqest').resolves([fakeCard]);
+        const cardAdd = sandbox.stub(Db, 'cardAdd').callsFake(() => null);
+        const getCardsOfSet = sandbox.stub(Db, 'getCardsOfSet').resolves([fakeCard]);
+        const extendCards = sandbox.stub(Umtg, 'extendCards').resolves({'UltraId': fakeCard});
 
         Collection.actions.selectSet({state, commit}, fakeSet)
             .then((result) => {
@@ -146,7 +146,7 @@ describe('store/modules/collection.ts', () => {
                 expect(commit.getCall(0).args[1]).to.deep.equal({'UltraId': fakeCard});
                 expect(state.loading).to.be.true;
                 done();
-            })
+            });
     });
 
     it('actions: addCardToCollection/removeCardFromCollection', (done) => {

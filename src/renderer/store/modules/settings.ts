@@ -29,7 +29,7 @@ export const state: Settings = {
     settingsPath: process.env.HOME + '/.umtg',
     decksFolder: 'decks',
     settingsFile: 'settings.json'
-}
+};
 
 export function initSettings(store: any): void {
     const state: Settings = store.state.settings;
@@ -51,7 +51,7 @@ export function initSettings(store: any): void {
     let data = fs.readFileSync(settingsFile);
     let settingsJson = JSON.parse(data.toString());
     store.state.settings = settingsJson;
-};
+}
 
 export const mutations = {
 
@@ -62,15 +62,14 @@ export const mutations = {
     setSetVisibleStatus(state: Settings, {setKey, value}: {setKey: string, value: boolean}): void {
         state.setTypes[setKey] = value;
     }
-}
+};
 
 export const actions = {
-
 
     writeSettingsToFile({state: any}: {state:any}): void {
         fs.writeFileSync(join(state.settingsPath, state.settingsFile), JSON.stringify(state, null, 4));
     }
-}
+};
 
 export const getters = {
     isGridActive(state: Settings): boolean {
@@ -80,7 +79,7 @@ export const getters = {
     getSetTypes(state: Settings): any {
         return state.setTypes;
     }
-}
+};
 
 export default {
     namespaced: true,

@@ -24,11 +24,11 @@ describe('store/modules/search.ts', () => {
             edition: ''
         };
         fakeCard = {name: 'fakeCard', id: 'fakeid'};
-    })
+    });
 
     afterEach(() => {
         sandbox.restore();
-    })
+    });
 
 
     it('mutations: setCards', () => {

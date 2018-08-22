@@ -10,8 +10,7 @@ export interface CollectionState {
     selectedSet: MagicSet | null;
     cards: Dict<Card>;
     selectedCard: Card | null;
-};
-
+}
 
 export const state = {
     loading: false,
@@ -30,7 +29,7 @@ export async function extendSets(sets: MagicSet[]): Promise<Dict<MagicSet>> {
         result[set.code].downloaded = await isSetDownloaded(set);
     }
     return result;
-};
+}
 
 export async function adjustCardAmountOfCollection(state: CollectionState, card: Card, amount: number): Promise<number> {
     let exist: boolean = await cardExistsById(card.id);
@@ -40,17 +39,17 @@ export async function adjustCardAmountOfCollection(state: CollectionState, card:
         cardAdd(card, amount);
     }
     return amount;
-};
+}
 
 export const mutations = {
-    setSets(state: CollectionState, sets: Dict<MagicSet>) {
+    setSets(state: CollectionState, sets: Dict<MagicSet>): void {
         state.sets = sets;
         state.loading = false;
     },
     setSelectedSet(state: CollectionState, set: MagicSet): void {
         state.selectedSet = set;
     },
-    setCards(state: CollectionState, cards: Dict<Card>) {
+    setCards(state: CollectionState, cards: Dict<Card>): void {
         state.cards = cards;
         state.loading = false;
     },
@@ -74,7 +73,7 @@ export const actions = {
 
     async updateSets({state, rootState, commit}: {state: CollectionState, rootState: any, commit: any}): Promise<null>  {
         state.loading = true;
-        let sets = await getSets()
+        let sets = await getSets();
         if (sets.length === 0) {
             let setsFromScryfall = await scryfallGetSets();
             setsFromScryfall.data.forEach((s: MagicSet) => setAdd(s));

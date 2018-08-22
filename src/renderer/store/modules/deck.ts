@@ -105,7 +105,7 @@ export const state: DeckState = {
     decks: [],
     deck: null,
     selectedCard: null
-}
+};
 
 export function initDeckState(store: any): void {
     console.log("init deck state");
@@ -117,7 +117,7 @@ export function initDeckState(store: any): void {
     if (!store.state.deck.selectedDeck && availableDecks.length > 0) {
         store.dispatch('deck/selectDeck', availableDecks[0]);
     }
-};
+}
 
 export const mutations = {
     setDecks(state: DeckState, decks: Deck[]): void {
@@ -142,7 +142,7 @@ export const mutations = {
     setSelectedCard(state: DeckState, card: Card): void {
         state.selectedCard = card;
     }
-}
+};
 
 export const actions = {
 
@@ -194,7 +194,7 @@ export const actions = {
         openSync(state.decksPath + '/' + deckname + '.txt', 'w');
         return Promise.resolve();
     }
-}
+};
 
 
 export default {
@@ -202,4 +202,4 @@ export default {
     state: state,
     mutations: mutations,
     actions: actions
-}
+};

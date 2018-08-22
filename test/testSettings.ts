@@ -20,7 +20,7 @@ describe('store/modules/settings.ts for Settings Management', () => {
             settingsPath: 'foo',
             decksFolder: 'foo',
             settingsFile: 'foo',
-        }
+        };
         sandbox.stub(fs, 'existsSync').callsFake(() => true);
         sandbox.stub(fs, 'readFileSync').callsFake(() => JSON.stringify(state));
     });
@@ -35,7 +35,7 @@ describe('store/modules/settings.ts for Settings Management', () => {
             },
             'dispatch': dispatch,
 
-        }
+        };
         initSettings(store);
     });
 

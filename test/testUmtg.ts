@@ -21,7 +21,7 @@ describe('store/modules/umtg.ts', () => {
                 id: 'ultraid',
                 name: 'Ultra Lord',
             }
-        ]
+        ];
 
         const getAmountOfCardById = sandbox.stub(Db, 'getAmountOfCardById').resolves(1);
         extendCards(cards)

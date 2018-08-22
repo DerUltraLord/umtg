@@ -3,7 +3,7 @@ import { getAmountOfCardById } from '../db';
 
 export interface UmtgState {
     currentPage: string;
-    pages: any,
+    pages: any;
 }
 
 export async function extendCards(cards: Card[]): Promise<Dict<Card>> {
@@ -11,11 +11,11 @@ export async function extendCards(cards: Card[]): Promise<Dict<Card>> {
 
     for (const card of cards) {
         result[card.id] = card;
-        result[card.id].ownedAmount = await getAmountOfCardById(card.id)
+        result[card.id].ownedAmount = await getAmountOfCardById(card.id);
     }
 
     return result;
-};
+}
 
 export const state: UmtgState = {
     currentPage: 'search',
@@ -39,7 +39,7 @@ export const mutations = {
     setCurrentPage(state: UmtgState, currentPage: string): void {
         state.currentPage = currentPage;
     },
-}
+};
 
 export const getters = {
     getCardsForSearchPage(state: UmtgState): Dict<Card> {
@@ -48,7 +48,7 @@ export const getters = {
     getSelectedSearchCard(state: UmtgState): Card | null {
         return state.pages.search.selectedCard;
     },
-}
+};
 
 export default { 
     state: state,

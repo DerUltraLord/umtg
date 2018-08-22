@@ -131,7 +131,7 @@ describe('Test Database', () => {
                     expect(isDownloaded).to.be.false;
                 })
                 .then(() => {
-                    Db.cardAdd(testCard, 0)
+                    Db.cardAdd(testCard, 0);
                     return Db.isSetDownloaded(testSet);
                 })
                 .then((isDownloaded: boolean) => {
