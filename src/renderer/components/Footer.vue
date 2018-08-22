@@ -37,6 +37,7 @@ export default {
             let lbl = $(e.srcElement).closest('label');
             lbl.removeClass('btn-secondary').addClass('btn-primary');
             this.$store.commit('settings/setGridActive', lbl.find('input').attr('id') == 'true');
+            this.$store.dispatch('settings/writeSettingsToFile');
         }
     },
     components: {

@@ -9,10 +9,13 @@
                             <div>
                             </div>
                         </div>
-                        <div class="media-body">
+                        <div class="media-body p-2">
                             <div class="row">
                                 <h2 class="col-lg-8">{{ card.name }}</h2>
-                                <div ref="manaSymbols" class="col-lg-4"></div>
+                                <div v-html="tagsForMana" class="col-lg-4"></div>
+                            </div>
+                            <div class="row">
+                                <p class="col-lg-12">{{ card.oracle_text }}</p>
                             </div>
                         </div>
                     </div>
@@ -84,12 +87,12 @@ export default {
         removeCardFromDeck() {
             this.$store.commit('deck/removeCardFromSelectedDeck', this.card);
             this.$store.dispatch('deck/writeDeckToDisk');
-        },
+        }
 
     },
-    mounted: function() {
-        if (!this.$store.getters['settings/isGridActive']) {
-            this.$refs.manaSymbols.insertAdjacentHTML('beforeend', this.getTagsForMana(this.card));
+    computed: {
+        tagsForMana() {
+            return this.getTagsForMana(this.card);
         }
     },
     components: {
