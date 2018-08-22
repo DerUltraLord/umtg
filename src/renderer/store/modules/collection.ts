@@ -57,7 +57,10 @@ export const mutations = {
         state.selectedCard = card;
     },
     setOwnedAmountOfCard(state: CollectionState, {card, amount}: {card: Card, amount: number}): void {
-        state.cards[card.id].ownedAmount = amount;
+        card.ownedAmount = amount;
+        if (state.cards[card.id]) {
+            state.cards[card.id] = card;
+        }
     },
     setCollectedAmountBySetCode(state: CollectionState, {setCode, amount}: {setCode: string, amount: number}): void {
         if (state.sets[setCode]) {

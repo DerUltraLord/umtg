@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import { openSync, readdirSync, readFileSync, writeFile } from 'fs';
 import { Deck, DeckWithCards, Decklist, DecklistCard, Card, Dict } from '../umtgTypes';
 import { matchRegex } from '../base';
@@ -80,14 +81,13 @@ export function traverseCards(content: String): Decklist {
 export function deckAdjustCardAmount(deck: DeckWithCards, card: Card, amount: number): void {
     if (!(card.id in deck.cardAmount)) {
         deck.cards.push(card);
-        deck.cardAmount[card.id] = 0;
+        Vue.set(deck.cardAmount, card.id, 0);
     }
     deck.cardAmount[card.id] += amount;
 
     if (deck.cardAmount[card.id] < 0) {
         deck.cardAmount[card.id] = 0;
     }
-
 }
 
 

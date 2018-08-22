@@ -33,7 +33,7 @@
                     <CardButtons @addCard="addCardToCollection" @removeCard="removeCardFromCollection" :card=card :amount=card.ownedAmount></CardButtons>
                 </div>
                 <div v-if=this.deck class="col text-right">
-                    <CardButtons @addCard="addCardToDeck" @removeCard="removeCardFromDeck" :card=card :amount=deck.cardAmount[card.id] :deck=deck></CardButtons>
+                    <CardButtons @addCard="addCardToDeck" @removeCard="removeCardFromDeck" :card=card :amount=deckAmount :deck=deck></CardButtons>
                 </div>
             </div>
         </div>
@@ -93,6 +93,9 @@ export default {
     computed: {
         tagsForMana() {
             return this.getTagsForMana(this.card);
+        },
+        deckAmount() {
+            return this.deck.cardAmount[this.card.id];
         }
     },
     components: {
