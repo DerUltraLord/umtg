@@ -47,7 +47,7 @@
                     <span><img src="icons/G.svg" width="24"></span>
                 </label>			
 		    </div>
-            <input @change="doFilter" class="form-control mr-sm-2" type="search" placeholder="Name filter" aria-label="Name filter" v-model="$store.state.umtg.filterString">
+            <input @change="doFilter" class="form-control mr-sm-2" style="margin-left: 10px" ytype="search" placeholder="Name filter" aria-label="Name filter" v-model="$store.state.umtg.filterString">
         </form>
     </nav>
 
