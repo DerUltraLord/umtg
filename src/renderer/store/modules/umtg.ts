@@ -5,6 +5,7 @@ export interface UmtgState {
     currentPage: string;
     pages: any;
     filterColors: string[];
+    filterString: string;
 }
 
 export async function extendCards(cards: Card[]): Promise<Dict<Card>> {
@@ -18,12 +19,19 @@ export async function extendCards(cards: Card[]): Promise<Dict<Card>> {
     return result;
 }
 
-export function filterCards(cards: Dict<Card>, colors: string[]): Dict<Card> {
+export function filterCards(cards: Dict<Card>, colors: string[], name: string): Dict<Card> {
 
     let result: Dict<Card> = {};
     if (cards) {
         for (const cardId of Object.keys(cards)) {
-            if (colors.some((color) => cards[cardId].colors && cards[cardId].colors.includes(color))) {
+            let matchesColor = false;
+            if (colors.length > 0) {
+                matchesColor = colors.some((color) => cards[cardId].colors && cards[cardId].colors.includes(color));
+            } else {
+                matchesColor = cards[cardId].colors === undefined || cards[cardId].colors.length === 0;
+            }
+            let matchesName = cards[cardId].name.toLowerCase().includes(name.toLowerCase());
+            if (matchesColor && matchesName) {
                 result[cardId] = cards[cardId];
             }
         }
@@ -47,7 +55,8 @@ export const state: UmtgState = {
             name: 'Settings'
         },
     },
-    filterColors: ["W", "U", "B", "R", "G"]
+    filterColors: ["W", "U", "B", "R", "G"],
+    filterString: ''
 };
 
 export const mutations = {

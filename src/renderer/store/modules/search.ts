@@ -48,7 +48,7 @@ export const actions = {
         return null;
     },
     filterCards({state, commit, rootState}: {state: SearchState, commit: any, rootState: any}): void {
-        commit('setCards', filterCards(state.allCards, rootState.umtg.filterColors));
+        commit('setCards', filterCards(state.allCards, rootState.umtg.filterColors, rootState.umtg.filterString));
     }
 
 };

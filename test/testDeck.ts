@@ -54,6 +54,7 @@ describe('store/modules/deck.ts for DeckManagement', () => {
         rootState = {
             umtg: {
                 filterColors: [],
+                filterString: '',
             }
         };
     });

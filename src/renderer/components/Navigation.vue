@@ -32,7 +32,7 @@
                     <input @change="doFilter" type="checkbox" autocomplete="off" value="G" v-model="filterColors">G
                 </label>			
 		    </div>
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <input @change="doFilter" class="form-control mr-sm-2" type="search" placeholder="Name filter" aria-label="Name filter" v-model="$store.state.umtg.filterString">
         </form>
     </nav>
 

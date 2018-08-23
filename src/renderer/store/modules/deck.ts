@@ -187,7 +187,7 @@ export const actions = {
             cardAmount: amountDict,
         };
         commit('setDeck', result);
-        commit('setCards', filterCards(result.cards, rootState.umtg.filterColors));
+        commit('setCards', filterCards(result.cards, rootState.umtg.filterColors, rootState.umtg.filterString));
     },
 
     writeDeckToDisk({state}: {state: DeckState}): void {
@@ -206,7 +206,7 @@ export const actions = {
         return Promise.resolve();
     },
     filterCards({state, commit, rootState}: {state: DeckState, commit: any, rootState: any}): void {
-        commit('setCards', filterCards(state.deck!.cards, rootState.umtg.filterColors));
+        commit('setCards', filterCards(state.deck!.cards, rootState.umtg.filterColors, rootState.umtg.filterString));
     }
 };
 
