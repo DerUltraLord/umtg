@@ -24,7 +24,7 @@ describe('store/modules/collection.ts', () => {
             sets: {},
             selectedSet: null,
             cards: {},
-            allCards: {},
+            cardIds: [],
             selectedCard: null,
         };
         fakeSet = {
@@ -125,7 +125,6 @@ describe('store/modules/collection.ts', () => {
             assert.calledOnce(isSetDownloaded);
             expect(commit.getCall(0).args[0]).to.be.equal('setSets');
             expect(commit.getCall(0).args[1]).to.deep.equal({'ultra': fakeSet});
-            expect(state.loading).to.be.true;
             done();
         }); 
     });
@@ -146,7 +145,6 @@ describe('store/modules/collection.ts', () => {
 
                 expect(commit.getCall(0).args[0]).to.be.equal('setCards');
                 expect(commit.getCall(0).args[1]).to.deep.equal({'UltraId': fakeCard});
-                expect(state.loading).to.be.true;
                 done();
             });
     });

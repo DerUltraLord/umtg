@@ -17,7 +17,7 @@ describe('store/modules/search.ts', () => {
         state = {
             loading: false,
             cards: {},
-            allCards: {},
+            cardIds: [],
             selectedCard: null,
             name: '',
             type: '',

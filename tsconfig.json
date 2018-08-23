@@ -6,6 +6,7 @@
         "moduleResolution": "node",
         "sourceMap": true,
         "noUnusedLocals": false,
+        "esModuleInterop": true,
         "lib": [ "es2015", "dom" ],
     },
     "exclude": [

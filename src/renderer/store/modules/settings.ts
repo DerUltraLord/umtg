@@ -1,4 +1,4 @@
-import * as fs from 'fs';
+import fs from 'fs';
 import { join } from 'path';
 
 import { Settings } from '../umtgTypes';

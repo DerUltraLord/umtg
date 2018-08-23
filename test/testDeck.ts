@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { createSandbox, SinonSandbox, spy } from 'sinon';
-import * as fs from 'fs';
+import fs from 'fs';
 
 import _, { mutations, actions, deckAdjustCardAmount, lineMatchCard, lineMatchSideboard, DeckState } from '../src/renderer/store/modules/deck';
 import { Deck, Card, DecklistCard } from '../src/renderer/store/umtgTypes';
@@ -24,7 +24,7 @@ let rootState: any;
 
 describe('store/modules/deck.ts for DeckManagement', () => {
 
-    before(() => {
+    beforeEach(() => {
         mySandbox = createSandbox();
         mySandbox.stub(fs, 'readdirSync').callsFake(() => ['deck1.txt', 'deck2.txt']);
         mySandbox.stub(fs, 'readFileSync').callsFake(() => '4 Ichor Wellspring');
@@ -42,6 +42,7 @@ describe('store/modules/deck.ts for DeckManagement', () => {
             decksPath: 'mydecksPath',
             decks: [],
             cards: {},
+            cardIds: [],
             deck: {
                 deck: {name: 'mydeck', filename: 'mydeck.txt'},
                 cards: {},
@@ -59,7 +60,7 @@ describe('store/modules/deck.ts for DeckManagement', () => {
         };
     });
 
-    after(() => {
+    afterEach(() => {
         mySandbox.restore() ;
     });
 

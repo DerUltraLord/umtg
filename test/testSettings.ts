@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import * as fs from 'fs';
+import fs from 'fs';
 import * as sinon from 'sinon';
 import _, { initSettings, mutations, actions, getters } from '../src/renderer/store/modules/settings';
 import { Settings } from '../src/renderer/store/umtgTypes';
@@ -28,6 +28,7 @@ describe('store/modules/settings.ts for Settings Management', () => {
     afterEach(() => sandbox.restore());
 
     it('helpers: initSettings', () => {
+
         const dispatch = sinon.spy();
         let store = {
             'state': {
