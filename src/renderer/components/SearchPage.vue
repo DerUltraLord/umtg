@@ -3,7 +3,7 @@
 
         <CardSearch></CardSearch>
         <div class="scrollable">
-            <CardList @cardClicked="$store.commit('search/setSelectedCard', $event)" :cards="$store.state.search.cards" :selectedCard=$store.state.search.selectedCard></CardList>
+            <CardList @cardClicked="$store.commit('search/setSelectedCard', $event)" :cards="$store.state.search.cards" :cardOrder="$store.state.search.cardIds" :selectedCard=$store.state.search.selectedCard></CardList>
             <Loader :loading=$store.state.search.loading></Loader>
         </div>
     </div>

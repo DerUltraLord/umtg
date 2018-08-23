@@ -2,6 +2,7 @@ export interface Card {
     id: string;
     name: string;
     ownedAmount?: number;
+    cmc?: number;
     [others: string]: any;
 }
 

@@ -9,8 +9,13 @@
             <a v-for="(page, pageName) in pages" @click="$emit('pageSelected', pageName)" v-bind:key=pageName v-bind:data=page v-bind:class="{ active: currentPage == page.key }" class="nav-item nav-link" href="#">{{page.name}}</a>
             </div>
         </div>
-        <form class="form-inline">
-            <div  class="btn-group">
+        <form @submit="onSubmit" class="form-inline">
+            <select @change="onSortStringChange" v-model="$store.state.umtg.sortString" class="custom-select mr-sm-2">
+                <option value="cmc">Mana</option>
+                <option value="colors">Color</option>
+                <option value="collector_number">Card number</option>
+            </select>
+            <div class="btn-group">
 
                 <label v-shortkey="['ctrl', 'c']" @shortkey="keyPressed($event)" class="btn" v-bind:class="[ filterColors.includes('C') ? 'btn-light' : 'btn-secondary' ]">
                     <input ref="c" @change="doFilter" type="checkbox" autocomplete="off" value="C" v-model="filterColors">
@@ -58,17 +63,26 @@ export default {
         };
     },
     methods: {
-        doFilter() {
+        async doFilter() {
             let currentPage = this.$store.state.umtg.currentPage;
             if (["search", "collection", "deck"].includes(currentPage)) {
-                this.$store.dispatch(currentPage + "/filterCards");
+                await this.$store.dispatch(currentPage + "/filterCards");
+                await this.$store.dispatch(currentPage + "/sortCards");
             }
         },
         keyPressed(event) {
             let element = event.target.querySelector('input');
             element.checked = !element.checked;
             element.dispatchEvent(new Event('change'));
+        },
+        onSortStringChange() {
+            let currentPage = this.$store.state.umtg.currentPage;
+            this.$store.dispatch(currentPage + "/sortCards");
+        },
+        onSubmit(e) {
+            e.preventDefault();
         }
+
     },
     computed: {
         filterColors: {

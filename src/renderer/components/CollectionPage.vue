@@ -4,7 +4,7 @@
             <SetList @setClicked="showSet" :sets=$store.state.collection.sets :selectedSet=$store.state.collection.selectedSet></SetList>
         </div>
         <div class="scrollable">
-            <CardList @cardClicked="cardClicked" :cards=$store.state.collection.cards :selectedCard=$store.state.collection.selectedCard></CardList>
+            <CardList @cardClicked="cardClicked" :cards=$store.state.collection.cards :cardOrder=$store.state.collection.cardIds :selectedCard=$store.state.collection.selectedCard></CardList>
             <Loader :loading=$store.state.collection.loading></Loader>
         </div>
     </div>
@@ -16,24 +16,21 @@ import SetList from './SetList.vue';
 import Loader from './Loader.vue';
 export default {
 
-    created: function () {
+    created: async function () {
         if (Object.keys(this.$store.state.collection.sets).length == 0) {
-            this.$store.dispatch('collection/updateSets');
+            this.$store.commit('collection/setLoading', true);
+            await this.$store.dispatch('collection/updateSets');
+            this.$store.commit('collection/setLoading', false);
         }
         
     },
     methods: {
-        //onUpdateSets() {
-        //    let setKeys = Object.keys(this.state.pages.collection.sets);
-        //    if (setKeys.length > 0) {
-        //        this.showSet(this.state.pages.collection.sets[setKeys[0]]);
-        //    } else {
-        //        this.loading = false;
-        //    }
-        //},
         async showSet(set) {
+            this.$store.commit('collection/setLoading', true);
             await this.$store.dispatch('collection/selectSet', set);
-            await this.$store.dispatch('collection/filterCards', set);
+            await this.$store.dispatch('collection/filterCards');
+            await this.$store.dispatch('collection/sortCards');
+            this.$store.commit('collection/setLoading', false);
 
         },
         cardClicked(card) {

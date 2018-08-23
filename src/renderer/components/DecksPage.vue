@@ -11,7 +11,7 @@
                 <DeckList @deckSelected=deckSelected :decks=$store.state.deck.decks :selectedDeck=$store.state.deck.deck></DeckList>
             </div>
             <div class="scrollable">
-                <CardList v-if=$store.state.deck.deck @cardClicked="cardClicked" :cards=$store.state.deck.cards :selectedCard=$store.state.deck.selectedCard :deck=$store.state.deck.deck></CardList>
+                <CardList v-if=$store.state.deck.deck @cardClicked="cardClicked" :cards=$store.state.deck.cards :cardOrder=$store.state.deck.cardIds :selectedCard=$store.state.deck.selectedCard :deck=$store.state.deck.deck></CardList>
                 <Loader :loading=$store.state.deck.loading></Loader>
             </div>
         </div>
@@ -29,8 +29,10 @@ export default {
     methods: {
         showCardsOfDeck(deck) {
         },
-        deckSelected(deck) {
-            this.$store.dispatch('deck/selectDeck', deck);
+        async deckSelected(deck) {
+            await this.$store.dispatch('deck/selectDeck', deck);
+            await this.$store.dispatch('deck/filterCards', deck);
+            await this.$store.dispatch('deck/sortCards', deck);
         },
         cardClicked(card) {
             this.$store.commit('deck/setSelectedCard', card);

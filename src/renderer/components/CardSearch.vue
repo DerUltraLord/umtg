@@ -19,8 +19,11 @@
 export default {
     methods: {
         async handleSubmit() {
+            this.$store.commit('search/setLoading', true);
             await this.$store.dispatch('search/doSearch');
             await this.$store.dispatch('search/filterCards');
+            await this.$store.dispatch('search/sortCards');
+            this.$store.commit('search/setLoading', false);
         }
     }
 };

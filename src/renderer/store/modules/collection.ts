@@ -1,15 +1,15 @@
+import Vue from 'vue';
 
-import { extendCards, filterCards } from './umtg';
+import { extendCards, filterCards, sortCards } from './umtg';
 import { Dict, MagicSet, Card } from '../umtgTypes';
 import { cardAdjustAmount, cardExistsById, getCardsOfSet, getSets, setAdd, getOwnedCardAmountBySetCode, isSetDownloaded, cardAdd } from '../db';
 import { scryfallGetSets, scryfallReqest } from '../scryfall';
+import { PageWithCards, baseMutations, baseActions } from './pageWithCards';
 
-export interface CollectionState {
+export interface CollectionState extends PageWithCards {
     loading: boolean;
     sets: Dict<MagicSet>;
     selectedSet: MagicSet | null;
-    cards: Dict<Card>;
-    allCards: Dict<Card>;
     selectedCard: Card | null;
 }
 
@@ -43,22 +43,14 @@ export async function adjustCardAmountOfCollection(state: CollectionState, card:
 }
 
 export const mutations = {
+    setLoading(state: CollectionState, value: boolean): void {
+        state.loading = value;
+    },
     setSets(state: CollectionState, sets: Dict<MagicSet>): void {
         state.sets = sets;
-        state.loading = false;
     },
     setSelectedSet(state: CollectionState, set: MagicSet): void {
         state.selectedSet = set;
-    },
-    setCards(state: CollectionState, cards: Dict<Card>): void {
-        state.cards = cards;
-        state.loading = false;
-    },
-    setAllCards(state: CollectionState, cards: Dict<Card>): void {
-        state.allCards = cards;
-    },
-    setSelectedCard(state: CollectionState, card: Card): void {
-        state.selectedCard = card;
     },
     setOwnedAmountOfCard(state: CollectionState, {card, amount}: {card: Card, amount: number}): void {
         card.ownedAmount = amount;
@@ -72,14 +64,15 @@ export const mutations = {
             state.sets[setCode].collectedAmount = amount;
             console.log(state.sets[setCode].collectedAmount);
         }
-    }
-
+    },
+    setCards: baseMutations.setCards,
+    setCardIds: baseMutations.setCardIds,
+    setSelectedCard: baseMutations.setSelectedCard
 };
 
 export const actions = {
 
     async updateSets({state, rootState, commit}: {state: CollectionState, rootState: any, commit: any}): Promise<null>  {
-        state.loading = true;
         let sets = await getSets();
         if (sets.length === 0) {
             let setsFromScryfall = await scryfallGetSets();
@@ -93,7 +86,6 @@ export const actions = {
     },
 
     async selectSet({state, commit}: {state: CollectionState, commit: any}, set: MagicSet): Promise<null> {
-        state.loading = true;
         let cards: Card[];
         if (!set.downloaded) {
             cards = await scryfallReqest<Card>(set.search_uri);
@@ -106,7 +98,7 @@ export const actions = {
         let cardsDict: Dict<Card> = await extendCards(cards);
 
         commit('setCards', cardsDict);
-        commit('setAllCards', cardsDict);
+        commit('setCardIds', Object.keys(cardsDict));
         commit('setSelectedSet', set);
 
         return null;
@@ -129,9 +121,8 @@ export const actions = {
         commit('setCollectedAmountBySetCode', {setCode: setCode, amount: collectedAmount});
         return null;
     },
-    filterCards({state, commit, rootState}: {state: CollectionState, commit: any, rootState: any}): void {
-        commit('setCards', filterCards(state.allCards, rootState.umtg.filterColors, rootState.umtg.filterString));
-    }
+    filterCards: baseActions.filterCards,
+    sortCards: baseActions.sortCards
 };
 
 export default {

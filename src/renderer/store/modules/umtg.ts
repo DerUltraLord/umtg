@@ -1,11 +1,21 @@
 import { Card, Dict } from '../umtgTypes';
 import { getAmountOfCardById } from '../db';
 
+let colorSortValues: any = {
+    W: 0,
+    U: 1,
+    B: 2,
+    R: 3,
+    G: 4,
+    C: 5,
+};
+
 export interface UmtgState {
     currentPage: string;
     pages: any;
     filterColors: string[];
     filterString: string;
+    sortString: string;
 }
 
 export async function extendCards(cards: Card[]): Promise<Dict<Card>> {
@@ -19,9 +29,9 @@ export async function extendCards(cards: Card[]): Promise<Dict<Card>> {
     return result;
 }
 
-export function filterCards(cards: Dict<Card>, colors: string[], name: string): Dict<Card> {
+export function filterCards(cards: Dict<Card>, colors: string[], name: string): string[] {
 
-    let result: Dict<Card> = {};
+    let result: string[] = [];
     if (cards) {
         for (const cardId of Object.keys(cards)) {
             let matchesColor = false;
@@ -33,10 +43,22 @@ export function filterCards(cards: Dict<Card>, colors: string[], name: string): 
             }
             let matchesName = cards[cardId].name.toLowerCase().includes(name.toLowerCase());
             if (matchesColor && matchesName) {
-                result[cardId] = cards[cardId];
+                result.push(cardId);
             }
         }
     }
+    return result;
+}
+
+export function sortCards(cards: Dict<Card>, cardIdList: string[], sortProperty: string): string[] {
+
+    let getValue = (v: string) => cards[v][sortProperty];
+    if (sortProperty == 'colors') {
+        getValue = (v: string) => colorSortValues[cards[v][sortProperty] && cards[v][sortProperty].length === 1 ? cards[v][sortProperty][0] : 'C'];
+    }
+    let result = cardIdList.sort((a, b) => {
+        return getValue(a) - getValue(b);
+    });
     return result;
 }
 
@@ -56,8 +78,9 @@ export const state: UmtgState = {
             name: 'Settings'
         },
     },
-    filterColors: ["W", "U", "B", "R", "G"],
-    filterString: ''
+    filterColors: ["W", "U", "B", "R", "G", "C"],
+    filterString: '',
+    sortString: 'cmc',
 };
 
 export const mutations = {

@@ -7,6 +7,7 @@ import { matchRegex } from '../base';
 import { getAmountOfCardById, cardExistsByName, getCardByName, cardAdd } from '../db';
 import * as scry from '../scryfall';
 import { filterCards } from './umtg';
+import { PageWithCards, baseMutations, baseActions } from './pageWithCards';
 
 function getCardObjectsFromCardNames(cards: DecklistCard[]): Promise<Dict<Card>> {
     let addedIds: string[] = [];
@@ -94,13 +95,11 @@ export function deckAdjustCardAmount(deck: DeckWithCards, card: Card, amount: nu
 }
 
 
-export interface DeckState {
+export interface DeckState extends PageWithCards {
     loading: boolean;
     decksPath: string;
     decks: Deck[];
     deck: DeckWithCards | null;
-    cards: Dict<Card>;
-    selectedCard: Card | null;
 }
 
 export const state: DeckState = {
@@ -109,6 +108,7 @@ export const state: DeckState = {
     decks: [],
     deck: null,
     cards: {},
+    cardIds: [],
     selectedCard: null
 };
 
@@ -133,10 +133,6 @@ export const mutations = {
         state.deck = deck;
         state.loading = false;
     },
-    setCards(state: DeckState, cards: Dict<Card>): void {
-        state.cards = cards;
-        state.loading = false;
-    },
     removeCardFromSelectedDeck(state: DeckState, card: Card): void {
         if (state.deck) {
             deckAdjustCardAmount(state.deck, card, -1);
@@ -148,9 +144,9 @@ export const mutations = {
             deckAdjustCardAmount(state.deck, card, 1);
         }
     },
-    setSelectedCard(state: DeckState, card: Card): void {
-        state.selectedCard = card;
-    }
+    setCards: baseMutations.setCards,
+    setSelectedCard: baseMutations.setSelectedCard,
+    setCardIds: baseMutations.setCardIds
 };
 
 export const actions = {
@@ -187,7 +183,8 @@ export const actions = {
             cardAmount: amountDict,
         };
         commit('setDeck', result);
-        commit('setCards', filterCards(result.cards, rootState.umtg.filterColors, rootState.umtg.filterString));
+        commit('setCards', result.cards);
+        commit('setCardIds', Object.keys(result.cards));
     },
 
     writeDeckToDisk({state}: {state: DeckState}): void {
@@ -205,9 +202,9 @@ export const actions = {
         openSync(state.decksPath + '/' + deckname + '.txt', 'w');
         return Promise.resolve();
     },
-    filterCards({state, commit, rootState}: {state: DeckState, commit: any, rootState: any}): void {
-        commit('setCards', filterCards(state.deck!.cards, rootState.umtg.filterColors, rootState.umtg.filterString));
-    }
+
+    filterCards: baseActions.filterCards,
+    sortCards: baseActions.sortCards
 };
 
 
