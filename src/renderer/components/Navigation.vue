@@ -10,26 +10,36 @@
             </div>
         </div>
         <form class="form-inline">
-            <div class="btn-group">
+            <div  class="btn-group">
+
+                <label v-shortkey="['ctrl', 'c']" @shortkey="keyPressed($event)" class="btn" v-bind:class="[ filterColors.includes('C') ? 'btn-light' : 'btn-secondary' ]">
+                    <input ref="c" @change="doFilter" type="checkbox" autocomplete="off" value="C" v-model="filterColors">
+                    <span><img src="icons/C.svg" width="24"></span>
+                </label>
 			
-                <label class="btn btn-warning active">
-                    <input @change="doFilter" type="checkbox" autocomplete="off" value="W" v-model="filterColors">W
+                <label v-shortkey="['ctrl', 'w']" @shortkey="keyPressed($event)" class="btn" v-bind:class="[ filterColors.includes('W') ? 'btn-warning' : 'btn-secondary' ]">
+                    <input ref="w" @change="doFilter" type="checkbox" autocomplete="off" value="W" v-model="filterColors">
+                    <span><img src="icons/W.svg" width="24"></span>
                 </label>
 
-                <label class="btn btn-info">
-                    <input @change="doFilter" type="checkbox" autocomplete="off" value="U" v-model="filterColors">U
+                <label v-shortkey="['ctrl', 'u']" @shortkey="keyPressed($event)" class="btn" v-bind:class="[ filterColors.includes('U') ? 'btn-info' : 'btn-secondary' ]">
+                    <input ref="u" @change="doFilter" type="checkbox" autocomplete="off" value="U" v-model="filterColors">
+                    <span><img src="icons/U.svg" width="24"></span>
                 </label>			
             
-                <label class="btn btn-dark">
-                    <input @change="doFilter" type="checkbox" autocomplete="off" value="B" v-model="filterColors">B
+                <label v-shortkey="['ctrl', 'b']" @shortkey="keyPressed($event)" class="btn" v-bind:class="[ filterColors.includes('B') ? 'btn-dark' : 'btn-secondary' ]">
+                    <input ref="b" @change="doFilter" type="checkbox" autocomplete="off" value="B" v-model="filterColors">
+                    <span><img src="icons/B.svg" width="24"></span>
                 </label>			
             
-                <label class="btn btn-danger">
-                    <input @change="doFilter" type="checkbox" autocomplete="off" value="R" v-model="filterColors">R
+                <label v-shortkey="['ctrl', 'r']" @shortkey="keyPressed($event)" class="btn" v-bind:class="[ filterColors.includes('R') ? 'btn-danger' : 'btn-secondary' ]">
+                    <input ref="r" @change="doFilter" type="checkbox" autocomplete="off" value="R" v-model="filterColors">
+                    <span><img src="icons/R.svg" width="24"></span>
                 </label>			
 
-                <label class="btn btn-success">
-                    <input @change="doFilter" type="checkbox" autocomplete="off" value="G" v-model="filterColors">G
+                <label v-shortkey="['ctrl', 'g']" @shortkey="keyPressed($event)" class="btn" v-bind:class="[ filterColors.includes('G') ? 'btn-success' : 'btn-secondary' ]">
+                    <input ref="g" @change="doFilter" type="checkbox" autocomplete="off" value="G" v-model="filterColors">
+                    <span><img src="icons/G.svg" width="24"></span>
                 </label>			
 		    </div>
             <input @change="doFilter" class="form-control mr-sm-2" type="search" placeholder="Name filter" aria-label="Name filter" v-model="$store.state.umtg.filterString">
@@ -53,6 +63,11 @@ export default {
             if (["search", "collection", "deck"].includes(currentPage)) {
                 this.$store.dispatch(currentPage + "/filterCards");
             }
+        },
+        keyPressed(event) {
+            let element = event.target.querySelector('input');
+            element.checked = !element.checked;
+            element.dispatchEvent(new Event('change'));
         }
     },
     computed: {
@@ -65,3 +80,13 @@ export default {
 
 };
 </script>
+
+<style scoped>
+label input[type="checkbox"] {
+    position: fixed;
+    z-index: -10;
+    opacity: 0;
+    left: 0;
+    top: 0;
+}
+</style>

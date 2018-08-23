@@ -8,6 +8,7 @@ import App from './components/App.vue';
 import storeDefinition from './store/store';
 
 Vue.use(Vuex);
+Vue.use(require('vue-shortkey'));
 
 const store: any = new Vuex.Store(storeDefinition);
 

@@ -54,7 +54,7 @@ describe('store/modules/umtg.ts', () => {
             'otherCard3': {
                 'id': 'otherCard3',
                 'name': 'otherCard',
-                'colors': []
+                'colors': ['C']
             }
         };
 
@@ -64,7 +64,7 @@ describe('store/modules/umtg.ts', () => {
         result = filterCards(cards, ['R'], 'otherc');
         expect(Object.keys(result).length).to.be.equal(1);
         expect(result['otherCard2'].id).to.be.equal('otherCard2');
-        result = filterCards(cards, [], 'otherc');
+        result = filterCards(cards, ['C'], 'otherc');
         expect(Object.keys(result).length).to.be.equal(1);
         expect(result['otherCard3'].id).to.be.equal('otherCard3');
 

@@ -25,9 +25,10 @@ export function filterCards(cards: Dict<Card>, colors: string[], name: string): 
     if (cards) {
         for (const cardId of Object.keys(cards)) {
             let matchesColor = false;
-            if (colors.length > 0) {
-                matchesColor = colors.some((color) => cards[cardId].colors && cards[cardId].colors.includes(color));
-            } else {
+            // TODO: flip cards
+            matchesColor = colors.some((color) => cards[cardId].colors && cards[cardId].colors.includes(color));
+
+            if (!matchesColor && colors.indexOf('C') >= 0) {
                 matchesColor = cards[cardId].colors === undefined || cards[cardId].colors.length === 0;
             }
             let matchesName = cards[cardId].name.toLowerCase().includes(name.toLowerCase());
