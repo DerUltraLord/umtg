@@ -48,7 +48,7 @@ export function initSettings(store: any): void {
 
     let settingsFile = join(store.state.settings.settingsPath, store.state.settings.settingsFile);
     if (!fs.existsSync(settingsFile)) {
-        actions.writeSettingsToFile(store.state.settings);
+        actions.writeSettingsToFile({state: store.state.settings});
     }
 
     let data = fs.readFileSync(settingsFile);
@@ -70,6 +70,7 @@ export const mutations = {
 export const actions = {
 
     writeSettingsToFile({state}: {state: Settings}): void {
+        console.log(state);
         fs.writeFileSync(join(state.settingsPath, state.settingsFile), JSON.stringify(state, null, 4));
     }
 };
