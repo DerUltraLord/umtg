@@ -92,6 +92,7 @@ export const actions = {
             for (const card of cards) {
                 cardAdd(card, 0);
             }
+            set.downloaded = true;
         }
 
         cards = await getCardsOfSet(set);
