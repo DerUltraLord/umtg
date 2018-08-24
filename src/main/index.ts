@@ -2,6 +2,7 @@ import { app, BrowserWindow } from 'electron';
 
 app.on('ready', () => {
     let window = new BrowserWindow({ title: 'UMTG' });
+    window.setMenu(null);
 
     let production = process.env.NODE_ENV === 'production';
 
