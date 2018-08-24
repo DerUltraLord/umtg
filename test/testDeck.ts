@@ -45,9 +45,10 @@ describe('store/modules/deck.ts for DeckManagement', () => {
             cardIds: [],
             deck: {
                 deck: {name: 'mydeck', filename: 'mydeck.txt'},
-                cards: {},
-                sideboard: {},
-                cardAmount: {},
+                decklist: {
+                    cards: [],
+                    sideboard: []
+                }
             },
             selectedCard: null,
         };
@@ -83,21 +84,21 @@ describe('store/modules/deck.ts for DeckManagement', () => {
 
     it('helper: deckAdjustCardAmount', () => {
         deckAdjustCardAmount(state.deck!, card1, 2);
-        expect(state.deck!.cardAmount[card1.id]).to.be.equal(2);
+        expect(state.deck!.decklist.cards[0].amount).to.be.equal(2);
         deckAdjustCardAmount(state.deck!, card1, -1);
-        expect(state.deck!.cardAmount[card1.id]).to.be.equal(1);
+        expect(state.deck!.decklist.cards[0].amount).to.be.equal(1);
         deckAdjustCardAmount(state.deck!, card1, -100);
-        expect(state.deck!.cardAmount[card1.id]).to.be.equal(0);
+        expect(state.deck!.decklist.cards[0].amount).to.be.equal(0);
     
     });
 
     it('mutation: removeCardFromSelectedDeck', () => {
         mutations.addCardToSelectedDeck(state, card1);
-        expect(Object.keys(state.deck!.cards).length).to.equal(1);
-        expect(state.deck!.cardAmount[card1.id]).to.be.equal(1);
+        expect(state.deck!.decklist.cards.length).to.equal(1);
+        expect(state.deck!.decklist.cards[0].amount).to.be.equal(1);
         mutations.removeCardFromSelectedDeck(state, card1);
-        expect(Object.keys(state.deck!.cards).length).to.equal(1);
-        expect(state.deck!.cardAmount[card1.id]).to.be.equal(0);
+        expect(state.deck!.decklist.cards.length).to.equal(1);
+        expect(state.deck!.decklist.cards[0].amount).to.be.equal(0);
 
     }),
 
@@ -105,14 +106,14 @@ describe('store/modules/deck.ts for DeckManagement', () => {
 
         
         mutations.addCardToSelectedDeck(state, card1);
-        expect(Object.keys(state.deck!.cards).length).to.equal(1);
-        expect(state.deck!.cardAmount[card1.id]).to.be.equal(1);
+        expect(state.deck!.decklist.cards.length).to.equal(1);
+        expect(state.deck!.decklist.cards[0].amount).to.be.equal(1);
         mutations.addCardToSelectedDeck(state, card1);
-        expect(Object.keys(state.deck!.cards).length).to.equal(1);
-        expect(state.deck!.cardAmount[card1.id]).to.be.equal(2);
+        expect(state.deck!.decklist.cards.length).to.equal(1);
+        expect(state.deck!.decklist.cards[0].amount).to.be.equal(2);
         mutations.addCardToSelectedDeck(state, card2);
-        expect(Object.keys(state.deck!.cards).length).to.equal(2);
-        expect(state.deck!.cardAmount[card2.id]).to.be.equal(1);
+        expect(state.deck!.decklist.cards.length).to.equal(2);
+        expect(state.deck!.decklist.cards[1].amount).to.be.equal(1);
     
     });
 
@@ -137,12 +138,7 @@ describe('store/modules/deck.ts for DeckManagement', () => {
         actions.selectDeck({state, commit, rootState}, myDeck)
         .then(() => {
 
-            expect(commit.args[0][0]).to.be.equal('setDeck');
-            let result = commit.args[0][1];
-            expect(Object.keys(result.cards).length).to.equal(1);
-            //expect(result.cards[result].name).to.equal('Ichor Wellspring');
-            //expect(result.cardAmount[result.cards[0].id]).to.be.equal(4);
-            expect(Object.keys(result.sideboard).length).to.equal(0);
+            expect(commit.getCall(0).args[0]).to.be.equal('setDeck');
             done();
         });
 

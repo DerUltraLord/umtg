@@ -31,6 +31,7 @@ export default {
         },
         async deckSelected(deck) {
             await this.$store.dispatch('deck/selectDeck', deck);
+            await this.$store.dispatch('deck/updateCardsOfSelectedDeck', deck);
             await this.$store.dispatch('deck/filterCards', deck);
             await this.$store.dispatch('deck/sortCards', deck);
         },

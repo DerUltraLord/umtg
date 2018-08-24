@@ -83,17 +83,20 @@ export function traverseCards(content: String): Decklist {
 }
 
 export function deckAdjustCardAmount(deck: DeckWithCards, card: Card, amount: number): void {
-    if (!(card.id in deck.cardAmount)) {
-        deck.cards[card.id] = card;
-        Vue.set(deck.cardAmount, card.id, 0);
-    }
-    deck.cardAmount[card.id] += amount;
-
-    if (deck.cardAmount[card.id] < 0) {
-        deck.cardAmount[card.id] = 0;
+    let cardNames = deck.decklist.cards.map((decklistCard) => decklistCard.name);
+    let cardIndex = cardNames.indexOf(card.name);
+    if (cardIndex >= 0) {
+        deck.decklist.cards[cardIndex].amount += amount;
+        if (deck.decklist.cards[cardIndex].amount < 0) {
+            deck.decklist.cards[cardIndex].amount = 0;
+        }
+    } else {
+        if (amount < 0) {
+            amount = 0;
+        }
+        deck.decklist.cards.push({name: card.name, amount: amount});
     }
 }
-
 
 export interface DeckState extends PageWithCards {
     loading: boolean;
@@ -107,13 +110,12 @@ export const state: DeckState = {
     decksPath: process.env.HOME + '/.umtg/decks',
     decks: [],
     deck: null,
-    cards: {},
+    cards: {}, // TODO: Not used
     cardIds: [],
     selectedCard: null
 };
 
 export function initDeckState(store: any): void {
-    console.log("init deck state");
     if (store.state.deck.decks.length === 0) {
         store.dispatch('deck/updateDecks');
     }
@@ -121,6 +123,7 @@ export function initDeckState(store: any): void {
     let availableDecks = store.state.deck.decks;
     if (!store.state.deck.selectedDeck && availableDecks.length > 0) {
         store.dispatch('deck/selectDeck', availableDecks[0]);
+        store.dispatch('deck/updateCardsOfSelectedDeck');
     }
 }
 
@@ -162,37 +165,28 @@ export const actions = {
         });
         commit('setDecks', decks);
     },
-
+    async updateCardsOfSelectedDeck({state, commit}: {state: DeckState, commit: any}): Promise<void> {
+        let cards = await getCardObjectsFromCardNames(state.deck!.decklist.cards);
+        commit('setCards', cards);
+        commit('setCardIds', Object.keys(cards));
+    },
     async selectDeck({state, commit, rootState}: {state: DeckState, commit: any, rootState: any}, deck: Deck): Promise<void> {
         state.loading = true;
         let contents = readFileSync(state.decksPath + '/' + deck.filename).toString();
-        let deckResult = traverseCards(contents);
-
-        let cards = await getCardObjectsFromCardNames(deckResult.cards);
-        let sideboard = await getCardObjectsFromCardNames(deckResult.sideboard);
-        let amountDict: Dict<number> = {};
-
-        Object.keys(cards).forEach((cardId: string, i: number)  => {
-            amountDict[cardId] = deckResult.cards[i].amount;
-        });
+        let decklist = traverseCards(contents);
 
         let result: DeckWithCards = {
             deck: deck,
-            cards: cards,
-            sideboard: sideboard,
-            cardAmount: amountDict,
+            decklist: decklist
         };
         commit('setDeck', result);
-        commit('setCards', result.cards);
-        commit('setCardIds', Object.keys(result.cards));
     },
 
     writeDeckToDisk({state}: {state: DeckState}): void {
         if (state.deck) {
             let data = '';
-            for (const cardId of Object.keys(state.deck.cards)) {
-                let card = state.deck.cards[cardId];
-                data += state.deck!.cardAmount[card.id] + " " + card.name + "\n";
+            for (const decklistCard of state.deck.decklist.cards) {
+                data += decklistCard.amount + " " + decklistCard.name + "\n";
             }
             writeFile(state.decksPath + '/' + state.deck.deck.filename, data, 'ascii', (err) => err ? console.error(err) : null);
         }

@@ -10,9 +10,6 @@ import Card from './Card.vue';
 export default {
     props: ['cards', 'cardOrder', 'selectedCard', 'deck'],
     methods: {
-        foo() {
-            console.log(this.cards);
-        }
     },
     components: {
         Card,

@@ -14,17 +14,19 @@ export default {
     mounted: function() {
     },
     methods: {
-        addCardToDeck() {
+        async addCardToDeck() {
             let selectedCard = this.$store.state[this.$store.state.umtg.currentPage].selectedCard;
             if (selectedCard) {
                 this.$store.commit('deck/addCardToSelectedDeck', selectedCard);
-                this.$store.dispatch('deck/writeDeckToDisk');
+                await this.$store.dispatch('deck/updateCardsOfSelectedDeck');
+                await this.$store.dispatch('deck/writeDeckToDisk');
             } else {
                 alert('No card selected');
             }
         },
         deckSelected(deck) {
             this.$store.dispatch('deck/selectDeck', deck);
+            this.$store.dispatch('deck/updateCardsOfSelectedDeck');
         },
     }
 };

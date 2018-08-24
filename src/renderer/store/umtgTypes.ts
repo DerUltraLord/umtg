@@ -20,9 +20,7 @@ export interface Deck {
 
 export interface DeckWithCards {
     deck: Deck;
-    cards: Dict<Card>;
-    sideboard: Dict<Card>;
-    cardAmount: Dict<number>;
+    decklist: Decklist;
 }
 
 export interface Decklist {

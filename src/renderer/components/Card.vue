@@ -95,7 +95,11 @@ export default {
             return this.getTagsForMana(this.card);
         },
         deckAmount() {
-            return this.deck.cardAmount[this.card.id];
+            let index = this.deck.decklist.cards.map((card) => card.name).indexOf(this.card.name);
+            if (index >= 0) {
+                return this.deck.decklist.cards[index].amount;
+            }
+            return 0;
         }
     },
     components: {
