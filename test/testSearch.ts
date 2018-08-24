@@ -35,7 +35,6 @@ describe('store/modules/search.ts', () => {
     it('mutations: setCards', () => {
         mutations.setCards(state, { 'fakeid': fakeCard });
         expect(state.cards.fakeid).to.be.equal(fakeCard);
-        expect(state.loading).to.be.false;
     });
 
     it('actions: doSearch', () => {
@@ -50,7 +49,6 @@ describe('store/modules/search.ts', () => {
             commit.calledWith('setCards', fakeResult); 
             assert.calledOnce(getSearchFilter);
             assert.calledOnce(searchByFilter);
-            expect(state.loading).to.be.true;
         });
 
 

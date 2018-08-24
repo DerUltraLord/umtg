@@ -30,10 +30,12 @@ export default {
         showCardsOfDeck(deck) {
         },
         async deckSelected(deck) {
+            this.$store.commit('deck/setLoading', true);
             await this.$store.dispatch('deck/selectDeck', deck);
             await this.$store.dispatch('deck/updateCardsOfSelectedDeck', deck);
             await this.$store.dispatch('deck/filterCards', deck);
             await this.$store.dispatch('deck/sortCards', deck);
+            this.$store.commit('deck/setLoading', false);
         },
         cardClicked(card) {
             this.$store.commit('deck/setSelectedCard', card);

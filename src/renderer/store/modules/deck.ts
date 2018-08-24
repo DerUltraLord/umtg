@@ -128,13 +128,14 @@ export function initDeckState(store: any): void {
 }
 
 export const mutations = {
+    setLoading(state: DeckState, value: boolean): void {
+        state.loading = value;
+    },
     setDecks(state: DeckState, decks: Deck[]): void {
         state.decks = decks;
-        state.loading = false;
     },
     setDeck(state: DeckState, deck: DeckWithCards): void {
         state.deck = deck;
-        state.loading = false;
     },
     removeCardFromSelectedDeck(state: DeckState, card: Card): void {
         if (state.deck) {
@@ -155,7 +156,6 @@ export const mutations = {
 export const actions = {
 
     updateDecks({state, commit}: {state: DeckState, commit: any}): void {
-        state.loading = true;
         let decks: Deck[] = readdirSync(state.decksPath).map((filename: string) => {
             let deckItem: Deck = {
                 name: filename.split('.')[0],
@@ -171,7 +171,6 @@ export const actions = {
         commit('setCardIds', Object.keys(cards));
     },
     async selectDeck({state, commit, rootState}: {state: DeckState, commit: any, rootState: any}, deck: Deck): Promise<void> {
-        state.loading = true;
         let contents = readFileSync(state.decksPath + '/' + deck.filename).toString();
         let decklist = traverseCards(contents);
 

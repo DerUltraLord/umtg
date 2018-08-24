@@ -78,7 +78,6 @@ describe('store/modules/collection.ts', () => {
     it('mutations: setSets()', () => {
         Collection.mutations.setSets(state, {'ultra': fakeSet}); 
         expect(state.sets['ultra']).to.deep.equal(fakeSet);
-        expect(state.loading).to.be.false;
     });
 
     it('mutations: setOwnedAmountOfCard()', () => {
@@ -97,7 +96,6 @@ describe('store/modules/collection.ts', () => {
     it('mutations: setCards()', () => {
         Collection.mutations.setCards(state, {'UltraId': fakeCard}); 
         expect(state.cards['UltraId']).to.deep.equal(fakeCard);
-        expect(state.loading).to.be.false;
     });
 
     it('actions: updateSets() when no set is in db', (done) => {

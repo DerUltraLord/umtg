@@ -35,7 +35,6 @@ export const mutations = {
 
 export const actions = {
     async doSearch({state, commit}: {state: SearchState, commit: any}): Promise<null> {
-        state.loading = true;
         let filter = Scryfall.getSearchFilter(state.name, state.type, state.text, state.edition);
         let cards: Card[] = await Scryfall.searchByFilter(filter);
         let cardsDict: Dict<Card> = await extendCards(cards);
