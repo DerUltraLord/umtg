@@ -1,5 +1,6 @@
 //const Vue = require('vue');
 import Vue from 'vue';
+import path from 'path';
 // TODO: import Vue does not work
 import { openSync, readdirSync, readFileSync, writeFile } from 'fs';
 import { Deck, DeckWithCards, Decklist, DecklistCard, Card, Dict } from '../umtgTypes';
@@ -8,6 +9,10 @@ import { getAmountOfCardById, cardExistsByName, getCardByName, cardAdd } from '.
 import * as scry from '../scryfall';
 import { filterCards } from './umtg';
 import { PageWithCards, baseMutations, baseActions } from './pageWithCards';
+
+function getDecksPath(rootState: any, filename: string) {
+    return path.join(rootState.settings.settingsPath, rootState.settings.decksFolder, filename);
+}
 
 function getCardObjectsFromCardNames(cards: DecklistCard[]): Promise<Dict<Card>> {
     let addedIds: string[] = [];
@@ -100,14 +105,12 @@ export function deckAdjustCardAmount(deck: DeckWithCards, card: Card, amount: nu
 
 export interface DeckState extends PageWithCards {
     loading: boolean;
-    decksPath: string;
     decks: Deck[];
     deck: DeckWithCards | null;
 }
 
 export const state: DeckState = {
     loading: false,
-    decksPath: process.env.HOME + '/.umtg/decks',
     decks: [],
     deck: null,
     cards: {}, // TODO: Not used
@@ -155,8 +158,8 @@ export const mutations = {
 
 export const actions = {
 
-    updateDecks({state, commit}: {state: DeckState, commit: any}): void {
-        let decks: Deck[] = readdirSync(state.decksPath).map((filename: string) => {
+    updateDecks({state, commit, rootState}: {state: DeckState, commit: any, rootState: any}): void {
+        let decks: Deck[] = readdirSync(path.join(rootState.settings.settingsPath, rootState.settings.decksFolder)).map((filename: string) => {
             let deckItem: Deck = {
                 name: filename.split('.')[0],
                 filename: filename
@@ -171,7 +174,7 @@ export const actions = {
         commit('setCardIds', Object.keys(cards));
     },
     async selectDeck({state, commit, rootState}: {state: DeckState, commit: any, rootState: any}, deck: Deck): Promise<void> {
-        let contents = readFileSync(state.decksPath + '/' + deck.filename).toString();
+        let contents = readFileSync(getDecksPath(rootState, deck.filename)).toString();
         let decklist = traverseCards(contents);
 
         let result: DeckWithCards = {
@@ -181,18 +184,18 @@ export const actions = {
         commit('setDeck', result);
     },
 
-    writeDeckToDisk({state}: {state: DeckState}): void {
+    writeDeckToDisk({state, rootState}: {state: DeckState, rootState:any}): void {
         if (state.deck) {
             let data = '';
             for (const decklistCard of state.deck.decklist.cards) {
                 data += decklistCard.amount + " " + decklistCard.name + "\n";
             }
-            writeFile(state.decksPath + '/' + state.deck.deck.filename, data, 'ascii', (err) => err ? console.error(err) : null);
+            writeFile(getDecksPath(rootState, state.deck.deck.filename), data, 'ascii', (err) => err ? console.error(err) : null);
         }
         },
 
-    createDeck({state, commit}: {state: DeckState, commit: any}, deckname: string): Promise<void> {
-        openSync(state.decksPath + '/' + deckname + '.txt', 'w');
+    createDeck({state, commit, rootState}: {state: DeckState, commit: any, rootState: any}, deckname: string): Promise<void> {
+        openSync(getDecksPath(rootState, deckname + '.txt'), 'w');
         return Promise.resolve();
     },
 

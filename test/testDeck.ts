@@ -39,7 +39,6 @@ describe('store/modules/deck.ts for DeckManagement', () => {
 
         state = {
             loading: false,
-            decksPath: 'mydecksPath',
             decks: [],
             cards: {},
             cardIds: [],
@@ -57,6 +56,10 @@ describe('store/modules/deck.ts for DeckManagement', () => {
             umtg: {
                 filterColors: [],
                 filterString: '',
+            },
+            settings: {
+                settingsPath: 'settingsPath',
+                decksFolder: 'decksFolder'
             }
         };
     });
@@ -120,7 +123,13 @@ describe('store/modules/deck.ts for DeckManagement', () => {
 
     it('action: updateDecks', () => {
         const commit = spy();
-        actions.updateDecks({state: state, commit: commit});
+        const rootState = {
+            settings: {
+                settingsPath: 'settigns',
+                decksFolder: 'decks'
+            }
+        };
+        actions.updateDecks({state: state, commit: commit, rootState: rootState});
         expect(commit.args[0][0]).to.be.equal('setDecks');
         const decklist = commit.args[0][1];
         expect(decklist[0].name).to.equal('deck1');
@@ -148,7 +157,7 @@ describe('store/modules/deck.ts for DeckManagement', () => {
         const commit = spy();
         const openSync = mySandbox.stub(fs, 'openSync').callsFake(() => null);
 
-        actions.createDeck({state, commit}, 'testdeck')
+        actions.createDeck({state, commit, rootState}, 'testdeck')
         .then(() => {
             expect(openSync.calledOnce).to.be.true;
             done();

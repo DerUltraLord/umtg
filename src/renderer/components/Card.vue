@@ -62,7 +62,7 @@ export default {
             m = re.exec(card.mana_cost);
             while (m != null) {
                 let manaString = m[0].substring(1, m[0].length - 1);
-                manaString = '<img src="icons/' + manaString + '.svg" class="float-lg-right" width=24>';
+                manaString = '<img src="' + window.__staticOffset + 'icons/' + manaString + '.svg" class="float-lg-right" width=24>';
                 res = manaString + res;
                 m = re.exec(card.mana_cost);
             }

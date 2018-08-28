@@ -2,6 +2,10 @@ import fs from 'fs';
 import { join } from 'path';
 
 import { Settings } from '../umtgTypes';
+let HOME = process.env.HOME;
+if (HOME === undefined) {
+    HOME = process.env.USERPROFILE;
+}
 
 export const state: Settings = {
     setTypes: {
@@ -26,7 +30,7 @@ export const state: Settings = {
         memorabilia: false
     },
     isGridActive: false,
-    settingsPath: process.env.HOME + '/.umtg',
+    settingsPath: HOME + '/.umtg',
     decksFolder: 'decks',
     settingsFile: 'settings.json'
 };
@@ -34,6 +38,7 @@ export const state: Settings = {
 export function initSettings(store: any): void {
     const state: Settings = store.state.settings;
     console.log("initSettings");
+    console.log(state);
 
     if (!fs.existsSync(store.state.settings.settingsPath)) {
         console.log("create settings folder");
