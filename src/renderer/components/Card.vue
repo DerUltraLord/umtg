@@ -1,5 +1,6 @@
 <template>
     <div ref="root" v-bind:class="[$store.getters['settings/isGridActive'] ? 'p-2' : 'list-group-item']">
+        <InfoPopup ref="infoPopup" :card=card></InfoPopup>
         <div v-if="!$store.getters['settings/isGridActive']" class="container"> 
             <div class="row"> 
                 <div class="col col-12"> 
@@ -35,17 +36,26 @@
                 <div v-if=this.deck class="col text-right">
                     <CardButtons @addCard="addCardToDeck" @removeCard="removeCardFromDeck" :card=card :amount=deckAmount :deck=deck></CardButtons>
                 </div>
+                <div class="col">
+                    <button @click=btnInfoClicked type="button" class="btn btn-sm btn-default">
+                        Info
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import InfoPopup from './InfoPopup.vue'
 import CardButtons from './CardButtons.vue';
 
 export default {
     props: ['card', 'deck'],
     methods: {
+        btnInfoClicked() {
+            this.$refs.infoPopup.show();
+        },
         getImageUri() {
             let uri = '';
             if (this.card.image_uris) {
@@ -103,6 +113,7 @@ export default {
         }
     },
     components: {
+        InfoPopup,
         CardButtons,
     },
 };

@@ -14,12 +14,14 @@ describe('store/modules/settings.ts for Settings Management', () => {
         sandbox = sinon.createSandbox();
         state = {
             setTypes: {
-                ultra: true,
+                available: ['ultra'],
+                selected: new Set(['ultra']),
             },
             isGridActive: false,
             settingsPath: 'foo',
             decksFolder: 'foo',
             settingsFile: 'foo',
+            infoPopupContent: [],
         };
         sandbox.stub(fs, 'existsSync').callsFake(() => true);
         sandbox.stub(fs, 'readFileSync').callsFake(() => JSON.stringify(state));
@@ -46,14 +48,17 @@ describe('store/modules/settings.ts for Settings Management', () => {
         expect(getters.isGridActive(state)).to.be.true;
     });
 
-    it('mutations: setSetVisibleStatus', () => {
-        expect(getters.getSetTypes(state)['ultra']).to.be.true;
-        mutations.setSetVisibleStatus(state, {setKey: 'ultra', value: false});
-        expect(getters.getSetTypes(state)['ultra']).to.be.false;
-    });
+    it('mutations: add-/removeInfoPopupContent', () => {
+        mutations.addInfoPopupContent(state, {displayName: "myDisplayName", property: "property"});
+        expect(state.infoPopupContent[0].displayName).to.be.equal('myDisplayName');
+        expect(state.infoPopupContent[0].property).to.be.equal('property');
 
-    it('getter: getSetTypes', () => {
-        expect(getters.getSetTypes(state)['ultra']).to.be.true;
+        expect(() => 
+            mutations.addInfoPopupContent(state, {displayName: "myDisplayName", property: "property"})
+        ).to.throw();
+
+        mutations.removeInfoPopupContent(state, "myDisplayName");
+        expect(state.infoPopupContent.length).to.be.equal(0);
     });
 
 });

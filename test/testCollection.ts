@@ -102,7 +102,7 @@ describe('store/modules/collection.ts', () => {
         const rootState = {
             settings: {
                 setTypes: {
-                    'ultra': true,
+                    selected: ['ultra'],
                 }
             }
         };

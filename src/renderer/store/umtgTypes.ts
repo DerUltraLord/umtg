@@ -37,12 +37,18 @@ export interface Dict<T> {
     [others: string]: T;
 }
 
+export interface SetTypesDefinition {
+    available: string[];
+    selected: Set<string>;
+}
+
 export interface Settings {
-    setTypes: any;
+    setTypes: SetTypesDefinition;
     isGridActive: boolean;
     settingsPath: string;
     decksFolder: string;
     settingsFile: string;
+    infoPopupContent: any[];
 }
 
 export interface Page {

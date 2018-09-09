@@ -9,45 +9,50 @@ if (HOME === undefined) {
 
 export const state: Settings = {
     setTypes: {
-        core: true,
-        expansion: true,
-        masters: true,
-        masterpiece: false,
-        from_the_vault: false,
-        spellbook: false,
-        premium_deck: false,
-        duel_deck: false,
-        commander: false,
-        planechase: false,
-        conspiracy: false,
-        archenemy: false,
-        vanguard: false,
-        funny: false,
-        starter: false,
-        box: false,
-        promo: false,
-        token: false,
-        memorabilia: false
+        available: [
+            'core', 
+            'expansion',
+            'master',
+            'masterpiece',
+            'from_the_vault',
+            'spellbook',
+            'premium_deck',
+            'draft_innovation',
+            'commander',
+            'planechase',
+            'archenemy',
+            'vanguard',
+            'funny',
+            'starter',
+            'box',
+            'promo',
+            'token',
+            'memorabila',
+        ],
+        selected: new Set(['core', 'expansion', 'master'])
     },
     isGridActive: false,
     settingsPath: HOME + '/.umtg',
     decksFolder: 'decks',
-    settingsFile: 'settings.json'
+    settingsFile: 'settings.json',
+    infoPopupContent: [
+        {name: 'Set', attrib: 'set'},
+        {name: 'Mana Cost', attrib: 'cmc'},
+        {name: 'Power', attrib: 'power'},
+        {name: 'Toughness', attrib: 'toughness'},
+    ]
 };
 
 export function initSettings(store: any): void {
     const state: Settings = store.state.settings;
     console.log("initSettings");
-    console.log(state);
 
     if (!fs.existsSync(store.state.settings.settingsPath)) {
-        console.log("create settings folder");
         fs.mkdirSync(store.state.settings.settingsPath);
     }
 
     let decksFolder = join(store.state.settings.settingsPath, store.state.settings.decksFolder);
     if (!fs.existsSync(decksFolder)) {
-        console.log("create decks folder");
         fs.mkdirSync(decksFolder);
     }
 
@@ -57,25 +62,34 @@ export function initSettings(store: any): void {
     }
 
     let data = fs.readFileSync(settingsFile);
+    // TODO: check version of settings file
     let settingsJson = JSON.parse(data.toString());
     store.state.settings = settingsJson;
 }
 
 export const mutations = {
-
     setGridActive(state: Settings, value: boolean): void {
         state.isGridActive = value;        
     },
 
-    setSetVisibleStatus(state: Settings, {setKey, value}: {setKey: string, value: boolean}): void {
-        state.setTypes[setKey] = value;
+    addInfoPopupContent(state: Settings, { displayName, property }: { displayName: string, property: string }): void {
+        if (state.infoPopupContent.map((item) => item.displayName).indexOf(displayName) >= 0) {
+            throw Error("Display name already in Info Popup")
+        }
+        state.infoPopupContent.push({displayName: displayName, property: property});
+    },
+    removeInfoPopupContent(state: Settings, displayName: string): void {
+        let index = state.infoPopupContent.map((item) => item.displayName).indexOf(displayName);
+        if (index >= 0) {
+            state.infoPopupContent.splice(index, 1);
+        }
+       
     }
 };
 
 export const actions = {
 
     writeSettingsToFile({state}: {state: Settings}): void {
-        console.log(state);
         fs.writeFileSync(join(state.settingsPath, state.settingsFile), JSON.stringify(state, null, 4));
     }
 };

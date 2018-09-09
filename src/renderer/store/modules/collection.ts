@@ -60,9 +60,7 @@ export const mutations = {
     },
     setCollectedAmountBySetCode(state: CollectionState, {setCode, amount}: {setCode: string, amount: number}): void {
         if (state.sets[setCode]) {
-            console.log(setCode);
             state.sets[setCode].collectedAmount = amount;
-            console.log(state.sets[setCode].collectedAmount);
         }
     },
     setCards: baseMutations.setCards,
@@ -79,7 +77,7 @@ export const actions = {
             setsFromScryfall.data.forEach((s: MagicSet) => setAdd(s));
             sets = await getSets();
         }
-        sets = sets.filter((s: MagicSet) => rootState.settings.setTypes[s.set_type]);
+        sets = sets.filter((s: MagicSet) => rootState.settings.setTypes.selected.includes(s.set_type));
         let setsDict: Dict<MagicSet> = await extendSets(sets);
         commit('setSets', setsDict);
         return null;

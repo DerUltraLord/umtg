@@ -1,12 +1,21 @@
 <template>
     <div>
-        <Navigation :pages=$store.state.umtg.pages :currentPage=$store.state.umtg.currentPage @pageSelected="$store.commit('setCurrentPage', $event)"/>
-        <SearchPage v-if="$store.state.umtg.currentPage == 'search'"/>
-        <CollectionPage v-if="$store.state.umtg.currentPage == 'collection'"/>
-        <DecksPage v-if="$store.state.umtg.currentPage == 'deck'"/>
-        <SettingsPage v-if="$store.state.umtg.currentPage == 'settings'"/>
-        <Footer></Footer>
+      <header>
+          <Navigation :pages=$store.state.umtg.pages :currentPage=$store.state.umtg.currentPage @pageSelected="$store.commit('setCurrentPage', $event)"/>
+      </header>
+   
+      <main>
+            <SearchPage v-if="$store.state.umtg.currentPage == 'search'"/>
+            <CollectionPage v-if="$store.state.umtg.currentPage == 'collection'"/>
+            <DecksPage v-if="$store.state.umtg.currentPage == 'deck'"/>
+            <SettingsPage v-if="$store.state.umtg.currentPage == 'settings'"/>
+      </main>
+
+      <footer>
+          <Footer></Footer>
+      </footer>
     </div>
+
 </template>
 
 <script>
@@ -23,6 +32,9 @@ import { initSettings } from '../store/modules/settings';
 
 export default {
     methods: {
+        show() {
+            this.$modal.show('InfoPopup');
+        }
     },
     components: {
         Navigation,
@@ -75,6 +87,16 @@ input {
 .scrollable {
     overflow: auto;
     max-height: calc(100vh - 120px);
+}
+
+main {
+    height: calc(100vh - 120px);
+}
+
+.pageWithSidebar {
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: 300px 3fr;
 }
 
 </style>
