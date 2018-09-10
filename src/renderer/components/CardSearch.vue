@@ -1,17 +1,13 @@
 <template>
     <div>
-        <form @submit.prevent="handleSubmit" class="cardSearchContainer">
-            <label>Name:</label>
-            <input v-model="$store.state.search.name" placeholder="Name or Scryfall search" type="text">
-            <label>Type:</label>
-            <input v-model=$store.state.search.type placeholder="Creature">
-            <label>Text:</label>
-            <input v-model="$store.state.search.text" placeholder="Oracle Text">
-            <label>Edition:</label>
-            <input v-model="$store.state.search.edition" placeholder="XLN">
-            <div/>
-            <button type="submit" class="btn btn-primary">Search</button>
-        </form>
+        <v-form @submit.prevent="handleSubmit">
+            <v-text-field v-model="$store.state.search.name" placeholder="Search"></v-text-field>
+            <v-text-field v-model="$store.state.search.type" placeholder="Type"></v-text-field>
+            <v-text-field v-model="$store.state.search.text" placeholder="Oracle Text"></v-text-field>
+            <v-text-field v-model="$store.state.search.edition" placeholder="Edition"></v-text-field>
+            
+            <v-btn color="blue" type="submit" class="btn btn-primary">Search</v-btn>
+        </v-form>
     </div>
 </template>
 
@@ -30,11 +26,5 @@ export default {
 </script>
 
 <style>
-.cardSearchContainer {
-    display: grid;
-    margin-top: 10px;
-    margin-left: 10px;
-    grid-gap: 10px;
-    grid-template-columns: 60px 1fr;
-}
+
 </style>

@@ -1,4 +1,6 @@
 <template>
+   
+    
     <b-modal ref="InfoPopup" centered v-bind:title=this.card.name>
         <b-container>
             <b-row v-for="cardAttrib in this.$store.state.settings.infoPopupContent" v-bind:key=cardAttrib.displayName v-bind:data=cardAttrib>
@@ -17,12 +19,18 @@
             </b-row>
         </b-container>
     </b-modal>
+    
 </template>
 <script>
 import { shell } from 'electron';
 
 export default {
     props: ['card'],
+    data: function() {
+        return {
+            openend: false
+        }
+    },
     methods: {
         openExternal(e) {
             shell.openExternal(e.srcElement.href);

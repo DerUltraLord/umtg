@@ -84,6 +84,9 @@ export const mutations = {
             state.infoPopupContent.splice(index, 1);
         }
        
+    },
+    changeInfoPopupContentByIndex(state: Settings, {index, newValue}: {index: number, newValue: any}): void {
+        state.infoPopupContent[index] = newValue;
     }
 };
 

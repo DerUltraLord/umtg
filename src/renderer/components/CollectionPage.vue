@@ -1,5 +1,6 @@
 <template>
     <div class="collectionPage">
+        <router-view></router-view>
         <div class="scrollable">
             <SetList @setClicked="showSet" :sets=$store.state.collection.sets :selectedSet=$store.state.collection.selectedSet></SetList>
         </div>
